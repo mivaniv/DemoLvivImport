@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="800" height="800">
+  <defs>
+    <linearGradient id="boxg" x1="0" x2="1">
+      <stop offset="0" stop-color="#2e5eb2"/>
+      <stop offset="1" stop-color="#003084"/>
+    </linearGradient>
+    <clipPath id="win"><rect x="135" y="220" width="130" height="118" rx="14"/></clipPath>
+  </defs>
+  <ellipse cx="200" cy="372" rx="100" ry="12" fill="#0b1f44" opacity=".10"/>
+  <path d="M285 52 L306 66 L306 370 L285 360 Z" fill="#00085c"/>
+  <rect x="112" y="52" width="174" height="308" rx="6" fill="url(#boxg)"/>
+  <ellipse cx="199" cy="100" rx="64" ry="30" fill="#e2231a" stroke="#fff" stroke-width="3"/>
+  <text x="199" y="109" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-weight="700" font-size="27" fill="#fff">Barilla</text>
+  <text x="199" y="162" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-weight="700" font-size="17" letter-spacing="1.5" fill="#fff">FARFALLE</text>
+  <text x="199" y="186" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-weight="600" font-size="14" fill="#fff" opacity=".9">N°65</text>
+  <rect x="135" y="220" width="130" height="118" rx="14" fill="#5787db"/>
+  <g clip-path="url(#win)"><path d="M135 237 L165 255 L135 273 Z M195 237 L165 255 L195 273 Z" fill="#f1c24b" stroke="#d49b22" stroke-width="2" stroke-linejoin="round"/>
+           <circle cx="165" cy="255" r="6" fill="#d49b22"/><path d="M205 250 L235 268 L205 286 Z M265 250 L235 268 L265 286 Z" fill="#f1c24b" stroke="#d49b22" stroke-width="2" stroke-linejoin="round"/>
+           <circle cx="235" cy="268" r="6" fill="#d49b22"/><path d="M160 297 L190 315 L160 333 Z M220 297 L190 315 L220 333 Z" fill="#f1c24b" stroke="#d49b22" stroke-width="2" stroke-linejoin="round"/>
+           <circle cx="190" cy="315" r="6" fill="#d49b22"/><path d="M218 304 L248 322 L218 340 Z M278 304 L248 322 L278 340 Z" fill="#f1c24b" stroke="#d49b22" stroke-width="2" stroke-linejoin="round"/>
+           <circle cx="248" cy="322" r="6" fill="#d49b22"/></g>
+  <rect x="135" y="220" width="130" height="118" rx="14" fill="none" stroke="#fff" stroke-width="3"/>
+  <text x="270" y="352" text-anchor="end" font-family="'Segoe UI', Arial, sans-serif" font-weight="600" font-size="12" fill="#fff">500 g</text></svg>

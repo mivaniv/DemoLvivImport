@@ -1,0 +1,47 @@
+{
+  "generatedAt": "2026-09-24T06:00:00+03:00",
+  "fullExport": false,
+  "categories": [
+    {
+      "id": "cat-sauces",
+      "name": "Соуси, джеми, намазки",
+      "sortOrder": 2
+    }
+  ],
+  "products": [
+    {
+      "id": "00-00001201",
+      "sku": "MESS-STR-280",
+      "name": "Джем MESSIS Полуниця, 280 г",
+      "categoryId": "cat-sauces",
+      "brand": "MESSIS",
+      "netWeight": "280 г",
+      "unitsPerBox": 9,
+      "stockQty": 340
+    },
+    {
+      "id": "00-00006101",
+      "sku": "MESS-PES-190",
+      "name": "Соус MESSIS Песто Дженовезе, 190 г",
+      "categoryId": "cat-sauces",
+      "brand": "MESSIS",
+      "description": "Класичний соус песто з базиліком і сиром. Для пасти, брускет і салатів.",
+      "netWeight": "190 г",
+      "unitsPerBox": 12,
+      "stockQty": 96,
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Італія"
+        },
+        {
+          "name": "Термін придатності",
+          "value": "12 місяців"
+        }
+      ],
+      "images": [
+        "images/pesto.svg"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="800" height="800">
+  <defs>
+    <linearGradient id="glass" x1="0" x2="1">
+      <stop offset="0" stop-color="#94002d"/>
+      <stop offset=".45" stop-color="#c2185b"/>
+      <stop offset="1" stop-color="#82001b"/>
+    </linearGradient>
+    <linearGradient id="lidg" x1="0" x2="1">
+      <stop offset="0" stop-color="#aa0005"/>
+      <stop offset=".5" stop-color="#ea3b45"/>
+      <stop offset="1" stop-color="#9d0000"/>
+    </linearGradient>
+    <pattern id="ging" width="18" height="18" patternUnits="userSpaceOnUse">
+      <rect width="18" height="18" fill="#fff"/>
+      <rect width="9" height="18" fill="#d0212b" opacity=".55"/>
+      <rect width="18" height="9" fill="#d0212b" opacity=".55"/>
+    </pattern>
+    <clipPath id="jarclip"><rect x="96" y="118" width="208" height="246" rx="42"/></clipPath>
+  </defs>
+  <ellipse cx="200" cy="372" rx="120" ry="12" fill="#0b1f44" opacity=".10"/>
+  <rect x="96" y="118" width="208" height="246" rx="42" fill="url(#glass)"/>
+  <g clip-path="url(#jarclip)"><circle cx="120" cy="150" r="6" fill="#a3003c" opacity=".6"/><circle cx="173" cy="221" r="9" fill="#a3003c" opacity=".6"/><circle cx="226" cy="292" r="12" fill="#a3003c" opacity=".6"/><circle cx="279" cy="173" r="6" fill="#a3003c" opacity=".6"/><circle cx="167" cy="244" r="9" fill="#a3003c" opacity=".6"/><circle cx="220" cy="315" r="12" fill="#a3003c" opacity=".6"/><circle cx="273" cy="196" r="6" fill="#a3003c" opacity=".6"/><circle cx="161" cy="267" r="9" fill="#a3003c" opacity=".6"/><circle cx="214" cy="338" r="12" fill="#a3003c" opacity=".6"/><circle cx="267" cy="219" r="6" fill="#a3003c" opacity=".6"/><circle cx="155" cy="290" r="9" fill="#a3003c" opacity=".6"/><circle cx="208" cy="171" r="12" fill="#a3003c" opacity=".6"/><circle cx="261" cy="242" r="6" fill="#a3003c" opacity=".6"/><circle cx="149" cy="313" r="9" fill="#a3003c" opacity=".6"/></g>
+  <rect x="112" y="132" width="18" height="210" rx="9" fill="#fff" opacity=".28"/>
+  <path d="M88 92 Q200 40 312 92 L300 122 Q200 100 100 122 Z" fill="url(#ging)"/>
+         <path d="M88 92 Q200 40 312 92" fill="none" stroke="#aa0005" stroke-width="2"/>
+         <rect x="106" y="112" width="188" height="12" rx="4" fill="#9d0000"/>
+  <rect x="116" y="176" width="168" height="136" rx="12" fill="#fffdf8"/>
+  <rect x="122" y="182" width="156" height="124" rx="9" fill="none" stroke="#d81b60" stroke-width="1.5" opacity=".5"/>
+  <text x="200" y="214" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="25" letter-spacing="1.5" fill="#3b1d12">MESSIS</text>
+  <text x="200" y="250" text-anchor="middle" font-family="'Brush Script MT', 'Segoe Script', cursive" font-size="28" fill="#d81b60">Raspberry</text>
+  <text x="200" y="272" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="11" letter-spacing="2" fill="#6b5a4a">EXTRA JAM</text>
+  <text x="200" y="296" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-weight="600" font-size="13" fill="#3b1d12">280 g</text>
+  <circle cx="270" cy="330" r="22" fill="#d81b60"/>
+     <circle cx="262.6666666666667" cy="322.6666666666667" r="5.5" fill="#fff" opacity=".4"/>
+     <path d="M265 310 q5 -9 12 -6" stroke="#3f8f2f" stroke-width="3" fill="none"/><circle cx="128" cy="330" r="16" fill="#d81b60"/>
+     <circle cx="122.66666666666667" cy="324.6666666666667" r="4" fill="#fff" opacity=".4"/>
+     <path d="M123 316 q5 -9 12 -6" stroke="#3f8f2f" stroke-width="3" fill="none"/></svg>

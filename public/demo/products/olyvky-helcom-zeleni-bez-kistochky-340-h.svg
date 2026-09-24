@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="800" height="800">
+  <defs>
+    <linearGradient id="glass" x1="0" x2="1">
+      <stop offset="0" stop-color="#5c6c00"/>
+      <stop offset=".45" stop-color="#8a9a2b"/>
+      <stop offset="1" stop-color="#4a5a00"/>
+    </linearGradient>
+    <linearGradient id="lidg" x1="0" x2="1">
+      <stop offset="0" stop-color="#194500"/>
+      <stop offset=".5" stop-color="#598539"/>
+      <stop offset="1" stop-color="#0c3800"/>
+    </linearGradient>
+    <pattern id="ging" width="18" height="18" patternUnits="userSpaceOnUse">
+      <rect width="18" height="18" fill="#fff"/>
+      <rect width="9" height="18" fill="#3f6b1f" opacity=".55"/>
+      <rect width="18" height="9" fill="#3f6b1f" opacity=".55"/>
+    </pattern>
+    <clipPath id="jarclip"><rect x="96" y="118" width="208" height="246" rx="42"/></clipPath>
+  </defs>
+  <ellipse cx="200" cy="372" rx="120" ry="12" fill="#0b1f44" opacity=".10"/>
+  <rect x="96" y="118" width="208" height="246" rx="42" fill="url(#glass)"/>
+  <g clip-path="url(#jarclip)"><ellipse cx="118" cy="150" rx="21" ry="16" fill="#7d8d1e"/>
+                  <ellipse cx="112" cy="145" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="155" cy="160" rx="21" ry="16" fill="#8a9a2b"/>
+                  <ellipse cx="149" cy="155" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="192" cy="150" rx="21" ry="16" fill="#97a738"/>
+                  <ellipse cx="186" cy="145" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="229" cy="160" rx="21" ry="16" fill="#7d8d1e"/>
+                  <ellipse cx="223" cy="155" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="266" cy="150" rx="21" ry="16" fill="#8a9a2b"/>
+                  <ellipse cx="260" cy="145" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="133" cy="202" rx="21" ry="16" fill="#97a738"/>
+                  <ellipse cx="127" cy="197" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="170" cy="192" rx="21" ry="16" fill="#7d8d1e"/>
+                  <ellipse cx="164" cy="187" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="207" cy="202" rx="21" ry="16" fill="#8a9a2b"/>
+                  <ellipse cx="201" cy="197" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="244" cy="192" rx="21" ry="16" fill="#97a738"/>
+                  <ellipse cx="238" cy="187" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="281" cy="202" rx="21" ry="16" fill="#7d8d1e"/>
+                  <ellipse cx="275" cy="197" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="148" cy="234" rx="21" ry="16" fill="#8a9a2b"/>
+                  <ellipse cx="142" cy="229" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="185" cy="244" rx="21" ry="16" fill="#97a738"/>
+                  <ellipse cx="179" cy="239" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="222" cy="234" rx="21" ry="16" fill="#7d8d1e"/>
+                  <ellipse cx="216" cy="229" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="259" cy="244" rx="21" ry="16" fill="#8a9a2b"/>
+                  <ellipse cx="253" cy="239" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="126" cy="276" rx="21" ry="16" fill="#97a738"/>
+                  <ellipse cx="120" cy="271" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="163" cy="286" rx="21" ry="16" fill="#7d8d1e"/>
+                  <ellipse cx="157" cy="281" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="200" cy="276" rx="21" ry="16" fill="#8a9a2b"/>
+                  <ellipse cx="194" cy="271" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="237" cy="286" rx="21" ry="16" fill="#97a738"/>
+                  <ellipse cx="231" cy="281" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="274" cy="276" rx="21" ry="16" fill="#7d8d1e"/>
+                  <ellipse cx="268" cy="271" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="141" cy="328" rx="21" ry="16" fill="#8a9a2b"/>
+                  <ellipse cx="135" cy="323" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="178" cy="318" rx="21" ry="16" fill="#97a738"/>
+                  <ellipse cx="172" cy="313" rx="6" ry="3" fill="#fff" opacity=".35"/><ellipse cx="215" cy="328" rx="21" ry="16" fill="#7d8d1e"/>
+                  <ellipse cx="209" cy="323" rx="6" ry="3" fill="#fff" opacity=".35"/></g>
+  <rect x="112" y="132" width="18" height="210" rx="9" fill="#fff" opacity=".28"/>
+  <rect x="104" y="58" width="192" height="60" rx="12" fill="url(#lidg)"/>
+         <rect x="104" y="100" width="192" height="10" fill="#204c00"/>
+  <rect x="116" y="176" width="168" height="136" rx="12" fill="#fffdf8"/>
+  <rect x="122" y="182" width="156" height="124" rx="9" fill="none" stroke="#4a6b1a" stroke-width="1.5" opacity=".5"/>
+  <text x="200" y="214" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="25" letter-spacing="1.5" fill="#3b1d12">HELCOM</text>
+  <text x="200" y="250" text-anchor="middle" font-family="'Brush Script MT', 'Segoe Script', cursive" font-size="21" fill="#4a6b1a">Green Olives</text>
+  <text x="200" y="272" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="11" letter-spacing="2" fill="#6b5a4a">PITTED</text>
+  <text x="200" y="296" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-weight="600" font-size="13" fill="#3b1d12">340 g</text>
+  </svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="800" height="800">
+  <defs>
+    <linearGradient id="packg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#754e3a"/>
+      <stop offset="1" stop-color="#3c1501"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="200" cy="372" rx="150" ry="12" fill="#0b1f44" opacity=".10"/>
+  <g transform="rotate(-10 200 230)">
+    <path d="M52 150 L348 150 L352 312 L48 312 Z" fill="url(#packg)"/>
+    <rect x="52" y="142" width="9" height="10" fill="#280100"/><rect x="70.5" y="142" width="9" height="10" fill="#280100"/><rect x="89" y="142" width="9" height="10" fill="#280100"/><rect x="107.5" y="142" width="9" height="10" fill="#280100"/><rect x="126" y="142" width="9" height="10" fill="#280100"/><rect x="144.5" y="142" width="9" height="10" fill="#280100"/><rect x="163" y="142" width="9" height="10" fill="#280100"/><rect x="181.5" y="142" width="9" height="10" fill="#280100"/><rect x="200" y="142" width="9" height="10" fill="#280100"/><rect x="218.5" y="142" width="9" height="10" fill="#280100"/><rect x="237" y="142" width="9" height="10" fill="#280100"/><rect x="255.5" y="142" width="9" height="10" fill="#280100"/><rect x="274" y="142" width="9" height="10" fill="#280100"/><rect x="292.5" y="142" width="9" height="10" fill="#280100"/><rect x="311" y="142" width="9" height="10" fill="#280100"/><rect x="329.5" y="142" width="9" height="10" fill="#280100"/>
+    <path d="M52 150 L200 150 L180 312 L48 312 Z" fill="#fff" opacity=".12"/>
+    <rect x="66" y="168" width="120" height="30" rx="15" fill="#fff"/>
+    <text x="126" y="189" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="18" letter-spacing="1.5" fill="#5b3420">MESSIS</text>
+    <text x="78" y="250" font-family="'Brush Script MT', 'Segoe Script', cursive" font-size="48" fill="#fff">Wafers</text>
+    <text x="80" y="278" font-family="'Segoe UI', Arial, sans-serif" font-size="13" letter-spacing="1" fill="#fff" opacity=".9">chocolate filling</text>
+    <text x="80" y="298" font-family="'Segoe UI', Arial, sans-serif" font-weight="600" font-size="13" fill="#fff">180 g</text>
+    <g transform="rotate(-8 280 220)"><rect x="236" y="202" width="88" height="36" rx="3" fill="#e6b872"/>
+     <line x1="243" y1="202" x2="243" y2="238" stroke="#c38d45" stroke-width="2"/><line x1="258" y1="202" x2="258" y2="238" stroke="#c38d45" stroke-width="2"/><line x1="273" y1="202" x2="273" y2="238" stroke="#c38d45" stroke-width="2"/><line x1="288" y1="202" x2="288" y2="238" stroke="#c38d45" stroke-width="2"/><line x1="303" y1="202" x2="303" y2="238" stroke="#c38d45" stroke-width="2"/><line x1="318" y1="202" x2="318" y2="238" stroke="#c38d45" stroke-width="2"/>
+     <rect x="236" y="217" width="88" height="6" fill="#7a4a2d"/></g><g transform="rotate(-8 292 262)"><rect x="248" y="244" width="88" height="36" rx="3" fill="#e6b872"/>
+     <line x1="255" y1="244" x2="255" y2="280" stroke="#c38d45" stroke-width="2"/><line x1="270" y1="244" x2="270" y2="280" stroke="#c38d45" stroke-width="2"/><line x1="285" y1="244" x2="285" y2="280" stroke="#c38d45" stroke-width="2"/><line x1="300" y1="244" x2="300" y2="280" stroke="#c38d45" stroke-width="2"/><line x1="315" y1="244" x2="315" y2="280" stroke="#c38d45" stroke-width="2"/><line x1="330" y1="244" x2="330" y2="280" stroke="#c38d45" stroke-width="2"/>
+     <rect x="248" y="259" width="88" height="6" fill="#7a4a2d"/></g>
+  </g></svg>
