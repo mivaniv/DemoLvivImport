@@ -13,7 +13,9 @@ const TYPES: Record<string, string> = {
   ".svg": "image/svg+xml",
 };
 
-export async function GET(_req: Request, ctx: RouteContext<"/media/[...path]">) {
+// Тип параметрів явно, а не глобальний RouteContext: у статичній збірці цей роут виключено,
+// і Next не генерує для нього типів, а TypeScript файл усе одно перевіряє.
+export async function GET(_req: Request, ctx: { params: Promise<{ path: string[] }> }) {
   const { path: parts } = await ctx.params;
   // turbopackIgnore: тека з'являється після збірки, трасувати її в бандл не потрібно
   const root = path.resolve(/*turbopackIgnore: true*/ process.env.MEDIA_DIR ?? "./storage/media");
