@@ -7,7 +7,11 @@ import { ProductCard } from "@/components/product/ProductCard";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { getProduct, getSimilarProducts } from "@/lib/catalog";
+import { getAllProductSlugs, getProduct, getSimilarProducts } from "@/lib/catalog";
+
+export async function generateStaticParams() {
+  return (await getAllProductSlugs()).map((slug) => ({ slug }));
+}
 
 export async function generateMetadata(props: PageProps<"/product/[slug]">): Promise<Metadata> {
   const { slug } = await props.params;

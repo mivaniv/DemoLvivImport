@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Package } from "lucide-react";
+import { asset } from "@/lib/asset";
 
 type Props = {
   src?: string | null;
@@ -20,7 +21,7 @@ export function ProductImage({ src, alt, sizes, preload, className = "" }: Props
   }
   return (
     <Image
-      src={src}
+      src={asset(src)}
       alt={alt}
       fill
       sizes={sizes}

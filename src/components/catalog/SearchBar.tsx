@@ -1,10 +1,12 @@
 import { Search } from "lucide-react";
+import Form from "next/form";
 import type { CatalogState } from "@/lib/catalog-params";
 
-// Звичайна GET-форма: працює і без JavaScript. Приховані поля зберігають активні фільтри.
+// GET-форма (next/form): працює і без JavaScript, сама враховує basePath і переходить без перезавантаження.
+// Приховані поля зберігають активні фільтри.
 export function SearchBar({ state, autoFocus }: { state: CatalogState; autoFocus?: boolean }) {
   return (
-    <form action="/catalog" role="search" className="flex gap-2 rounded-2xl border border-line bg-white p-2 shadow-sm">
+    <Form action="/catalog" role="search" className="flex gap-2 rounded-2xl border border-line bg-white p-2 shadow-sm">
       <label className="flex flex-1 items-center gap-3 pl-3">
         <Search className="size-4 shrink-0 text-muted" />
         <span className="sr-only">Пошук</span>
@@ -23,6 +25,6 @@ export function SearchBar({ state, autoFocus }: { state: CatalogState; autoFocus
       <button type="submit" className="h-10 rounded-xl bg-brand-600 px-5 text-sm font-semibold text-white transition hover:bg-brand-700 sm:px-8">
         Знайти
       </button>
-    </form>
+    </Form>
   );
 }

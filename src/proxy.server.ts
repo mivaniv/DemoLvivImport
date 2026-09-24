@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 // HTTP Basic Auth для /admin. Логін і пароль — ADMIN_USER / ADMIN_PASSWORD у .env.
-export function proxy(request: NextRequest) {
+// Default-експорт: з розширенням .server.ts Next не розпізнає іменований `proxy`.
+export default function proxy(request: NextRequest) {
   const user = process.env.ADMIN_USER;
   const password = process.env.ADMIN_PASSWORD;
   if (!user || !password) {

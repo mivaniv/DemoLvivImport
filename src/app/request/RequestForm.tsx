@@ -6,15 +6,37 @@ import { useActionState, useEffect } from "react";
 import { ProductImage } from "@/components/product/ProductImage";
 import { useRequest } from "@/components/request/RequestProvider";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
-import { submitPriceRequest, type RequestFormState } from "./actions";
+import { submitPriceRequest } from "@/app/request/actions";
+import { CONTACT } from "@/lib/contacts";
+import type { RequestFormState } from "./request-schema";
 
 export function RequestForm() {
   const { items, ready, setQuantity, remove, clear } = useRequest();
   const [state, action, pending] = useActionState<RequestFormState, FormData>(submitPriceRequest, null);
 
+  // Лист у поштовій програмі (id: null) може й не відправитися — тоді список лишаємо.
   useEffect(() => {
-    if (state?.ok) clear();
+    if (state?.ok && state.id !== null) clear();
   }, [state, clear]);
+
+  if (state?.ok && state.id === null) {
+    return (
+      <div className="mx-auto max-w-lg rounded-2xl border border-line bg-white p-8 text-center">
+        <CircleCheck className="mx-auto size-12 text-emerald-600" strokeWidth={1.5} />
+        <h2 className="mt-4 text-xl font-bold">Лист із заявкою сформовано</h2>
+        <p className="mt-2 text-sm text-muted">
+          Надішліть його з поштової програми, що відкрилася. Якщо вона не відкрилася — напишіть нам на{" "}
+          <a href={`mailto:${CONTACT.email}`} className="font-semibold text-brand-600">
+            {CONTACT.email}
+          </a>
+          . Список товарів збережено.
+        </p>
+        <Link href="/catalog" className="mt-6 inline-flex h-11 items-center rounded-xl bg-brand-600 px-6 text-sm font-semibold text-white">
+          Повернутися до каталогу
+        </Link>
+      </div>
+    );
+  }
 
   if (state?.ok) {
     return (

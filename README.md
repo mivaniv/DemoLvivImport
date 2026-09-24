@@ -42,6 +42,28 @@ npm run import -- data/1c-sample/catalog.json
 
 Щоденний запуск: Планувальник завдань Windows або `cron` на сервері з командою вище.
 
+## Статична демоверсія (GitHub Pages)
+
+Адреса: https://mivaniv.github.io/DemoLvivImport/
+
+Workflow [.github/workflows/pages.yml](.github/workflows/pages.yml) збирає сайт після кожного push у `main`. База для цього не потрібна: дані беруться зі знімка [src/data/catalog-snapshot.json](src/data/catalog-snapshot.json).
+
+Щоб оновити товари в демоверсії:
+
+```powershell
+npm run import -- шлях/до/вивантаження.json   # за потреби
+npm run snapshot                                # знімок бази → src/data/catalog-snapshot.json
+git add -A; git commit -m "Update catalog snapshot"; git push
+```
+
+Чим статична версія відрізняється від повної (`NEXT_PUBLIC_STATIC_EXPORT=1` у [next.config.ts](next.config.ts)):
+
+- модулі `*.static.ts(x)` підміняють роботу з базою; фільтри й пошук каталогу виконуються в браузері;
+- файли `*.server.ts(x)` (адмінпанель, `/media`, захист паролем) до збірки не входять;
+- форма заявки не зберігає її, а відкриває поштову програму з готовим листом.
+
+Локальна перевірка: `npm run build:static`, результат у теці `out/`.
+
 ## Корисне
 
 ```powershell

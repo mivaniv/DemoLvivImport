@@ -4,6 +4,7 @@ import Link from "next/link";
 import { HeroArt } from "@/components/home/HeroArt";
 import { ProductCard } from "@/components/product/ProductCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { asset } from "@/lib/asset";
 import { getCategories, getPopularProducts } from "@/lib/catalog";
 
 const FEATURES = [
@@ -69,7 +70,7 @@ export default async function HomePage() {
               <div className="relative aspect-[4/3] bg-gradient-to-br from-brand-50 to-white">
                 {c.products[0]?.images[0] && (
                   <Image
-                    src={c.products[0].images[0].url}
+                    src={asset(c.products[0].images[0].url)}
                     alt=""
                     fill
                     unoptimized={c.products[0].images[0].url.endsWith(".svg")}

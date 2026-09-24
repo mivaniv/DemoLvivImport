@@ -12,7 +12,9 @@
     "db:seed": "prisma db seed",
     "import": "tsx scripts/import-catalog.ts",
     "typecheck": "tsc --noEmit",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "snapshot": "tsx scripts/export-snapshot.ts",
+    "build:static": "cross-env NEXT_PUBLIC_STATIC_EXPORT=1 next build"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",
@@ -31,6 +33,7 @@
     "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^10.1.0",
     "dotenv": "^18.0.3",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",

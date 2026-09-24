@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { asset } from "@/lib/asset";
 
 // Композиція упаковок для банера. Шляхи — до згенерованих демо-ілюстрацій;
 // коли з'являться маркетингові фото, їх достатньо підставити сюди.
@@ -17,10 +18,10 @@ export function HeroArt() {
       <div className="absolute left-[10%] top-[12%] size-[78%] rounded-full border border-brand-100" />
       {ITEMS.map((item) => (
         <div key={item.src} className={`absolute aspect-square ${item.cls}`}>
-          <Image src={item.src} alt="" fill unoptimized loading="eager" className="object-contain drop-shadow-xl" />
+          <Image src={asset(item.src)} alt="" fill unoptimized loading="eager" className="object-contain drop-shadow-xl" />
         </div>
       ))}
-      <p className="absolute -left-4 top-[50%] z-40 hidden max-w-40 -rotate-12 font-script text-2xl leading-6 text-brand-600 sm:block">
+      <p className="absolute -left-12 top-[40%] z-40 hidden max-w-36 -rotate-12 font-script text-2xl leading-6 text-brand-600 sm:block">
         Європейська якість на вашій полиці
       </p>
     </div>

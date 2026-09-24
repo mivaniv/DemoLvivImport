@@ -1,0 +1,758 @@
+{
+  "generatedAt": "2026-09-24T14:48:33.808Z",
+  "categories": [
+    {
+      "id": 1,
+      "slug": "makaronni-vyroby",
+      "name": "Макаронні вироби",
+      "sortOrder": 1
+    },
+    {
+      "id": 2,
+      "slug": "sousy-dzhemy-namazky",
+      "name": "Соуси, джеми, намазки",
+      "sortOrder": 2
+    },
+    {
+      "id": 3,
+      "slug": "kava",
+      "name": "Кава",
+      "sortOrder": 3
+    },
+    {
+      "id": 4,
+      "slug": "olyvky-konservy",
+      "name": "Оливки, консерви",
+      "sortOrder": 4
+    },
+    {
+      "id": 5,
+      "slug": "vafli-ta-solodoshchi",
+      "name": "Вафлі та солодощі",
+      "sortOrder": 5
+    }
+  ],
+  "brands": [
+    {
+      "id": 3,
+      "slug": "barilla",
+      "name": "Barilla",
+      "country": "Італія"
+    },
+    {
+      "id": 4,
+      "slug": "helcom",
+      "name": "HELCOM",
+      "country": "Польща"
+    },
+    {
+      "id": 1,
+      "slug": "messis",
+      "name": "MESSIS",
+      "country": "Польща"
+    },
+    {
+      "id": 2,
+      "slug": "vivavo",
+      "name": "VIVAVO",
+      "country": "Італія"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "externalId": "00-00001201",
+      "sku": "MESS-STR-280",
+      "slug": "dzhem-messis-polunytsia-280-h",
+      "name": "Джем MESSIS Полуниця, 280 г",
+      "description": "Джем MESSIS Полуниця — це насичений смак стиглої полуниці, виготовлений за традиційними європейськими рецептами. Ідеально підходить для сніданків, десертів та професійного використання у HoReCa.",
+      "netWeight": "280 г",
+      "unitsPerBox": 9,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": true,
+      "sortOrder": 0,
+      "categoryId": 2,
+      "brandId": 1,
+      "createdAt": "2026-09-24T12:37:36.037Z",
+      "images": [
+        {
+          "url": "/demo/products/dzhem-messis-polunytsia-280-h.svg",
+          "alt": "Джем MESSIS Полуниця, 280 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Польща"
+        },
+        {
+          "name": "Вміст фруктів",
+          "value": "50 г на 100 г"
+        },
+        {
+          "name": "Термін придатності",
+          "value": "18 місяців"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "externalId": "00-00001202",
+      "sku": "MESS-APR-280",
+      "slug": "dzhem-messis-abrykos-280-h",
+      "name": "Джем MESSIS Абрикос, 280 г",
+      "description": "Ніжний абрикосовий джем із шматочками фруктів. Підходить для випічки, сирників і сніданків.",
+      "netWeight": "280 г",
+      "unitsPerBox": 9,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": false,
+      "sortOrder": 1,
+      "categoryId": 2,
+      "brandId": 1,
+      "createdAt": "2026-09-24T12:37:36.055Z",
+      "images": [
+        {
+          "url": "/demo/products/dzhem-messis-abrykos-280-h.svg",
+          "alt": "Джем MESSIS Абрикос, 280 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Польща"
+        },
+        {
+          "name": "Вміст фруктів",
+          "value": "50 г на 100 г"
+        },
+        {
+          "name": "Термін придатності",
+          "value": "18 місяців"
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "externalId": "00-00006101",
+      "sku": "MESS-PES-190",
+      "slug": "sous-messis-pesto-dzhenoveze-190-h",
+      "name": "Соус MESSIS Песто Дженовезе, 190 г",
+      "description": "Класичний соус песто з базиліком і сиром. Для пасти, брускет і салатів.",
+      "netWeight": "190 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": false,
+      "sortOrder": 1,
+      "categoryId": 2,
+      "brandId": 1,
+      "createdAt": "2026-09-24T12:47:15.670Z",
+      "images": [
+        {
+          "url": "/snapshot/products/00-00006101/pesto.svg",
+          "alt": "Соус MESSIS Песто Дженовезе, 190 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Італія"
+        },
+        {
+          "name": "Термін придатності",
+          "value": "12 місяців"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "externalId": "00-00001203",
+      "sku": "MESS-BLC-280",
+      "slug": "dzhem-messis-chorna-smorodyna-280-h",
+      "name": "Джем MESSIS Чорна смородина, 280 г",
+      "description": "Джем із чорної смородини з яскравою кислинкою. Добре поєднується з млинцями та десертами.",
+      "netWeight": "280 г",
+      "unitsPerBox": 9,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": false,
+      "sortOrder": 2,
+      "categoryId": 2,
+      "brandId": 1,
+      "createdAt": "2026-09-24T12:37:36.066Z",
+      "images": [
+        {
+          "url": "/demo/products/dzhem-messis-chorna-smorodyna-280-h.svg",
+          "alt": "Джем MESSIS Чорна смородина, 280 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Польща"
+        },
+        {
+          "name": "Вміст фруктів",
+          "value": "50 г на 100 г"
+        },
+        {
+          "name": "Термін придатності",
+          "value": "18 місяців"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "externalId": "00-00001204",
+      "sku": "MESS-CHR-280",
+      "slug": "dzhem-messis-vyshnia-280-h",
+      "name": "Джем MESSIS Вишня, 280 г",
+      "description": "Вишневий джем з насиченим кольором і глибоким смаком стиглих ягід.",
+      "netWeight": "280 г",
+      "unitsPerBox": 9,
+      "unit": "шт.",
+      "inStock": false,
+      "isPopular": false,
+      "sortOrder": 3,
+      "categoryId": 2,
+      "brandId": 1,
+      "createdAt": "2026-09-24T12:37:36.076Z",
+      "images": [
+        {
+          "url": "/demo/products/dzhem-messis-vyshnia-280-h.svg",
+          "alt": "Джем MESSIS Вишня, 280 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Польща"
+        },
+        {
+          "name": "Вміст фруктів",
+          "value": "50 г на 100 г"
+        },
+        {
+          "name": "Термін придатності",
+          "value": "18 місяців"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "externalId": "00-00001205",
+      "sku": "MESS-RSP-280",
+      "slug": "dzhem-messis-malyna-280-h",
+      "name": "Джем MESSIS Малина, 280 г",
+      "description": "Малиновий джем з ароматом свіжих ягід для сніданків, випічки та десертів.",
+      "netWeight": "280 г",
+      "unitsPerBox": 9,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": false,
+      "sortOrder": 4,
+      "categoryId": 2,
+      "brandId": 1,
+      "createdAt": "2026-09-24T12:37:36.085Z",
+      "images": [
+        {
+          "url": "/demo/products/dzhem-messis-malyna-280-h.svg",
+          "alt": "Джем MESSIS Малина, 280 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Польща"
+        },
+        {
+          "name": "Вміст фруктів",
+          "value": "50 г на 100 г"
+        },
+        {
+          "name": "Термін придатності",
+          "value": "18 місяців"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "externalId": "00-00002101",
+      "sku": "VIV-CRM-1000",
+      "slug": "kava-vivavo-caffe-crema-1-kh",
+      "name": "Кава VIVAVO Caffè Crema, 1 кг",
+      "description": "Кава в зернах Caffè Crema з м'яким смаком і щільною пінкою. Оптимальний вибір для кав'ярень, офісів і HoReCa.",
+      "netWeight": "1 кг",
+      "unitsPerBox": 6,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": true,
+      "sortOrder": 5,
+      "categoryId": 3,
+      "brandId": 2,
+      "createdAt": "2026-09-24T12:37:36.094Z",
+      "images": [
+        {
+          "url": "/demo/products/kava-vivavo-caffe-crema-1-kh.svg",
+          "alt": "Кава VIVAVO Caffè Crema, 1 кг"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Італія"
+        },
+        {
+          "name": "Тип",
+          "value": "Зерно"
+        },
+        {
+          "name": "Обсмаження",
+          "value": "Середнє"
+        },
+        {
+          "name": "Склад",
+          "value": "70% арабіка, 30% робуста"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "externalId": "00-00002102",
+      "sku": "VIV-ESP-1000",
+      "slug": "kava-vivavo-espresso-intenso-1-kh",
+      "name": "Кава VIVAVO Espresso Intenso, 1 кг",
+      "description": "Інтенсивний еспресо-бленд з нотами какао та карамелі. Розрахований на професійні кавомашини.",
+      "netWeight": "1 кг",
+      "unitsPerBox": 6,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": false,
+      "sortOrder": 6,
+      "categoryId": 3,
+      "brandId": 2,
+      "createdAt": "2026-09-24T12:37:36.103Z",
+      "images": [
+        {
+          "url": "/demo/products/kava-vivavo-espresso-intenso-1-kh.svg",
+          "alt": "Кава VIVAVO Espresso Intenso, 1 кг"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Італія"
+        },
+        {
+          "name": "Тип",
+          "value": "Зерно"
+        },
+        {
+          "name": "Обсмаження",
+          "value": "Темне"
+        },
+        {
+          "name": "Склад",
+          "value": "50% арабіка, 50% робуста"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "externalId": "00-00002103",
+      "sku": "VIV-GRD-250",
+      "slug": "kava-melena-vivavo-classico-250-h",
+      "name": "Кава мелена VIVAVO Classico, 250 г",
+      "description": "Мелена кава для турки, гейзерної кавоварки та фільтра. Збалансований смак на щодень.",
+      "netWeight": "250 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": false,
+      "sortOrder": 7,
+      "categoryId": 3,
+      "brandId": 2,
+      "createdAt": "2026-09-24T12:37:36.111Z",
+      "images": [
+        {
+          "url": "/demo/products/kava-melena-vivavo-classico-250-h.svg",
+          "alt": "Кава мелена VIVAVO Classico, 250 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Італія"
+        },
+        {
+          "name": "Тип",
+          "value": "Мелена"
+        },
+        {
+          "name": "Обсмаження",
+          "value": "Середнє"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "externalId": "00-00003101",
+      "sku": "BAR-PEN-500",
+      "slug": "makarony-barilla-penne-rigate-500-h",
+      "name": "Макарони Barilla Penne Rigate, 500 г",
+      "description": "Класичні пере з рифленою поверхнею, що добре тримають соус. Виготовлені з твердих сортів пшениці.",
+      "netWeight": "500 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": true,
+      "sortOrder": 8,
+      "categoryId": 1,
+      "brandId": 3,
+      "createdAt": "2026-09-24T12:37:36.119Z",
+      "images": [
+        {
+          "url": "/demo/products/makarony-barilla-penne-rigate-500-h.svg",
+          "alt": "Макарони Barilla Penne Rigate, 500 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Італія"
+        },
+        {
+          "name": "Час варіння",
+          "value": "11 хв"
+        },
+        {
+          "name": "Склад",
+          "value": "Борошно з твердих сортів пшениці, вода"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "externalId": "00-00003102",
+      "sku": "BAR-SPG-500",
+      "slug": "makarony-barilla-spaghetti-n-5-500-h",
+      "name": "Макарони Barilla Spaghetti n.5, 500 г",
+      "description": "Спагеті середньої товщини — універсальна основа для більшості італійських страв.",
+      "netWeight": "500 г",
+      "unitsPerBox": 24,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": false,
+      "sortOrder": 9,
+      "categoryId": 1,
+      "brandId": 3,
+      "createdAt": "2026-09-24T12:37:36.126Z",
+      "images": [
+        {
+          "url": "/demo/products/makarony-barilla-spaghetti-n-5-500-h.svg",
+          "alt": "Макарони Barilla Spaghetti n.5, 500 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Італія"
+        },
+        {
+          "name": "Час варіння",
+          "value": "9 хв"
+        },
+        {
+          "name": "Склад",
+          "value": "Борошно з твердих сортів пшениці, вода"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "externalId": "00-00003103",
+      "sku": "BAR-FUS-500",
+      "slug": "makarony-barilla-fusilli-500-h",
+      "name": "Макарони Barilla Fusilli, 500 г",
+      "description": "Спіральки фузілі для салатів, запіканок і густих соусів.",
+      "netWeight": "500 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": false,
+      "sortOrder": 10,
+      "categoryId": 1,
+      "brandId": 3,
+      "createdAt": "2026-09-24T12:37:36.134Z",
+      "images": [
+        {
+          "url": "/demo/products/makarony-barilla-fusilli-500-h.svg",
+          "alt": "Макарони Barilla Fusilli, 500 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Італія"
+        },
+        {
+          "name": "Час варіння",
+          "value": "10 хв"
+        },
+        {
+          "name": "Склад",
+          "value": "Борошно з твердих сортів пшениці, вода"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "externalId": "00-00003104",
+      "sku": "BAR-FAR-500",
+      "slug": "makarony-barilla-farfalle-500-h",
+      "name": "Макарони Barilla Farfalle, 500 г",
+      "description": "Метелики фарфалле — для легких соусів, салатів і дитячого меню.",
+      "netWeight": "500 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "inStock": false,
+      "isPopular": false,
+      "sortOrder": 11,
+      "categoryId": 1,
+      "brandId": 3,
+      "createdAt": "2026-09-24T12:37:36.144Z",
+      "images": [
+        {
+          "url": "/demo/products/makarony-barilla-farfalle-500-h.svg",
+          "alt": "Макарони Barilla Farfalle, 500 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Італія"
+        },
+        {
+          "name": "Час варіння",
+          "value": "11 хв"
+        },
+        {
+          "name": "Склад",
+          "value": "Борошно з твердих сортів пшениці, вода"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "externalId": "00-00004101",
+      "sku": "HEL-GRN-340",
+      "slug": "olyvky-helcom-zeleni-bez-kistochky-340-h",
+      "name": "Оливки HELCOM зелені без кісточки, 340 г",
+      "description": "Зелені оливки без кісточки в розсолі. Для закусок, салатів і піци.",
+      "netWeight": "340 г",
+      "unitsPerBox": 6,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": true,
+      "sortOrder": 12,
+      "categoryId": 4,
+      "brandId": 4,
+      "createdAt": "2026-09-24T12:37:36.152Z",
+      "images": [
+        {
+          "url": "/demo/products/olyvky-helcom-zeleni-bez-kistochky-340-h.svg",
+          "alt": "Оливки HELCOM зелені без кісточки, 340 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Польща"
+        },
+        {
+          "name": "Маса після відціджування",
+          "value": "150 г"
+        },
+        {
+          "name": "Упаковка",
+          "value": "Скляна банка"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "externalId": "00-00004102",
+      "sku": "HEL-BLK-340",
+      "slug": "olyvky-helcom-chorni-bez-kistochky-340-h",
+      "name": "Оливки HELCOM чорні без кісточки, 340 г",
+      "description": "Чорні оливки без кісточки з м'яким смаком для закусок і гарячих страв.",
+      "netWeight": "340 г",
+      "unitsPerBox": 6,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": false,
+      "sortOrder": 13,
+      "categoryId": 4,
+      "brandId": 4,
+      "createdAt": "2026-09-24T12:37:36.160Z",
+      "images": [
+        {
+          "url": "/demo/products/olyvky-helcom-chorni-bez-kistochky-340-h.svg",
+          "alt": "Оливки HELCOM чорні без кісточки, 340 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Польща"
+        },
+        {
+          "name": "Маса після відціджування",
+          "value": "150 г"
+        },
+        {
+          "name": "Упаковка",
+          "value": "Скляна банка"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "externalId": "00-00004103",
+      "sku": "HEL-JAL-340",
+      "slug": "olyvky-helcom-z-pertsem-khalapeno-340-h",
+      "name": "Оливки HELCOM з перцем халапеньо, 340 г",
+      "description": "Зелені оливки, фаршировані гострим перцем халапеньо.",
+      "netWeight": "340 г",
+      "unitsPerBox": 6,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": false,
+      "sortOrder": 14,
+      "categoryId": 4,
+      "brandId": 4,
+      "createdAt": "2026-09-24T12:37:36.167Z",
+      "images": [
+        {
+          "url": "/demo/products/olyvky-helcom-z-pertsem-khalapeno-340-h.svg",
+          "alt": "Оливки HELCOM з перцем халапеньо, 340 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Польща"
+        },
+        {
+          "name": "Маса після відціджування",
+          "value": "150 г"
+        },
+        {
+          "name": "Упаковка",
+          "value": "Скляна банка"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "externalId": "00-00005101",
+      "sku": "MESS-WAF-180",
+      "slug": "vafli-messis-z-kremom-180-h",
+      "name": "Вафлі MESSIS з кремом, 180 г",
+      "description": "Хрусткі вафлі з ніжним вершковим кремом. Популярна позиція для роздрібу та кав'ярень.",
+      "netWeight": "180 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": true,
+      "sortOrder": 15,
+      "categoryId": 5,
+      "brandId": 1,
+      "createdAt": "2026-09-24T12:37:36.175Z",
+      "images": [
+        {
+          "url": "/demo/products/vafli-messis-z-kremom-180-h.svg",
+          "alt": "Вафлі MESSIS з кремом, 180 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Польща"
+        },
+        {
+          "name": "Термін придатності",
+          "value": "12 місяців"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "externalId": "00-00005102",
+      "sku": "MESS-WAC-180",
+      "slug": "vafli-messis-shokoladni-180-h",
+      "name": "Вафлі MESSIS шоколадні, 180 г",
+      "description": "Вафлі з шоколадним кремом і насиченим какао-смаком.",
+      "netWeight": "180 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "inStock": true,
+      "isPopular": false,
+      "sortOrder": 16,
+      "categoryId": 5,
+      "brandId": 1,
+      "createdAt": "2026-09-24T12:37:36.182Z",
+      "images": [
+        {
+          "url": "/demo/products/vafli-messis-shokoladni-180-h.svg",
+          "alt": "Вафлі MESSIS шоколадні, 180 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Польща"
+        },
+        {
+          "name": "Термін придатності",
+          "value": "12 місяців"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "externalId": "00-00005103",
+      "sku": "MESS-WAL-180",
+      "slug": "vafli-messis-lymonni-180-h",
+      "name": "Вафлі MESSIS лимонні, 180 г",
+      "description": "Легкі вафлі з освіжаючим лимонним кремом.",
+      "netWeight": "180 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "inStock": false,
+      "isPopular": false,
+      "sortOrder": 17,
+      "categoryId": 5,
+      "brandId": 1,
+      "createdAt": "2026-09-24T12:37:36.191Z",
+      "images": [
+        {
+          "url": "/demo/products/vafli-messis-lymonni-180-h.svg",
+          "alt": "Вафлі MESSIS лимонні, 180 г"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "Країна виробництва",
+          "value": "Польща"
+        },
+        {
+          "name": "Термін придатності",
+          "value": "12 місяців"
+        }
+      ]
+    }
+  ]
+}

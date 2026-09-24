@@ -125,6 +125,12 @@ export const getProduct = cache(async (slug: string) => {
   });
 });
 
+// Сервер рендерить сторінки товарів на запит, тож заздалегідь нічого не генеруємо.
+// Статична збірка (catalog.static.ts) повертає тут усі slug-и зі знімка.
+export async function getAllProductSlugs(): Promise<string[]> {
+  return [];
+}
+
 export async function getSimilarProducts(product: { id: number; categoryId: number | null }, limit = 4) {
   await connection();
   return db.product.findMany({

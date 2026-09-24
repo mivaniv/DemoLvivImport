@@ -2,15 +2,15 @@ import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { CONTACT } from "@/lib/contacts";
 
 export const metadata: Metadata = { title: "Контакти" };
 
-// TODO: замінити на реальні контакти компанії перед показом клієнтам.
 const CONTACTS = [
-  { icon: Phone, label: "Телефон", value: "+380 00 000 00 00", href: "tel:+380000000000" },
-  { icon: Mail, label: "Email", value: "info@lvivimport.com", href: "mailto:info@lvivimport.com" },
-  { icon: MapPin, label: "Склад і офіс", value: "м. Львів" },
-  { icon: Clock, label: "Графік", value: "Пн–Пт, 9:00–18:00" },
+  { icon: Phone, label: "Телефон", value: CONTACT.phone, href: CONTACT.phoneHref },
+  { icon: Mail, label: "Email", value: CONTACT.email, href: `mailto:${CONTACT.email}` },
+  { icon: MapPin, label: "Склад і офіс", value: CONTACT.address },
+  { icon: Clock, label: "Графік", value: CONTACT.hours },
 ];
 
 export default function ContactsPage() {

@@ -1,0 +1,55 @@
+# Статична демоверсія на GitHub Pages: збирається зі знімка каталогу (src/data/catalog-snapshot.json),
+# база даних не потрібна. Публікується після кожного push у main.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          # prisma generate (postinstall) читає prisma.config.ts; з'єднання з базою не відбувається
+          DATABASE_URL: postgresql://build:build@localhost:5432/build
+
+      - name: Build static site
+        run: npx next build
+        env:
+          NEXT_PUBLIC_STATIC_EXPORT: "1"
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+          DATABASE_URL: postgresql://build:build@localhost:5432/build
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
