@@ -8,12 +8,13 @@ datasource db {
 }
 
 model Category {
-  id         Int       @id @default(autoincrement())
-  externalId String?   @unique // ID групи в 1С
-  slug       String    @unique
-  name       String
-  sortOrder  Int       @default(0)
-  products   Product[]
+  id               Int       @id @default(autoincrement())
+  externalId       String?   @unique // ID групи в 1С
+  slug             String    @unique
+  name             String
+  parentExternalId String? // батьківська група в 1С (ієрархія з файлу)
+  sortOrder        Int       @default(0)
+  products         Product[]
 }
 
 model Brand {
@@ -26,32 +27,45 @@ model Brand {
 }
 
 model Product {
-  id          Int                @id @default(autoincrement())
-  externalId  String             @unique // унікальний ID товару в 1С — ключ для імпорту
-  sku         String? // артикул
-  slug        String             @unique
-  name        String
-  description String?
-  netWeight   String? // "280 г", "1 кг"
-  unitsPerBox Int?
-  unit        String             @default("шт.")
-  inStock     Boolean            @default(true)
-  stockQty    Int?
-  isActive    Boolean            @default(true)
-  isPopular   Boolean            @default(false)
-  sortOrder   Int                @default(0)
-  categoryId  Int?
-  category    Category?          @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  brandId     Int?
-  brand       Brand?             @relation(fields: [brandId], references: [id], onDelete: SetNull)
-  images      ProductImage[]
-  attributes  ProductAttribute[]
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  id            Int                @id @default(autoincrement())
+  externalId    String             @unique // унікальний ID товару в 1С — ключ для імпорту
+  sku           String? // артикул
+  barcode       String? // штрихкод
+  slug          String             @unique
+  name          String
+  description   String?
+  netWeight     String? // "280 г", "1 кг"
+  unitsPerBox   Int?
+  unit          String             @default("шт.")
+  inStock       Boolean            @default(true)
+  stockQty      Int?
+  minOrder      Int                @default(1) // «Від N шт»
+  price         Decimal?           @db.Decimal(12, 2) // оптова ціна за одиницю, бачать лише підтверджені клієнти
+  oldPrice      Decimal?           @db.Decimal(12, 2)
+  isActive      Boolean            @default(true)
+  isPopular     Boolean            @default(false)
+  isNew         Boolean            @default(false) // «Новинки»
+  isSale        Boolean            @default(false) // «Акції»
+  lastSeenRunId Int? // останній SYNC-запуск, у файлі якого був товар; основа для прибирання
+  hiddenAt      DateTime? // коли приховано прибиранням; скидається, коли товар повертається у файл
+  sortOrder     Int                @default(0)
+  categoryId    Int?
+  category      Category?          @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  brandId       Int?
+  brand         Brand?             @relation(fields: [brandId], references: [id], onDelete: SetNull)
+  images        ProductImage[]
+  attributes    ProductAttribute[]
+  cartItems     CartItem[]
+  orderItems    OrderItem[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
 
   @@index([categoryId])
   @@index([brandId])
   @@index([isActive, isPopular])
+  @@index([isActive, isNew])
+  @@index([isActive, isSale])
+  @@index([lastSeenRunId])
 }
 
 model ProductImage {
@@ -76,6 +90,11 @@ model ProductAttribute {
   @@index([productId])
 }
 
+enum ImportKind {
+  SYNC // завантаження й оновлення товарів
+  CLEANUP // приховування товарів, яких немає в повному вивантаженні
+}
+
 enum ImportStatus {
   RUNNING
   SUCCESS
@@ -84,14 +103,18 @@ enum ImportStatus {
 
 model ImportRun {
   id          Int          @id @default(autoincrement())
+  kind        ImportKind   @default(SYNC)
   status      ImportStatus @default(RUNNING)
   source      String // шлях до файлу або назва джерела
+  fullExport  Boolean      @default(false) // файл містить увесь каталог, а не лише зміни
+  cleanupDone Boolean      @default(false) // для SYNC: прибирання за цим запуском уже виконано
   startedAt   DateTime     @default(now())
   finishedAt  DateTime?
   total       Int          @default(0)
   created     Int          @default(0)
   updated     Int          @default(0)
   deactivated Int          @default(0)
+  restored    Int          @default(0) // повернуто раніше приховані товари
   errorCount  Int          @default(0)
   errors      Json? // [{ item, message }]
   message     String?
@@ -99,20 +122,173 @@ model ImportRun {
   @@index([startedAt])
 }
 
-enum RequestStatus {
+// ---------- Клієнти та доступ ----------
+
+enum UserRole {
+  CLIENT
+  ADMIN
+}
+
+enum UserStatus {
+  PENDING // заявка на реєстрацію, чекає підтвердження менеджером
+  ACTIVE
+  BLOCKED
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  email        String     @unique // зберігається в нижньому регістрі
+  passwordHash String
+  role         UserRole   @default(CLIENT)
+  status       UserStatus @default(PENDING)
+  company      String
+  edrpou       String? // код ЄДРПОУ / ІПН
+  contactName  String
+  phone        String
+  city         String?
+  managerNote  String? // внутрішня примітка менеджера
+  createdAt    DateTime   @default(now())
+  approvedAt   DateTime?
+  lastLoginAt  DateTime?
+
+  sessions    Session[]
+  resetTokens PasswordResetToken[]
+  cartItems   CartItem[]
+  orders      Order[]
+
+  @@index([status])
+}
+
+// Сесія входу: у cookie — випадковий токен, у базі — лише його SHA-256.
+model Session {
+  id        Int      @id @default(autoincrement())
+  tokenHash String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  id        Int       @id @default(autoincrement())
+  tokenHash String    @unique
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+}
+
+// ---------- Кошик і замовлення ----------
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int // у штуках
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, productId])
+}
+
+enum OrderStatus {
   NEW
-  IN_PROGRESS
+  CONFIRMED
+  SHIPPED
+  DONE
+  CANCELLED
+}
+
+enum DeliveryMethod {
+  OWN_LOGISTICS // власна логістика Львівімпорт
+  NOVA_POSHTA
+  DELIVERY
+  MEEST
+  PICKUP // самовивіз зі складу
+}
+
+model Order {
+  id             Int            @id @default(autoincrement())
+  userId         Int
+  user           User           @relation(fields: [userId], references: [id], onDelete: Restrict)
+  status         OrderStatus    @default(NEW)
+  deliveryMethod DeliveryMethod
+  deliveryCity   String?
+  deliveryPoint  String? // адреса або номер відділення
+  recipientName  String
+  recipientPhone String
+  comment        String?
+  total          Decimal        @db.Decimal(14, 2)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  items          OrderItem[]
+
+  @@index([userId, createdAt])
+  @@index([status])
+}
+
+// Рядок замовлення зберігає знімок товару й ціни на момент оформлення.
+model OrderItem {
+  id         Int      @id @default(autoincrement())
+  orderId    Int
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  Int?
+  product    Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  externalId String
+  sku        String?
+  name       String
+  quantity   Int
+  price      Decimal  @db.Decimal(12, 2)
+  sum        Decimal  @db.Decimal(14, 2)
+}
+
+// ---------- Відгуки та звернення ----------
+
+enum ReviewStatus {
+  PENDING
+  PUBLISHED
+  REJECTED
+}
+
+model Review {
+  id          Int          @id @default(autoincrement())
+  author      String
+  email       String?
+  rating      Int // 1..5
+  text        String
+  reply       String? // відповідь компанії
+  status      ReviewStatus @default(PENDING)
+  createdAt   DateTime     @default(now())
+  publishedAt DateTime?
+
+  @@index([status, createdAt])
+}
+
+enum InquiryKind {
+  CALLBACK // «Замовити дзвінок» / «Отримати консультацію»
+  CONTACT // форма зворотного зв'язку на сторінці контактів
+}
+
+enum InquiryStatus {
+  NEW
   DONE
 }
 
-model PriceRequest {
-  id          Int           @id @default(autoincrement())
-  status      RequestStatus @default(NEW)
-  company     String
-  contactName String
-  phone       String
-  email       String?
-  comment     String?
-  items       Json // [{ productId, externalId, name, quantity }]
-  createdAt   DateTime      @default(now())
+model Inquiry {
+  id           Int           @id @default(autoincrement())
+  kind         InquiryKind
+  status       InquiryStatus @default(NEW)
+  name         String
+  phone        String?
+  email        String?
+  organization String?
+  position     String?
+  message      String?
+  page         String? // з якої сторінки звернулися
+  createdAt    DateTime      @default(now())
+
+  @@index([status, createdAt])
 }

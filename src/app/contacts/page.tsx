@@ -1,53 +1,80 @@
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { ContactForm } from "@/components/contacts/ContactForm";
+import { SocialLinks } from "@/components/layout/SocialLinks";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { CONTACT } from "@/lib/contacts";
+import { COMPANY, DEPARTMENTS, HOURS, OFFICE, phoneHref, WAREHOUSE } from "@/content/company";
 
 export const metadata: Metadata = { title: "Контакти" };
-
-const CONTACTS = [
-  { icon: Phone, label: "Телефон", value: CONTACT.phone, href: CONTACT.phoneHref },
-  { icon: Mail, label: "Email", value: CONTACT.email, href: `mailto:${CONTACT.email}` },
-  { icon: MapPin, label: "Склад і офіс", value: CONTACT.address },
-  { icon: Clock, label: "Графік", value: CONTACT.hours },
-];
 
 export default function ContactsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
       <Breadcrumbs items={[{ label: "Головна", href: "/" }, { label: "Контакти" }]} />
       <h1 className="mt-2 text-2xl font-bold sm:text-3xl">Контакти</h1>
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1fr]">
-        <ul className="grid gap-4 sm:grid-cols-2">
-          {CONTACTS.map(({ icon: Icon, label, value, href }) => (
-            <li key={label} className="rounded-2xl border border-line bg-white p-5">
-              <Icon className="size-6 text-brand-600" strokeWidth={1.6} />
-              <p className="mt-3 text-xs text-muted">{label}</p>
-              {href ? (
-                <a href={href} className="font-semibold hover:text-brand-600">
-                  {value}
-                </a>
-              ) : (
-                <p className="font-semibold">{value}</p>
-              )}
-            </li>
-          ))}
-        </ul>
-        <div className="rounded-2xl bg-gradient-to-br from-navy-900 to-navy-700 p-7 text-white">
-          <h2 className="text-xl font-bold">Потрібна комерційна пропозиція?</h2>
-          <p className="mt-2 text-sm text-white/75">
-            Додайте товари до заявки в каталозі — менеджер надішле ціни та умови поставки з урахуванням вашого обсягу.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/catalog" className="inline-flex h-11 items-center rounded-xl bg-brand-600 px-5 text-sm font-semibold hover:bg-brand-500">
-              До каталогу
-            </Link>
-            <Link href="/request" className="inline-flex h-11 items-center rounded-xl border border-white/30 px-5 text-sm font-semibold hover:bg-white/10">
-              Моя заявка
-            </Link>
+
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
+        {[OFFICE, WAREHOUSE].map((c) => (
+          <div key={c.title} className="space-y-3 rounded-2xl bg-white p-6 ring-1 ring-line">
+            <h2 className="text-lg font-bold">{c.title}:</h2>
+            <a href={COMPANY.mapUrl} target="_blank" rel="noopener noreferrer" className="flex gap-2 text-sm hover:text-brand-600">
+              <MapPin className="mt-0.5 size-4 shrink-0 text-brand-600" /> {COMPANY.address}
+            </a>
+            <a href={phoneHref(c.phone)} className="flex gap-2 text-sm font-semibold hover:text-brand-600">
+              <Phone className="mt-0.5 size-4 shrink-0 text-brand-600" /> {c.phone}
+            </a>
+            <a href={`mailto:${c.email}`} className="flex gap-2 text-sm hover:text-brand-600">
+              <Mail className="mt-0.5 size-4 shrink-0 text-brand-600" /> {c.email}
+            </a>
           </div>
+        ))}
+        <div className="space-y-3 rounded-2xl bg-navy-900 p-6 text-white">
+          <h2 className="text-lg font-bold">Графік роботи:</h2>
+          {HOURS.map((h) => (
+            <p key={h} className="flex gap-2 text-sm text-white/85">
+              <Clock className="mt-0.5 size-4 shrink-0" /> {h}
+            </p>
+          ))}
+          <SocialLinks className="pt-2 text-white/80" />
         </div>
+      </div>
+
+      <section className="mt-10">
+        <h2 className="text-xl font-bold">Команда:</h2>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {DEPARTMENTS.map((d) => (
+            <div key={d.title} className="rounded-2xl bg-white p-5 ring-1 ring-line">
+              <p className="font-semibold">{d.title}:</p>
+              <a href={d.phoneHref} className="mt-2 flex items-center gap-2 text-sm hover:text-brand-600">
+                <Phone className="size-4 text-brand-600" /> {d.phone}
+              </a>
+              <a href={`mailto:${d.email}`} className="mt-1 flex items-center gap-2 text-sm hover:text-brand-600">
+                <Mail className="size-4 text-brand-600" /> {d.email}
+              </a>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="mt-10 grid gap-6 lg:grid-cols-2">
+        <section>
+          <h2 className="text-xl font-bold">Як нас знайти</h2>
+          <div className="mt-4 aspect-[4/3] overflow-hidden rounded-2xl ring-1 ring-line">
+            <iframe
+              title="Львівімпорт на мапі"
+              src={COMPANY.mapEmbed}
+              className="size-full border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        </section>
+        <section>
+          <h2 className="text-xl font-bold">Зворотній зв&apos;язок</h2>
+          <div className="mt-4 rounded-2xl bg-white p-6 ring-1 ring-line sm:p-8">
+            <ContactForm />
+          </div>
+        </section>
       </div>
     </div>
   );

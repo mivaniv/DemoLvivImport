@@ -9,66 +9,85 @@ export const metadata: Metadata = { title: "Адмінпанель", robots: { i
 const fmt = new Intl.DateTimeFormat("uk-UA", { dateStyle: "short", timeStyle: "medium", timeZone: "Europe/Kyiv" });
 
 type ImportErrorRow = { item: string; message: string };
-type RequestLine = { name: string; sku?: string | null; quantity: number };
 
 export default async function AdminPage() {
   await connection();
-  const [runs, counts, requests] = await Promise.all([
+  const [runs, counts] = await Promise.all([
     db.importRun.findMany({ orderBy: { startedAt: "desc" }, take: 15 }),
     Promise.all([
       db.product.count({ where: { isActive: true } }),
       db.product.count({ where: { isActive: false } }),
       db.product.count({ where: { isActive: true, images: { none: {} } } }),
-      db.priceRequest.count({ where: { status: "NEW" } }),
+      db.order.count({ where: { status: "NEW" } }),
     ]),
-    db.priceRequest.findMany({ orderBy: { createdAt: "desc" }, take: 10 }),
   ]);
-  const [active, hidden, noPhoto, newRequests] = counts;
-  const last = runs[0];
-  const lastSuccess = runs.find((r) => r.status === "SUCCESS");
+  const [active, hidden, noPhoto, newOrders] = counts;
+  const [lastSync, lastSyncOk, lastCleanup] = await Promise.all([
+    db.importRun.findFirst({ where: { kind: "SYNC" }, orderBy: { startedAt: "desc" } }),
+    db.importRun.findFirst({ where: { kind: "SYNC", status: "SUCCESS" }, orderBy: { startedAt: "desc" } }),
+    db.importRun.findFirst({ where: { kind: "CLEANUP" }, orderBy: { startedAt: "desc" } }),
+  ]);
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-bold">Адмінпанель</h1>
+    <div className="space-y-8">
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat label="Товарів на сайті" value={active} />
         <Stat label="Приховано (немає у 1С)" value={hidden} />
         <Stat label="Без фото" value={noPhoto} warn={noPhoto > 0} />
-        <Stat label="Нові заявки" value={newRequests} warn={newRequests > 0} />
+        <Stat label="Нові замовлення" value={newOrders} warn={newOrders > 0} />
       </div>
 
       <section className="rounded-2xl border border-line bg-white p-5 sm:p-6">
         <h2 className="text-lg font-bold">Імпорт з 1С</h2>
-        {last ? (
-          <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm">
-            <StatusBadge status={last.status} />
-            <span>
-              Останній запуск: <b>{fmt.format(last.startedAt)}</b>
-            </span>
-            <span>
-              Останній успішний: <b>{lastSuccess ? fmt.format(lastSuccess.startedAt) : "—"}</b>
-            </span>
-            {last.message && <span className="text-muted">{last.message}</span>}
+        {lastSync ? (
+          <div className="mt-4 grid gap-4 text-sm md:grid-cols-2">
+            <div className="space-y-1.5 rounded-xl bg-canvas p-4">
+              <p className="flex items-center gap-2 font-semibold">
+                Синхронізація <StatusBadge status={lastSync.status} />
+              </p>
+              <p>
+                Останній запуск: <b>{fmt.format(lastSync.startedAt)}</b>
+              </p>
+              <p>
+                Останній успішний: <b>{lastSyncOk ? fmt.format(lastSyncOk.startedAt) : "—"}</b>
+              </p>
+              {lastSync.message && <p className="text-muted">{lastSync.message}</p>}
+            </div>
+            <div className="space-y-1.5 rounded-xl bg-canvas p-4">
+              <p className="flex items-center gap-2 font-semibold">
+                Прибирання {lastCleanup ? <StatusBadge status={lastCleanup.status} /> : <span className="text-muted">ще не було</span>}
+              </p>
+              {lastCleanup && (
+                <>
+                  <p>
+                    Останній запуск: <b>{fmt.format(lastCleanup.startedAt)}</b>, приховано: <b>{lastCleanup.deactivated}</b>
+                  </p>
+                  {lastCleanup.message && <p className="text-muted">{lastCleanup.message}</p>}
+                </>
+              )}
+            </div>
           </div>
         ) : (
           <p className="mt-3 text-sm text-muted">
-            Імпорт ще не запускався. Команда: <code className="rounded bg-canvas px-1.5 py-0.5">npm run import -- шлях/до/файлу.json</code>
+            Імпорт ще не запускався. Команда: <code className="rounded bg-canvas px-1.5 py-0.5">npm run import:daily</code>
           </p>
         )}
 
         {runs.length > 0 && (
           <div className="mt-5 overflow-x-auto">
-            <table className="w-full min-w-[720px] text-left text-sm">
+            <table className="w-full min-w-[960px] text-left text-sm">
               <thead className="border-b border-line text-xs text-muted">
                 <tr>
                   <th className="py-2 pr-4 font-medium">#</th>
                   <th className="py-2 pr-4 font-medium">Початок</th>
+                  <th className="py-2 pr-4 font-medium">Задача</th>
                   <th className="py-2 pr-4 font-medium">Статус</th>
-                  <th className="py-2 pr-4 font-medium">Файл</th>
+                  <th className="py-2 pr-4 font-medium">Джерело</th>
                   <th className="py-2 pr-4 text-right font-medium">У файлі</th>
                   <th className="py-2 pr-4 text-right font-medium">Нових</th>
                   <th className="py-2 pr-4 text-right font-medium">Оновлено</th>
+                  <th className="py-2 pr-4 text-right font-medium">Відновлено</th>
                   <th className="py-2 pr-4 text-right font-medium">Приховано</th>
                   <th className="py-2 font-medium">Помилки</th>
                 </tr>
@@ -80,14 +99,23 @@ export default async function AdminPage() {
                     <tr key={r.id} className="align-top">
                       <td className="py-2.5 pr-4 text-muted">{r.id}</td>
                       <td className="whitespace-nowrap py-2.5 pr-4">{fmt.format(r.startedAt)}</td>
+                      <td className="whitespace-nowrap py-2.5 pr-4">
+                        {r.kind === "SYNC" ? "Синхронізація" : "Прибирання"}
+                        {r.kind === "SYNC" && r.status === "SUCCESS" && (
+                          <span className="block text-xs text-muted">{r.fullExport ? "повний каталог" : "лише зміни"}</span>
+                        )}
+                      </td>
                       <td className="py-2.5 pr-4">
                         <StatusBadge status={r.status} />
                       </td>
-                      <td className="py-2.5 pr-4">{r.source}</td>
-                      <td className="py-2.5 pr-4 text-right">{r.total}</td>
-                      <td className="py-2.5 pr-4 text-right">{r.created}</td>
-                      <td className="py-2.5 pr-4 text-right">{r.updated}</td>
-                      <td className="py-2.5 pr-4 text-right">{r.deactivated}</td>
+                      <td className="max-w-56 truncate py-2.5 pr-4" title={r.source}>
+                        {r.source}
+                      </td>
+                      <td className="py-2.5 pr-4 text-right">{r.kind === "SYNC" ? r.total : "—"}</td>
+                      <td className="py-2.5 pr-4 text-right">{r.kind === "SYNC" ? r.created : "—"}</td>
+                      <td className="py-2.5 pr-4 text-right">{r.kind === "SYNC" ? r.updated : "—"}</td>
+                      <td className="py-2.5 pr-4 text-right">{r.kind === "SYNC" ? r.restored : "—"}</td>
+                      <td className="py-2.5 pr-4 text-right">{r.kind === "CLEANUP" ? r.deactivated : "—"}</td>
                       <td className="py-2.5">
                         {r.message && <p className="mb-1 text-xs text-muted">{r.message}</p>}
                         {errors.length > 0 && (
@@ -112,38 +140,6 @@ export default async function AdminPage() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-line bg-white p-5 sm:p-6">
-        <h2 className="text-lg font-bold">Останні заявки</h2>
-        {requests.length === 0 ? (
-          <p className="mt-3 text-sm text-muted">Заявок поки немає.</p>
-        ) : (
-          <ul className="mt-4 divide-y divide-line">
-            {requests.map((r) => (
-              <li key={r.id} className="grid gap-2 py-3 text-sm sm:grid-cols-[180px_1fr_1.4fr]">
-                <div>
-                  <p className="font-semibold">№{r.id}</p>
-                  <p className="text-xs text-muted">{fmt.format(r.createdAt)}</p>
-                </div>
-                <div>
-                  <p className="font-medium">{r.company}</p>
-                  <p className="text-xs text-muted">
-                    {r.contactName} · <a href={`tel:${r.phone}`} className="hover:text-brand-600">{r.phone}</a>
-                    {r.email && <> · <a href={`mailto:${r.email}`} className="hover:text-brand-600">{r.email}</a></>}
-                  </p>
-                  {r.comment && <p className="mt-1 text-xs italic text-muted">{r.comment}</p>}
-                </div>
-                <ul className="text-xs">
-                  {(r.items as RequestLine[]).map((l, i) => (
-                    <li key={i}>
-                      {l.name} {l.sku && <span className="text-muted">({l.sku})</span>} — <b>{l.quantity} шт.</b>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
     </div>
   );
 }

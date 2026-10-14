@@ -1,10 +1,12 @@
 import { connection } from "next/server";
 import { cache } from "react";
 import type { Prisma } from "@/generated/prisma/client";
-import type { CatalogState, SortKey } from "@/lib/catalog-params";
+import { getViewer } from "@/lib/auth/session";
+import { PRICE_SORTS, type CatalogState, type Collection, type SortKey } from "@/lib/catalog-params";
 import { db } from "@/lib/db";
 
 // Каталог читається з бази на кожен запит: після нічного імпорту зміни видно одразу.
+// Ціни додаються ЛИШЕ для підтверджених клієнтів: для гостей їх немає ні в HTML, ні в даних для браузера.
 
 const cardSelect = {
   id: true,
@@ -14,36 +16,68 @@ const cardSelect = {
   netWeight: true,
   unitsPerBox: true,
   unit: true,
+  minOrder: true,
   inStock: true,
+  isPopular: true,
+  isNew: true,
+  isSale: true,
+  price: true,
+  oldPrice: true,
   brand: { select: { name: true, slug: true } },
   images: { select: { url: true, alt: true }, orderBy: { sortOrder: "asc" }, take: 1 },
 } satisfies Prisma.ProductSelect;
 
-export type ProductCardData = Prisma.ProductGetPayload<{ select: typeof cardSelect }>;
+type CardRow = Prisma.ProductGetPayload<{ select: typeof cardSelect }>;
+
+export function toCard(row: CardRow, canOrder: boolean) {
+  const { price, oldPrice, ...rest } = row;
+  return {
+    ...rest,
+    price: canOrder && price !== null ? Number(price) : null,
+    oldPrice: canOrder && oldPrice !== null ? Number(oldPrice) : null,
+  };
+}
+
+export type ProductCardData = ReturnType<typeof toCard>;
 
 const ORDER_BY: Record<SortKey, Prisma.ProductOrderByWithRelationInput[]> = {
+  default: [{ sortOrder: "asc" }],
   popular: [{ isPopular: "desc" }, { sortOrder: "asc" }],
+  new: [{ createdAt: "desc" }, { sortOrder: "asc" }],
+  price_asc: [{ price: { sort: "asc", nulls: "last" } }, { sortOrder: "asc" }],
+  price_desc: [{ price: { sort: "desc", nulls: "last" } }, { sortOrder: "asc" }],
   name_asc: [{ name: "asc" }],
-  name_desc: [{ name: "desc" }],
-  new: [{ createdAt: "desc" }],
 };
 
-export const PAGE_SIZE = 12;
+const COLLECTION_WHERE: Record<Collection, Prisma.ProductWhereInput> = {
+  "": {},
+  sale: { isSale: true },
+  new: { isNew: true },
+  popular: { isPopular: true },
+};
 
-type CatalogFilters = Pick<CatalogState, "q" | "category" | "brands" | "inStock" | "sort" | "page">;
+type CatalogFilters = Omit<CatalogState, "view">;
 
-function buildWhere(f: CatalogFilters): Prisma.ProductWhereInput {
-  const words = (f.q ?? "").trim().split(/\s+/).filter(Boolean).slice(0, 8);
+function buildWhere(f: CatalogFilters, canOrder: boolean): Prisma.ProductWhereInput {
+  const words = f.q.trim().split(/\s+/).filter(Boolean).slice(0, 8);
   return {
     isActive: true,
+    ...COLLECTION_WHERE[f.collection],
     ...(f.category && { category: { slug: f.category } }),
     ...(f.brands.length > 0 && { brand: { slug: { in: f.brands } } }),
     ...(f.inStock && { inStock: true }),
+    ...(f.box.length > 0 && { unitsPerBox: { in: f.box } }),
+    // Фільтр за ціною діє лише для тих, хто бачить ціни
+    ...(canOrder &&
+      (f.priceMin !== undefined || f.priceMax !== undefined) && {
+        price: { ...(f.priceMin !== undefined && { gte: f.priceMin }), ...(f.priceMax !== undefined && { lte: f.priceMax }) },
+      }),
     // Кожне слово запиту має знайтися хоча б в одному з полів.
     AND: words.map((w) => ({
       OR: [
         { name: { contains: w, mode: "insensitive" } },
         { sku: { contains: w, mode: "insensitive" } },
+        { barcode: { contains: w } },
         { brand: { name: { contains: w, mode: "insensitive" } } },
         { category: { name: { contains: w, mode: "insensitive" } } },
       ],
@@ -53,23 +87,43 @@ function buildWhere(f: CatalogFilters): Prisma.ProductWhereInput {
 
 export async function searchProducts(f: CatalogFilters) {
   await connection();
-  const where = buildWhere(f);
-  const [items, total] = await Promise.all([
+  const canOrder = (await getViewer())?.canOrder ?? false;
+  const where = buildWhere(f, canOrder);
+  const sort = !canOrder && PRICE_SORTS.includes(f.sort) ? "default" : f.sort;
+  const [rows, total] = await Promise.all([
     db.product.findMany({
       where,
       select: cardSelect,
-      orderBy: ORDER_BY[f.sort],
-      skip: (f.page - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
+      orderBy: ORDER_BY[sort],
+      skip: (f.page - 1) * f.perPage,
+      take: f.perPage * f.count,
     }),
     db.product.count({ where }),
   ]);
-  return { items, total, pages: Math.max(1, Math.ceil(total / PAGE_SIZE)) };
+  return {
+    items: rows.map((r) => toCard(r, canOrder)),
+    total,
+    pages: Math.max(1, Math.ceil(total / f.perPage)),
+  };
+}
+
+// Значення «кількість у ящику» для фільтра (як на lvivimport.com)
+export async function getBoxSizes(collection: Collection = "") {
+  await connection();
+  const rows = await db.product.groupBy({
+    by: ["unitsPerBox"],
+    where: { isActive: true, unitsPerBox: { not: null }, ...COLLECTION_WHERE[collection] },
+    _count: true,
+    orderBy: { unitsPerBox: "asc" },
+  });
+  return rows.map((r) => ({ value: r.unitsPerBox!, count: r._count }));
 }
 
 export async function getCategories() {
   await connection();
   return db.category.findMany({
+    // Батьківські групи з 1С без власних товарів не показуємо — інтерфейс плаский.
+    where: { products: { some: { isActive: true } } },
     orderBy: { sortOrder: "asc" },
     select: {
       id: true,
@@ -90,6 +144,7 @@ export async function getCategories() {
 export async function getBrands() {
   await connection();
   return db.brand.findMany({
+    where: { products: { some: { isActive: true } } },
     orderBy: { name: "asc" },
     select: {
       id: true,
@@ -101,20 +156,35 @@ export async function getBrands() {
   });
 }
 
-export async function getPopularProducts(limit = 5) {
+// Добірка для головної. Якщо позначених товарів замало (з 1С позначки можуть не приходити),
+// «Популярні» доповнюються першими товарами за порядком у вивантаженні.
+export async function getCollectionProducts(collection: Exclude<Collection, "">, limit: number) {
   await connection();
-  return db.product.findMany({
-    where: { isActive: true, isPopular: true },
-    orderBy: { sortOrder: "asc" },
+  const canOrder = (await getViewer())?.canOrder ?? false;
+  const rows = await db.product.findMany({
+    where: { isActive: true, ...COLLECTION_WHERE[collection] },
+    orderBy: ORDER_BY[collection === "new" ? "new" : "default"],
     take: limit,
     select: cardSelect,
   });
+  if (collection === "popular" && rows.length < limit) {
+    rows.push(
+      ...(await db.product.findMany({
+        where: { isActive: true, isPopular: false },
+        orderBy: ORDER_BY.default,
+        take: limit - rows.length,
+        select: cardSelect,
+      })),
+    );
+  }
+  return rows.map((r) => toCard(r, canOrder));
 }
 
 // cache: generateMetadata і сторінка товару в одному запиті ділять один результат.
 export const getProduct = cache(async (slug: string) => {
   await connection();
-  return db.product.findFirst({
+  const canOrder = (await getViewer())?.canOrder ?? false;
+  const product = await db.product.findFirst({
     where: { slug, isActive: true },
     include: {
       brand: true,
@@ -123,6 +193,13 @@ export const getProduct = cache(async (slug: string) => {
       attributes: { orderBy: { sortOrder: "asc" } },
     },
   });
+  if (!product) return null;
+  const { price, oldPrice, ...rest } = product;
+  return {
+    ...rest,
+    price: canOrder && price !== null ? Number(price) : null,
+    oldPrice: canOrder && oldPrice !== null ? Number(oldPrice) : null,
+  };
 });
 
 // Сервер рендерить сторінки товарів на запит, тож заздалегідь нічого не генеруємо.
@@ -133,10 +210,12 @@ export async function getAllProductSlugs(): Promise<string[]> {
 
 export async function getSimilarProducts(product: { id: number; categoryId: number | null }, limit = 4) {
   await connection();
-  return db.product.findMany({
+  const canOrder = (await getViewer())?.canOrder ?? false;
+  const rows = await db.product.findMany({
     where: { isActive: true, id: { not: product.id }, categoryId: product.categoryId },
     orderBy: [{ isPopular: "desc" }, { sortOrder: "asc" }],
     take: limit,
     select: cardSelect,
   });
+  return rows.map((r) => toCard(r, canOrder));
 }

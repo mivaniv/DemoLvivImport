@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Тестове YML-вивантаження. Фото посилаються на локальний сервер (npx serve data/1c-sample -l 4100). -->
+<yml_catalog date="2026-10-07 05:00">
+  <shop>
+    <name>Lviv Import</name>
+    <categories>
+      <category id="10">Бакалія</category>
+      <category id="11" parentId="10">Макаронні вироби</category>
+      <category id="12" parentId="10">Соуси, джеми, намазки</category>
+      <category id="20">Кава та чай</category>
+    </categories>
+    <offers>
+      <offer id="YML-0001" available="true">
+        <name>Макарони Barilla Penne Rigate, 500 г</name>
+        <vendor>Barilla</vendor>
+        <vendorCode>BAR-PEN-500</vendorCode>
+        <price>79.90</price>
+        <oldprice>86.50</oldprice>
+        <barcode>8076809513753</barcode>
+        <categoryId>11</categoryId>
+        <picture>http://localhost:4100/images/penne.svg</picture>
+        <picture>http://localhost:4100/images/penne-2.svg</picture>
+        <description><![CDATA[<p>Класичні пере з <b>рифленою</b> поверхнею.</p><p>Час варіння&nbsp;— 11 хв.</p>]]></description>
+        <param name="Вага нетто" unit="г">500</param>
+        <param name="Кількість в упаковці">12 шт</param>
+        <param name="Країна виробництва">Італія</param>
+        <param name="Новинка">так</param>
+        <param name="Мінімальне замовлення">6</param>
+        <count>240</count>
+      </offer>
+      <offer id="YML-0002" available="true">
+        <name>Джем MESSIS Полуниця, 280 г</name>
+        <vendorCode>MESS-STR-280</vendorCode>
+        <price>68,40</price>
+        <categoryId>12</categoryId>
+        <picture>http://localhost:4100/images/strawberry.svg</picture>
+        <description>Насичений смак стиглої полуниці.</description>
+        <param name="Торгова марка">MESSIS</param>
+        <param name="Вага">280 г</param>
+        <param name="Кількість у коробці">9</param>
+      </offer>
+      <offer id="YML-0003" available="false">
+        <name>Кава VIVAVO Caffè Crema, 1 кг</name>
+        <vendor>VIVAVO</vendor>
+        <vendorCode>VIV-CRM-1000</vendorCode>
+        <categoryId>20</categoryId>
+        <picture>http://localhost:4100/images/coffee.svg</picture>
+        <param name="Тип">Зерно</param>
+        <count>0</count>
+      </offer>
+      <offer id="YML-0004" type="vendor.model" available="true">
+        <typePrefix>Оливки</typePrefix>
+        <vendor>HELCOM</vendor>
+        <model>зелені без кісточки, 340 г</model>
+        <categoryId>12</categoryId>
+        <param name="Вага нетто">340 г</param>
+      </offer>
+    </offers>
+  </shop>
+</yml_catalog>

@@ -18,6 +18,13 @@
   --color-line: #e3e9f3;
   --color-canvas: #f4f7fc;
   --color-gold: #f5b82e;
+
+  --animate-marquee: marquee 60s linear infinite;
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }
 
 body {

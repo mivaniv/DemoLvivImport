@@ -14,22 +14,31 @@
     "typecheck": "tsc --noEmit",
     "postinstall": "prisma generate",
     "snapshot": "tsx scripts/export-snapshot.ts",
-    "build:static": "cross-env NEXT_PUBLIC_STATIC_EXPORT=1 next build"
+    "build:static": "cross-env NEXT_PUBLIC_STATIC_EXPORT=1 next build",
+    "import:sync": "tsx scripts/import-sync.ts",
+    "import:cleanup": "tsx scripts/import-cleanup.ts",
+    "import:daily": "tsx scripts/import-daily.ts",
+    "test": "vitest run",
+    "admin:create": "tsx scripts/create-admin.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",
     "@prisma/client": "7.10.0",
     "clsx": "^2.1.1",
+    "fast-xml-parser": "^5.11.2",
     "lucide-react": "^1.48.0",
     "next": "16.3.6",
+    "nodemailer": "^10.0.16",
     "pg": "^8.23.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "server-only": "^0.0.1",
     "zod": "^4.6.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^24.19.1",
+    "@types/nodemailer": "^8.0.2",
     "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -40,6 +49,7 @@
     "prisma": "7.10.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^5.0.3"
   }
 }

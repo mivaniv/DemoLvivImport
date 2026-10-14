@@ -2,10 +2,14 @@ import { ArrowRight, BadgeCheck, Building2, Handshake, Headset, Store, Truck, Us
 import Image from "next/image";
 import Link from "next/link";
 import { HeroArt } from "@/components/home/HeroArt";
+import { LogoMarquee } from "@/components/home/LogoMarquee";
 import { ProductCard } from "@/components/product/ProductCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { CLIENTS, HERO_TAGLINE, HOME_ABOUT } from "@/content/company";
 import { asset } from "@/lib/asset";
-import { getCategories, getPopularProducts } from "@/lib/catalog";
+import { getViewer } from "@/lib/auth/session";
+import { PARTNER_CTA } from "@/lib/features";
+import { getCategories, getCollectionProducts, type ProductCardData } from "@/lib/catalog";
 
 const FEATURES = [
   { icon: BadgeCheck, label: "Оригінальні бренди" },
@@ -22,7 +26,14 @@ const SEGMENTS = [
 ];
 
 export default async function HomePage() {
-  const [categories, popular] = await Promise.all([getCategories(), getPopularProducts(5)]);
+  const [viewer, categories, popular, fresh, sale] = await Promise.all([
+    getViewer(),
+    getCategories(),
+    getCollectionProducts("popular", 10),
+    getCollectionProducts("new", 5),
+    getCollectionProducts("sale", 5),
+  ]);
+  const canOrder = viewer?.canOrder ?? false;
 
   return (
     <>
@@ -34,9 +45,7 @@ export default async function HomePage() {
               <br />
               Одне <span className="text-brand-600">замовлення.</span>
             </h1>
-            <p className="mt-5 max-w-md text-muted sm:text-lg">
-              Європейські продукти від перевірених брендів для роздрібної торгівлі, HoReCa та дистриб&apos;юторів.
-            </p>
+            <p className="mt-5 max-w-md text-muted sm:text-lg">{HERO_TAGLINE}.</p>
             <Link
               href="/catalog"
               className="mt-7 inline-flex h-12 items-center gap-2 rounded-xl bg-brand-600 px-6 font-semibold text-white shadow-lg shadow-brand-600/25 transition hover:bg-brand-700"
@@ -58,8 +67,39 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <ProductRow title="Популярні позиції" href="/popular" products={popular} canOrder={canOrder} />
+      <ProductRow title="Новинки" href="/new-products" products={fresh} canOrder={canOrder} />
+      <ProductRow title="Акційні позиції" href="/promo" products={sale} canOrder={canOrder} />
+
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-        <SectionHeader title="Популярні категорії" href="/catalog" linkLabel="Усі категорії" />
+        <div className="grid gap-8 rounded-3xl bg-white p-6 ring-1 ring-line sm:p-10 lg:grid-cols-[1fr_1.2fr]">
+          <div>
+            <h2 className="text-2xl font-bold sm:text-3xl">Про нас</h2>
+            <p className="mt-2 font-script text-2xl text-brand-600">Більше смаку в бізнесі</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/about" className="inline-flex h-11 items-center gap-2 rounded-xl bg-brand-600 px-5 text-sm font-semibold text-white hover:bg-brand-700">
+                Детальніше <ArrowRight className="size-4" />
+              </Link>
+              <Link href="/catalog" className="inline-flex h-11 items-center rounded-xl border border-brand-600 px-5 text-sm font-semibold text-brand-600 hover:bg-brand-50">
+                До каталогу
+              </Link>
+            </div>
+          </div>
+          <div className="space-y-4 text-sm leading-relaxed text-ink/80">
+            {HOME_ABOUT.map((p) => (
+              <p key={p.slice(0, 20)}>{p}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+        <SectionHeader title="Наші партнери" href="/about" linkLabel="Про компанію" />
+        <LogoMarquee logos={CLIENTS} />
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+        <SectionHeader title="Категорії товарів" href="/catalog" linkLabel="Увесь каталог" />
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
           {categories.map((c) => (
             <Link
@@ -88,15 +128,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-        <SectionHeader title="Популярні товари" href="/catalog" linkLabel="Усі товари" />
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
-          {popular.map((p) => (
-            <ProductCard key={p.id} product={p} variant="compact" />
-          ))}
-        </div>
-      </section>
-
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
         <div className="relative grid overflow-hidden rounded-3xl bg-gradient-to-r from-navy-900 via-navy-800 to-navy-700 text-white lg:grid-cols-[1.1fr_0.9fr_0.8fr]">
           <div className="relative z-10 p-7 sm:p-10">
@@ -109,10 +140,10 @@ export default async function HomePage() {
               Гнучкі умови співпраці та індивідуальний підхід до кожного клієнта.
             </p>
             <Link
-              href="/business"
+              href={PARTNER_CTA.href}
               className="mt-6 inline-flex h-11 items-center gap-2 rounded-xl bg-brand-600 px-5 text-sm font-semibold transition hover:bg-brand-500"
             >
-              Для бізнесу <ArrowRight className="size-4" />
+              {PARTNER_CTA.label} <ArrowRight className="size-4" />
             </Link>
           </div>
           <WarehouseArt />
@@ -127,6 +158,20 @@ export default async function HomePage() {
         </div>
       </section>
     </>
+  );
+}
+
+function ProductRow({ title, href, products, canOrder }: { title: string; href: string; products: ProductCardData[]; canOrder: boolean }) {
+  if (products.length === 0) return null;
+  return (
+    <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+      <SectionHeader title={title} href={href} linkLabel="Дивитися всі" />
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
+        {products.map((p) => (
+          <ProductCard key={p.id} product={p} variant="compact" canOrder={canOrder} />
+        ))}
+      </div>
+    </section>
   );
 }
 

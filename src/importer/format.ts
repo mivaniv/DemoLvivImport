@@ -10,6 +10,7 @@ z.config(z.locales.uk());
 export const categorySchema = z.object({
   id: z.string().min(1),
   name: z.string().trim().min(1),
+  parentId: z.string().optional(),
   sortOrder: z.number().int().optional(),
 });
 
@@ -26,6 +27,13 @@ export const productSchema = z.object({
   inStock: z.boolean().optional(),
   stockQty: z.number().int().min(0).optional(),
   popular: z.boolean().optional(),
+  isNew: z.boolean().optional(),
+  sale: z.boolean().optional(),
+  barcode: z.string().trim().optional(),
+  minOrder: z.number().int().positive().optional(),
+  // Оптова ціна за одиницю, грн. Показується лише підтвердженим клієнтам.
+  price: z.number().nonnegative().optional(),
+  oldPrice: z.number().nonnegative().optional(),
   attributes: z.array(z.object({ name: z.string().min(1), value: z.string() })).optional(),
   // Шляхи відносно файлу вивантаження або абсолютні http(s)-адреси.
   // Відсутнє поле — фото не змінюються; порожній масив — фото видаляються.

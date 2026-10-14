@@ -2,20 +2,21 @@
 
 import { useSearchParams } from "next/navigation";
 import { CatalogView } from "@/components/catalog/CatalogView";
-import { parseCatalogParams } from "@/lib/catalog-params";
-import { getBrandsSync, getCategoriesSync, PAGE_SIZE, querySnapshot } from "@/lib/catalog.static";
+import { parseCatalogParams, type Collection } from "@/lib/catalog-params";
+import { getBoxSizesSync, getBrandsSync, getCategoriesSync, querySnapshot } from "@/lib/catalog.static";
 
-export function ClientCatalog() {
+export function ClientCatalog({ collection }: { collection: Collection }) {
   const params = useSearchParams();
   const raw = Object.fromEntries(params.entries());
-  const state = parseCatalogParams(raw);
+  const state = parseCatalogParams(raw, collection);
   return (
     <CatalogView
       state={state}
+      canOrder={false}
       autoFocusSearch={raw.focus === "search"}
-      pageSize={PAGE_SIZE}
       categories={getCategoriesSync()}
       brands={getBrandsSync()}
+      boxSizes={getBoxSizesSync(collection)}
       result={querySnapshot(state)}
     />
   );
