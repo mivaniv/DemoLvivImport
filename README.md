@@ -68,6 +68,10 @@ npm run dev                 # http://localhost:3000
 
 Тести: `npm test` (адаптери, паролі, повний цикл імпорту на окремій базі `lvivimport_test`). Приклади файлів — у [data/1c-sample/](data/1c-sample/).
 
+## Хостинг HostPro (demo.lvivimport.com)
+
+Після кожного push у `main` GitHub збирає сайт і **чекає підтвердження власника**, а тоді заливає його по FTP на demo.lvivimport.com. Налаштування й порядок підтвердження: [docs/hosting.md](docs/hosting.md). Поки на хостинг іде статична версія (каталог без цін), база не потрібна.
+
 ## Статична демоверсія (GitHub Pages)
 
 Адреса: https://mivaniv.github.io/DemoLvivImport/

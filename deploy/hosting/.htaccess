@@ -1,0 +1,29 @@
+# demo.lvivimport.com — статична версія каталогу (без цін і входу).
+# Файл викладається разом із сайтом workflow-ом .github/workflows/deploy-hosting.yml.
+
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+# Демоверсія не повинна потрапляти в пошук і конкурувати з lvivimport.com
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow"
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Сторінки лежать у теках з index.html: /catalog → /catalog/
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteCond %{REQUEST_URI} !/$
+  RewriteRule ^(.*)$ /$1/ [R=301,L]
+
+  # Дані для швидких переходів між сторінками (prefetch Next.js):
+  # браузер запитує /catalog/__next.catalog.__PAGE__.txt, а статична збірка зберігає
+  # файл як /catalog/__next.catalog/__PAGE__.txt — крапки між сегментами стають теками.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^(.*/)?__next\.([^./]+)\.([^./]+)\.([^./]+)\.([^./]+)\.txt$ $1__next.$2/$3/$4/$5.txt [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^(.*/)?__next\.([^./]+)\.([^./]+)\.([^./]+)\.txt$ $1__next.$2/$3/$4.txt [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^(.*/)?__next\.([^./]+)\.([^./]+)\.txt$ $1__next.$2/$3.txt [L]
+</IfModule>
