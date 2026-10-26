@@ -4,7 +4,7 @@
 # 2. Крок «deploy» прив'язаний до GitHub Environment «hosting» з обов'язковим рецензентом:
 #    GitHub чекає, доки власник натисне «Review deployments → Approve and deploy».
 # 3. Перед заливкою перевіряється цільова тека на сервері: у ній має лежати файл-позначка
-#    .lvivimport-demo і не повинно бути WordPress/PHP (wp-config.php, index.php, wp-admin...).
+#    lvivimport-demo.txt і не повинно бути WordPress/PHP (wp-config.php, index.php, wp-admin...).
 # 4. Лише тоді змінені файли заливаються по FTP у теку демосайту.
 #
 # Налаштування (один раз): див. docs/hosting.md — Environment «hosting», секрети FTP_*, позначка.
@@ -84,7 +84,7 @@ jobs:
           esac
 
           # Захист від заливки не туди (26.10 сайт потрапив у теку lvivimport.com):
-          # заливаємо лише в теку з файлом-позначкою .lvivimport-demo і без WordPress/PHP.
+          # заливаємо лише в теку з файлом-позначкою lvivimport-demo.txt і без WordPress/PHP.
           case "$FTP_PROTOCOL" in
             ftp) BASE="ftp://$FTP_SERVER"; TLS="" ;;
             ftps-legacy) BASE="ftps://$FTP_SERVER"; TLS="" ;;
@@ -99,8 +99,9 @@ jobs:
           if echo "$LIST" | sed 's#.*/##' | grep -qxE 'wp-config\.php|wp-admin|wp-content|wp-includes|index\.php'; then
             echo "::error::У цільовій теці є WordPress/PHP-сайт — заливку скасовано. Перевірте FTP_DIR і корінь FTP-акаунта."; exit 1
           fi
-          if ! ftp -o /dev/null "$BASE${FTP_DIR}.lvivimport-demo"; then
-            echo "::error::У цільовій теці немає файла-позначки .lvivimport-demo — заливку скасовано. Створіть порожній файл .lvivimport-demo у public_html демосайту (див. docs/hosting.md)."; exit 1
+          # Файли з крапкою на початку FTP-сервер HostPro не показує й не віддає, тому позначка — без крапки
+          if ! echo "$LIST" | sed 's#.*/##' | grep -qxF 'lvivimport-demo.txt'; then
+            echo "::error::У цільовій теці немає файла-позначки lvivimport-demo.txt — заливку скасовано. Створіть порожній файл lvivimport-demo.txt у public_html демосайту (див. docs/hosting.md)."; exit 1
           fi
           echo "ready=true" >> "$GITHUB_OUTPUT"
 
@@ -110,7 +111,7 @@ jobs:
           name: site
           path: site
 
-      # Заливаються лише змінені файли; чужі файли в теці (зокрема .lvivimport-demo) не видаляються
+      # Заливаються лише змінені файли; чужі файли в теці (зокрема lvivimport-demo.txt) не видаляються
       - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         if: steps.cfg.outputs.ready == 'true'
         with:
