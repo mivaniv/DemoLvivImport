@@ -70,8 +70,10 @@ jobs:
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_DIR: ${{ secrets.FTP_DIR }}
           # true — FTP-акаунт бачить лише теку демосайту (рекомендовано), тоді FTP_DIR = "/"
-          DEDICATED: ${{ vars.FTP_DEDICATED_ACCOUNT }}
+          # (змінна у Variables або, якщо створено як секрет, у Secrets; регістр і пробіли не важливі)
+          DEDICATED: ${{ vars.FTP_DEDICATED_ACCOUNT || secrets.FTP_DEDICATED_ACCOUNT }}
         run: |
+          DEDICATED=$(printf '%s' "$DEDICATED" | tr -d '[:space:]"' | tr '[:upper:]' '[:lower:]')
           if [ -z "$FTP_SERVER" ] || [ -z "$FTP_USERNAME" ] || [ -z "$FTP_PASSWORD" ] || [ -z "$FTP_DIR" ]; then
             echo "::warning::FTP ще не налаштовано (секрети FTP_SERVER, FTP_USERNAME, FTP_PASSWORD, FTP_DIR) — заливку пропущено. Див. docs/hosting.md"
             echo "ready=false" >> "$GITHUB_OUTPUT"
