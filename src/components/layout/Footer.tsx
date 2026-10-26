@@ -13,7 +13,7 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr]">
         <div className="space-y-5">
           <div className="w-fit rounded-lg bg-white px-3 py-2">
-            <Logo className="h-9" />
+            <Logo className="h-12" />
           </div>
           <p className="max-w-xs text-sm text-white/70">
             Провідна компанія — імпортер високоякісних продуктів харчування європейських виробників.

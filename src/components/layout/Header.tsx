@@ -31,7 +31,7 @@ export async function Header() {
 
       <div className="border-b border-line bg-white/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:h-18 sm:px-6">
-          <Logo className="h-10 sm:h-11" />
+          <Logo className="h-11 sm:h-14" />
 
           <NavLinks className="ml-6 hidden items-center gap-7 text-sm font-medium lg:flex" />
 
