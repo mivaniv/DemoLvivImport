@@ -1,0 +1,15 @@
+# Ззовні доступний лише обробник форм. config.php (адреса для листів) і тека data/
+# (журнал звернень, ліміти частоти) закриті.
+<IfModule mod_authz_core.c>
+  Require all denied
+  <Files "form.php">
+    Require all granted
+  </Files>
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Order deny,allow
+  Deny from all
+  <Files "form.php">
+    Allow from all
+  </Files>
+</IfModule>

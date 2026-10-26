@@ -12,6 +12,7 @@ import { db } from "@/lib/db";
 const cardSelect = {
   id: true,
   externalId: true,
+  sku: true,
   slug: true,
   name: true,
   netWeight: true,

@@ -10,6 +10,7 @@ import { B2B_ENABLED } from "@/lib/features";
 import { formatPrice, orderNumber } from "@/lib/format";
 import { MANAGER_EMAIL, sendMail, siteUrl } from "@/lib/mail";
 import { DELIVERY_LABELS } from "@/lib/orders";
+import { deliveryShape, refineDelivery } from "./delivery";
 import { fieldErrorsOf, PHONE_RE, valuesOf, type FormState } from "./form-state";
 
 export type CartActionResult = { ok: boolean; message?: string };
@@ -66,24 +67,12 @@ export async function removeFromCart(productId: number): Promise<CartActionResul
 
 const checkoutSchema = z
   .object({
-    deliveryMethod: z.enum(["OWN_LOGISTICS", "NOVA_POSHTA", "DELIVERY", "MEEST", "PICKUP"], { error: "Оберіть спосіб доставки" }),
-    deliveryCity: z.string().trim().max(120).optional(),
-    deliveryPoint: z.string().trim().max(300).optional(),
+    ...deliveryShape,
     recipientName: z.string().trim().min(2, "Вкажіть отримувача").max(120),
     recipientPhone: z.string().trim().regex(PHONE_RE, "Вкажіть телефон отримувача"),
     comment: z.string().trim().max(2000).optional(),
   })
-  .superRefine((d, ctx) => {
-    if (d.deliveryMethod === "PICKUP") return;
-    if (!d.deliveryCity) ctx.addIssue({ code: "custom", path: ["deliveryCity"], message: "Вкажіть населений пункт" });
-    if (!d.deliveryPoint) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["deliveryPoint"],
-        message: d.deliveryMethod === "OWN_LOGISTICS" ? "Вкажіть адресу доставки" : "Вкажіть номер відділення",
-      });
-    }
-  });
+  .superRefine(refineDelivery);
 
 const CHECKOUT_FIELDS = ["deliveryMethod", "deliveryCity", "deliveryPoint", "recipientName", "recipientPhone", "comment"] as const;
 

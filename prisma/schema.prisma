@@ -270,6 +270,7 @@ model Review {
 enum InquiryKind {
   CALLBACK // «Замовити дзвінок» / «Отримати консультацію»
   CONTACT // форма зворотного зв'язку на сторінці контактів
+  REQUEST // заявка з кошика (каталог без цін)
 }
 
 enum InquiryStatus {

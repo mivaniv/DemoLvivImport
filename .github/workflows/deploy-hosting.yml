@@ -45,9 +45,13 @@ jobs:
           NEXT_PUBLIC_STATIC_EXPORT: "1"
           SITE_URL: https://demo.lvivimport.com
           DATABASE_URL: postgresql://build:build@localhost:5432/build
+          # Форми й кошик-заявка надсилаються на PHP-обробник хостингу (deploy/hosting/api/form.php)
+          NEXT_PUBLIC_FORM_ENDPOINT: /api/form.php
 
-      - name: Add hosting config
-        run: cp deploy/hosting/.htaccess out/.htaccess
+      - name: Add hosting config and form handler
+        run: |
+          cp deploy/hosting/.htaccess out/.htaccess
+          cp -r deploy/hosting/api out/api
 
       - uses: actions/upload-artifact@v4
         with:
@@ -122,6 +126,25 @@ jobs:
         with:
           name: site
           path: site
+
+      # Адреса для листів з форм — GitHub Variable FORM_TO_EMAIL (у репозиторій і артефакт збірки не потрапляє).
+      # Можна кілька через кому.
+      - name: Add form settings
+        if: steps.cfg.outputs.ready == 'true'
+        env:
+          FORM_TO_EMAIL: ${{ vars.FORM_TO_EMAIL }}
+          FORM_FROM_EMAIL: ${{ vars.FORM_FROM_EMAIL || 'noreply@demo.lvivimport.com' }}
+        run: |
+          TO=$(printf '%s' "$FORM_TO_EMAIL" | tr -d '[:space:]')
+          FROM=$(printf '%s' "$FORM_FROM_EMAIL" | tr -d '[:space:]')
+          EMAIL='[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
+          if [ -z "$TO" ]; then
+            echo "::error::Не задано адресу для листів з форм: Settings → Secrets and variables → Actions → Variables → FORM_TO_EMAIL. Див. docs/hosting.md"; exit 1
+          fi
+          if ! printf '%s' "$TO" | grep -qxE "$EMAIL(,$EMAIL)*" || ! printf '%s' "$FROM" | grep -qxE "$EMAIL"; then
+            echo "::error::FORM_TO_EMAIL або FORM_FROM_EMAIL — некоректна адреса"; exit 1
+          fi
+          printf "<?php\nreturn ['to' => '%s', 'from' => '%s'];\n" "$TO" "$FROM" > site/api/config.php
 
       # Заливаються лише змінені файли; чужі файли в теці (зокрема lvivimport-demo.txt) не видаляються
       - uses: SamKirkland/FTP-Deploy-Action@v4.3.5

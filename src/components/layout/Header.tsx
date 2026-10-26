@@ -1,5 +1,6 @@
 import { Clock, Menu, Phone, Search, ShoppingCart, UserRound } from "lucide-react";
 import Link from "next/link";
+import { RequestCartButton } from "@/components/cart/RequestCartButton";
 import { CallbackButton } from "@/components/layout/CallbackDialog";
 import { Logo } from "@/components/layout/Logo";
 import { NavLinks } from "@/components/layout/NavLinks";
@@ -55,6 +56,8 @@ export async function Header() {
                 <span className="hidden max-w-36 truncate md:inline">{viewer ? viewer.company : "Увійти"}</span>
               </Link>
             )}
+
+            {!B2B_ENABLED && <RequestCartButton />}
 
             {B2B_ENABLED && viewer?.canOrder && (
               <Link

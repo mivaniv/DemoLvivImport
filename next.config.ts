@@ -16,6 +16,7 @@ const staticAliases = {
   "@/app/actions/inquiry": "./src/app/actions/static.ts",
   "@/app/actions/review": "./src/app/actions/static.ts",
   "@/app/actions/cart": "./src/app/actions/static.ts",
+  "@/app/actions/request": "./src/app/actions/static.ts",
 };
 
 const nextConfig: NextConfig = isStatic

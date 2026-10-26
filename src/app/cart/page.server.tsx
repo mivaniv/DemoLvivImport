@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CartLines } from "@/components/cart/CartLines";
 import { CheckoutForm } from "@/components/cart/CheckoutForm";
+import { RequestCartPage } from "@/components/cart/RequestCartPage";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { redirect } from "next/navigation";
 import { requireClient } from "@/lib/auth/session";
 import { B2B_ENABLED } from "@/lib/features";
 import { getCart } from "@/lib/cart";
@@ -14,7 +14,7 @@ import { formatPrice, plural } from "@/lib/format";
 export const metadata: Metadata = { title: "Кошик", robots: { index: false } };
 
 export default async function CartPage() {
-  if (!B2B_ENABLED) redirect("/"); // кошик відкриється разом із кабінетом
+  if (!B2B_ENABLED) return <RequestCartPage />; // каталог без цін: кошик-заявка в браузері
   const viewer = await requireClient("/cart");
   const [cart, user] = await Promise.all([getCart(viewer.id), db.user.findUniqueOrThrow({ where: { id: viewer.id } })]);
 

@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import { setInquiryStatus } from "@/app/actions/admin";
 import { ActionButton, Card, FilterTabs, Pill } from "@/components/admin/ui";
+import type { InquiryKind } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
 import { formatDateTime } from "@/lib/format";
 import type { SearchPageProps } from "@/lib/page-props";
 
 export const metadata: Metadata = { title: "Звернення — адмінпанель", robots: { index: false } };
+
+const KIND_LABELS: Record<InquiryKind, string> = { CALLBACK: "Замовлення дзвінка", CONTACT: "Повідомлення", REQUEST: "Заявка з кошика" };
+const KIND_TONES: Record<InquiryKind, "brand" | "slate" | "emerald"> = { CALLBACK: "brand", CONTACT: "slate", REQUEST: "emerald" };
 
 export default async function AdminInquiriesPage(props: SearchPageProps) {
   const { status: raw } = await props.searchParams;
@@ -34,7 +38,7 @@ export default async function AdminInquiriesPage(props: SearchPageProps) {
               <div className="space-y-1">
                 <p className="flex flex-wrap items-center gap-2 font-semibold">
                   {i.name}
-                  <Pill tone={i.kind === "CALLBACK" ? "brand" : "slate"}>{i.kind === "CALLBACK" ? "Замовлення дзвінка" : "Повідомлення"}</Pill>
+                  <Pill tone={KIND_TONES[i.kind]}>{KIND_LABELS[i.kind]}</Pill>
                   <span className="text-xs font-normal text-muted">{formatDateTime(i.createdAt)}</span>
                 </p>
                 <p>

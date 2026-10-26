@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AddToRequest } from "@/components/cart/AddToRequest";
 import { AddToCart } from "@/components/product/AddToCart";
 import { Badges } from "@/components/product/Badges";
 import { PriceTag } from "@/components/product/PriceTag";
@@ -26,8 +27,13 @@ export function ProductCard({ product, variant = "full", canOrder = false }: Pro
     </div>
   );
 
-  const order = B2B_ENABLED && canOrder && product.price !== null && variant !== "compact" && (
-    <AddToCart productId={product.id} unit={product.unit} minOrder={product.minOrder} unitsPerBox={product.unitsPerBox} compact />
+  // Каталог без цін: будь-хто додає товар у кошик-заявку прямо з картки
+  const order = !B2B_ENABLED ? (
+    <AddToRequest product={product} />
+  ) : (
+    canOrder &&
+    product.price !== null &&
+    variant !== "compact" && <AddToCart productId={product.id} unit={product.unit} minOrder={product.minOrder} unitsPerBox={product.unitsPerBox} compact />
   );
 
   if (variant === "row") {

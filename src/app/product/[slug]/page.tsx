@@ -2,6 +2,7 @@ import { Boxes, CircleCheck, Clock, FileSpreadsheet, Lock, PackageCheck, Phone, 
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AddToRequest } from "@/components/cart/AddToRequest";
 import { CallbackButton } from "@/components/layout/CallbackDialog";
 import { AddToCart } from "@/components/product/AddToCart";
 import { Badges } from "@/components/product/Badges";
@@ -117,18 +118,32 @@ export default async function ProductPage(props: PageProps<"/product/[slug]">) {
               )}
             </div>
           ) : !B2B_ENABLED ? (
-            // Каталог без цін: замість входу — зв'язок з менеджером
-            <div className="space-y-3 rounded-xl bg-brand-50 p-4">
-              <p className="text-sm font-medium text-navy-800">Ціни та умови поставки — у менеджера:</p>
-              <div className="grid gap-2 sm:grid-cols-2">
-                <a href={MAIN_PHONE.href} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-brand-600 text-sm font-semibold text-white hover:bg-brand-700">
-                  <Phone className="size-4" /> {MAIN_PHONE.label}
-                </a>
-                <CallbackButton
-                  label="Отримати консультацію"
-                  topic={product.name}
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-brand-600 bg-white text-sm font-semibold text-brand-600 hover:bg-brand-50"
-                />
+            // Каталог без цін: товар додається в кошик-заявку, ціни й умови надсилає менеджер
+            <div className="space-y-4">
+              <AddToRequest
+                product={{
+                  slug: product.slug,
+                  sku: product.sku,
+                  name: product.name,
+                  unit: product.unit,
+                  unitsPerBox: product.unitsPerBox,
+                  minOrder: product.minOrder,
+                  images: product.images.slice(0, 1).map((i) => ({ url: i.url })),
+                }}
+                size="lg"
+              />
+              <div className="space-y-3 rounded-xl bg-brand-50 p-4">
+                <p className="text-sm font-medium text-navy-800">Ціни та умови поставки — у менеджера:</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <a href={MAIN_PHONE.href} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-brand-600 bg-white text-sm font-semibold text-brand-600 hover:bg-brand-50">
+                    <Phone className="size-4" /> {MAIN_PHONE.label}
+                  </a>
+                  <CallbackButton
+                    label="Отримати консультацію"
+                    topic={product.name}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-brand-600 bg-white text-sm font-semibold text-brand-600 hover:bg-brand-50"
+                  />
+                </div>
               </div>
             </div>
           ) : (

@@ -16,6 +16,7 @@ function toCard(p: SnapshotProduct) {
   return {
     id: p.id,
     externalId: p.externalId,
+    sku: p.sku,
     slug: p.slug,
     name: p.name,
     netWeight: p.netWeight,
