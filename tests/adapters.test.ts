@@ -13,6 +13,7 @@ describe("detectFormat", () => {
     expect(detectFormat(fixture("sample.yml.xml"))).toBe("yml");
     expect(detectFormat(fixture("sample.commerceml.xml"))).toBe("commerceml");
     expect(detectFormat(fixture("catalog.json"))).toBe("json");
+    expect(detectFormat(fixture("sample.goods.xml"))).toBe("goods");
     expect(detectFormat("<html></html>")).toBeNull();
   });
 });
@@ -111,6 +112,62 @@ describe("CommerceML", () => {
   it("СодержитТолькоИзменения=true → не повний каталог", () => {
     const changes = fixture("sample.commerceml.xml").replace('<Каталог СодержитТолькоИзменения="false">', '<Каталог СодержитТолькоИзменения="true">');
     expect((parseCatalogText(changes).raw as RawCatalog).fullExport).toBe(false);
+  });
+});
+
+describe("Вивантаження lvivimport.com (<goods>)", () => {
+  const source = "https://feed.example.com/export/products.xml";
+  const { raw } = parseCatalogText(fixture("sample.goods.xml"), source);
+  const cat = raw as RawCatalog;
+  const byId = new Map((cat.products as Product[]).map((p) => [p.id, p]));
+
+  it("повний каталог; номер у назві категорії — порядок, службова категорія прихована", () => {
+    expect(cat.fullExport).toBe(true);
+    expect(cat.categories).toEqual([
+      { id: "cat-pasta", name: "Макарони", parentId: undefined, sortOrder: 10 },
+      { id: "cat-tomadini", name: "Tomadini", parentId: "cat-pasta", sortOrder: 1001 },
+      { id: "cat-messis", name: "Messis сніданки джеми", parentId: undefined, sortOrder: 2 },
+    ]);
+  });
+
+  it("поля товару, тип ціни 1 за замовчуванням, усі фото з images_backup у .jpeg", () => {
+    expect(byId.get("goods-0001")).toMatchObject({
+      sku: "00-00000001",
+      categoryId: "cat-tomadini",
+      brand: "Tomadini",
+      description: "Маса нетто: 500 г.\nТверді сорти пшениці.",
+      netWeight: "500 г",
+      unitsPerBox: 12,
+      inStock: true,
+      isNew: true,
+      popular: true,
+      minOrder: 1,
+      price: 55.5,
+      barcode: "8000000000001",
+      images: [
+        "https://feed.example.com/export/images_backup/00-00000001-1.jpeg",
+        "https://feed.example.com/export/images_backup/00-00000001-2.jpeg",
+      ],
+    });
+  });
+
+  it("акція: акційна ціна поточна, ціна типу — стара; бренд з верхньої категорії; мінімум — ящик", () => {
+    expect(byId.get("goods-0002")).toMatchObject({ brand: "Messis", sale: true, price: 63.2, oldPrice: 70, minOrder: 9 });
+  });
+
+  it("немає в наявності, службова категорія й порожні фото", () => {
+    expect(byId.get("goods-0003")).toMatchObject({ inStock: false, categoryId: undefined, brand: undefined, images: [] });
+  });
+
+  it("інший тип ціни й власна тека фото", () => {
+    const { raw: r } = parseCatalogText(fixture("sample.goods.xml"), undefined, { priceType: "price_tier_0", imageBase: "https://cdn.example.com/p/" });
+    const first = (r as RawCatalog).products[0] as Product;
+    expect(first).toMatchObject({ price: 60, images: ["https://cdn.example.com/p/00-00000001-1.jpeg", "https://cdn.example.com/p/00-00000001-2.jpeg"] });
+    expect(() => parseCatalogText(fixture("sample.goods.xml"), undefined, { priceType: "VIP" })).toThrow(/номер/);
+  });
+
+  it("усі товари проходять схему імпорту", () => {
+    for (const p of cat.products) expect(productSchema.safeParse(p).success).toBe(true);
   });
 });
 

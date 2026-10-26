@@ -28,6 +28,7 @@ export function syncOptions(): SyncOptions {
     archiveDir: path.resolve(process.env.IMPORT_ARCHIVE_DIR ?? "./storage/imports"),
     auth: user && password ? { user, password } : undefined,
     priceType: process.env.IMPORT_PRICE_TYPE || undefined,
+    imageBase: process.env.IMPORT_IMAGE_BASE_URL || undefined,
   };
 }
 

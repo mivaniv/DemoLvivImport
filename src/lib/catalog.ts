@@ -3,6 +3,7 @@ import { cache } from "react";
 import type { Prisma } from "@/generated/prisma/client";
 import { getViewer } from "@/lib/auth/session";
 import { PRICE_SORTS, type CatalogState, type Collection, type SortKey } from "@/lib/catalog-params";
+import { buildCategoryTree, categoryScope, type FlatCategory } from "@/lib/category-tree";
 import { db } from "@/lib/db";
 
 // Каталог читається з бази на кожен запит: після нічного імпорту зміни видно одразу.
@@ -58,12 +59,13 @@ const COLLECTION_WHERE: Record<Collection, Prisma.ProductWhereInput> = {
 
 type CatalogFilters = Omit<CatalogState, "view">;
 
-function buildWhere(f: CatalogFilters, canOrder: boolean): Prisma.ProductWhereInput {
+// categoryIds — обрана категорія з усіма підкатегоріями (categoryScope)
+function buildWhere(f: CatalogFilters, canOrder: boolean, categoryIds: number[]): Prisma.ProductWhereInput {
   const words = f.q.trim().split(/\s+/).filter(Boolean).slice(0, 8);
   return {
     isActive: true,
     ...COLLECTION_WHERE[f.collection],
-    ...(f.category && { category: { slug: f.category } }),
+    ...(f.category && { categoryId: { in: categoryIds } }),
     ...(f.brands.length > 0 && { brand: { slug: { in: f.brands } } }),
     ...(f.inStock && { inStock: true }),
     ...(f.box.length > 0 && { unitsPerBox: { in: f.box } }),
@@ -88,7 +90,7 @@ function buildWhere(f: CatalogFilters, canOrder: boolean): Prisma.ProductWhereIn
 export async function searchProducts(f: CatalogFilters) {
   await connection();
   const canOrder = (await getViewer())?.canOrder ?? false;
-  const where = buildWhere(f, canOrder);
+  const where = buildWhere(f, canOrder, f.category ? categoryScope(await getFlatCategories(), f.category) : []);
   const sort = !canOrder && PRICE_SORTS.includes(f.sort) ? "default" : f.sort;
   const [rows, total] = await Promise.all([
     db.product.findMany({
@@ -119,16 +121,17 @@ export async function getBoxSizes(collection: Collection = "") {
   return rows.map((r) => ({ value: r.unitsPerBox!, count: r._count }));
 }
 
-export async function getCategories() {
-  await connection();
-  return db.category.findMany({
-    // Батьківські групи з 1С без власних товарів не показуємо — інтерфейс плаский.
-    where: { products: { some: { isActive: true } } },
-    orderBy: { sortOrder: "asc" },
+// Усі категорії з кількістю власних товарів; ієрархія — за ID груп 1С (parentExternalId).
+// cache: каталог і фільтр у межах одного запиту читають категорії один раз.
+const getFlatCategories = cache(async (): Promise<FlatCategory[]> => {
+  const rows = await db.category.findMany({
     select: {
       id: true,
       slug: true,
       name: true,
+      sortOrder: true,
+      externalId: true,
+      parentExternalId: true,
       _count: { select: { products: { where: { isActive: true } } } },
       // Перший товар категорії дає ілюстрацію для плитки на головній.
       products: {
@@ -139,6 +142,22 @@ export async function getCategories() {
       },
     },
   });
+  const idByExternal = new Map(rows.filter((r) => r.externalId).map((r) => [r.externalId!, r.id]));
+  return rows.map((r) => ({
+    id: r.id,
+    slug: r.slug,
+    name: r.name,
+    parentId: (r.parentExternalId && idByExternal.get(r.parentExternalId)) || null,
+    sortOrder: r.sortOrder,
+    ownCount: r._count.products,
+    image: r.products[0]?.images[0]?.url,
+  }));
+});
+
+// Розділи й підкатегорії в порядку дерева; кількість товарів — разом із підкатегоріями.
+export async function getCategories() {
+  await connection();
+  return buildCategoryTree(await getFlatCategories());
 }
 
 export async function getBrands() {

@@ -1,5 +1,6 @@
 import snapshot from "@/data/catalog-snapshot.json";
 import type { CatalogState, Collection, SortKey } from "@/lib/catalog-params";
+import { buildCategoryTree, categoryScope, type FlatCategory } from "@/lib/category-tree";
 
 // Каталог для статичної збірки (GitHub Pages): ті самі функції, що й у catalog.ts,
 // але дані — зі знімка бази, а пошук і фільтри виконуються в JS (зокрема в браузері).
@@ -57,12 +58,13 @@ type CatalogFilters = Omit<CatalogState, "view">;
 // Та сама логіка, що й buildWhere у catalog.ts: кожне слово запиту має знайтися хоча б в одному полі.
 export function querySnapshot(f: CatalogFilters) {
   const words = f.q.toLocaleLowerCase("uk").trim().split(/\s+/).filter(Boolean).slice(0, 8);
+  const scope = f.category ? new Set(categoryScope(flatCategories(), f.category)) : null;
   const matches = snapshot.products
     .filter((p) => {
       const category = p.categoryId ? categoryById.get(p.categoryId) : undefined;
       const brand = p.brandId ? brandById.get(p.brandId) : undefined;
       if (!IN_COLLECTION[f.collection](p)) return false;
-      if (f.category && category?.slug !== f.category) return false;
+      if (scope && (p.categoryId === null || !scope.has(p.categoryId))) return false;
       if (f.brands.length && (!brand || !f.brands.includes(brand.slug))) return false;
       if (f.inStock && !p.inStock) return false;
       if (f.box.length && (p.unitsPerBox === null || !f.box.includes(p.unitsPerBox))) return false;
@@ -94,20 +96,24 @@ export async function getBoxSizes(collection: Collection = "") {
   return getBoxSizesSync(collection);
 }
 
+// Як getFlatCategories у catalog.ts, але зі знімка
+function flatCategories(): FlatCategory[] {
+  return snapshot.categories.map((c) => {
+    const products = snapshot.products.filter((p) => p.categoryId === c.id).sort(COMPARE.popular);
+    return {
+      id: c.id,
+      slug: c.slug,
+      name: c.name,
+      parentId: (c as { parentId?: number | null }).parentId ?? null,
+      sortOrder: c.sortOrder,
+      ownCount: products.length,
+      image: products.find((p) => p.images.length > 0)?.images[0].url,
+    };
+  });
+}
+
 export function getCategoriesSync() {
-  return snapshot.categories
-    .filter((c) => snapshot.products.some((p) => p.categoryId === c.id))
-    .map((c) => {
-      const products = snapshot.products.filter((p) => p.categoryId === c.id).sort(COMPARE.popular);
-      const withImage = products.find((p) => p.images.length > 0);
-      return {
-        id: c.id,
-        slug: c.slug,
-        name: c.name,
-        _count: { products: products.length },
-        products: withImage ? [{ images: withImage.images.slice(0, 1).map(({ url }) => ({ url })) }] : [],
-      };
-    });
+  return buildCategoryTree(flatCategories());
 }
 
 export async function getCategories() {

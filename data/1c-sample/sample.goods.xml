@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- Вигаданий приклад у форматі вивантаження lvivimport.com (<goods>); ціни умовні. -->
+<goods>
+	<categories>
+		<cat>
+			<name>10.МАКАРОНИ</name>
+			<slug>krupy_makarony</slug>
+			<category_id>cat-pasta</category_id>
+			<level>0</level>
+			<in_price>1</in_price>
+		</cat>
+		<cat>
+			<name>TOMADINI</name>
+			<slug>tomadini</slug>
+			<category_id>cat-tomadini</category_id>
+			<level>1</level>
+			<in_price>0</in_price>
+			<parent_id>cat-pasta</parent_id>
+		</cat>
+		<cat>
+			<name>2.MESSIS сніданки   джеми</name>
+			<slug>messis</slug>
+			<category_id>cat-messis</category_id>
+			<level>0</level>
+			<in_price>1</in_price>
+		</cat>
+		<cat>
+			<name>Службова</name>
+			<slug>hidden</slug>
+			<category_id>ae67cc39-3241-11ec-8102-001e67f8ed26</category_id>
+			<level>0</level>
+			<in_price>0</in_price>
+		</cat>
+	</categories>
+	<products>
+		<product>
+			<uuid>goods-0001</uuid>
+			<code>00-00000001</code>
+			<name>Макарони TOMADINI 500g 05 Spaghetti bronzo картон (12 шт)</name>
+			<category>TOMADINI</category>
+			<category_id>cat-tomadini</category_id>
+			<description>Маса нетто: 500 г.&lt;br&gt;Тверді сорти пшениці.</description>
+			<ammount>1</ammount>
+			<price_tier_0>60,00</price_tier_0>
+			<price_tier_1>55,50</price_tier_1>
+			<qty>12</qty>
+			<sale_pice/>
+			<barcode>8000000000001</barcode>
+			<discount>0</discount>
+			<new>1</new>
+			<top>1</top>
+			<from_piece>1</from_piece>
+			<images>
+				<image>00-00000001-1.jpg,00-00000001-2.png</image>
+			</images>
+		</product>
+		<product>
+			<uuid>goods-0002</uuid>
+			<code>00-00000002</code>
+			<name>Джем MESSIS 280g полуниця ск/б (9 шт/200 ящ)</name>
+			<category>2.MESSIS сніданки джеми</category>
+			<category_id>cat-messis</category_id>
+			<description/>
+			<ammount>1</ammount>
+			<price_tier_1>70</price_tier_1>
+			<qty>9</qty>
+			<sale_pice>63,2</sale_pice>
+			<discount>1</discount>
+			<new/>
+			<top/>
+			<from_piece/>
+			<images>
+				<image>00-00000002-1.jpg</image>
+			</images>
+		</product>
+		<product>
+			<uuid>goods-0003</uuid>
+			<code>00-00000003</code>
+			<name>Ананас RIO 580ml шматочки ж/б (24 шт/60 ящ)</name>
+			<category>Службова</category>
+			<category_id>ae67cc39-3241-11ec-8102-001e67f8ed26</category_id>
+			<description/>
+			<ammount>0</ammount>
+			<price_tier_1>41,8</price_tier_1>
+			<qty>24</qty>
+			<sale_pice/>
+			<discount/>
+			<new/>
+			<top/>
+			<from_piece/>
+			<images>
+				<image/>
+			</images>
+		</product>
+	</products>
+</goods>

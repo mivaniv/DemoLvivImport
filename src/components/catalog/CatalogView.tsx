@@ -19,7 +19,8 @@ type Props = {
   state: CatalogState;
   canOrder: boolean;
   autoFocusSearch?: boolean;
-  categories: { id: number; slug: string; name: string; _count: { products: number } }[];
+  // Порядок дерева (buildCategoryTree): розділ, його підкатегорії, наступний розділ
+  categories: { id: number; slug: string; name: string; parentId: number | null; depth: number; _count: { products: number } }[];
   brands: { id: number; slug: string; name: string }[];
   boxSizes: { value: number; count: number }[];
   result: { items: ProductCardData[]; total: number; pages: number };
@@ -27,6 +28,10 @@ type Props = {
 
 export function CatalogView({ state, canOrder, autoFocusSearch, categories, brands, boxSizes, result }: Props) {
   const activeCategory = categories.find((c) => c.slug === state.category);
+  // Підкатегорії показуємо лише у відкритого розділу: обрана категорія та її предки
+  const open = new Set<number>();
+  for (let c = activeCategory; c; c = categories.find((p) => p.id === c!.parentId)) open.add(c.id);
+  const visibleCategories = categories.filter((c) => c.depth === 0 || (c.parentId !== null && open.has(c.parentId)));
   const collection = state.collection ? COLLECTIONS[state.collection] : null;
   const hasFilters = hasActiveFilters(state);
   const from = result.total === 0 ? 0 : (state.page - 1) * state.perPage + 1;
@@ -41,8 +46,8 @@ export function CatalogView({ state, canOrder, autoFocusSearch, categories, bran
           <li>
             <CategoryLink href={catalogHref(state, { category: "" })} active={!state.category} label="Усі товари" />
           </li>
-          {categories.map((c) => (
-            <li key={c.id}>
+          {visibleCategories.map((c) => (
+            <li key={c.id} className={c.depth === 1 ? "pl-3" : c.depth > 1 ? "pl-6" : undefined}>
               <CategoryLink
                 href={catalogHref(state, { category: c.slug })}
                 active={state.category === c.slug}

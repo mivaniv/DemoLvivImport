@@ -19,7 +19,10 @@ if (limit !== undefined && !(limit > 0)) {
 
 async function main() {
   const [allCategories, allBrands, products] = await Promise.all([
-    db.category.findMany({ orderBy: { sortOrder: "asc" }, select: { id: true, slug: true, name: true, sortOrder: true } }),
+    db.category.findMany({
+      orderBy: { sortOrder: "asc" },
+      select: { id: true, slug: true, name: true, sortOrder: true, externalId: true, parentExternalId: true },
+    }),
     db.brand.findMany({ orderBy: { name: "asc" }, select: { id: true, slug: true, name: true, country: true } }),
     db.product.findMany({
       where: { isActive: true },
@@ -53,8 +56,18 @@ async function main() {
     }),
   }));
 
-  // Лише категорії й бренди, що мають товари у знімку.
-  const categories = allCategories.filter((c) => products.some((p) => p.categoryId === c.id));
+  // Лише категорії з товарами у знімку та їхні батьківські розділи (для дерева в каталозі).
+  const idByExternal = new Map(allCategories.filter((c) => c.externalId).map((c) => [c.externalId!, c.id]));
+  const withParent = allCategories.map(({ externalId: _e, parentExternalId, ...c }) => ({
+    ...c,
+    parentId: (parentExternalId && idByExternal.get(parentExternalId)) || null,
+  }));
+  const parentOf = new Map(withParent.map((c) => [c.id, c.parentId]));
+  const used = new Set<number>();
+  for (const p of products) {
+    for (let id = p.categoryId; id !== null && !used.has(id); id = parentOf.get(id) ?? null) used.add(id);
+  }
+  const categories = withParent.filter((c) => used.has(c.id));
   const brands = allBrands.filter((b) => products.some((p) => p.brandId === b.id));
 
   // Опубліковані відгуки (без email авторів)

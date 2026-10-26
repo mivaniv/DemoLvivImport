@@ -1,35 +1,131 @@
 {
-  "generatedAt": "2026-10-08T06:46:59.321Z",
+  "generatedAt": "2026-10-26T15:30:54.196Z",
   "categories": [
     {
-      "id": 1,
-      "slug": "makaronni-vyroby",
-      "name": "Макаронні вироби",
-      "sortOrder": 1
+      "id": 62,
+      "slug": "messis-snidanky-dzhemy-vafli",
+      "name": "Messis сніданки джеми вафлі",
+      "sortOrder": 2,
+      "parentId": null
     },
     {
-      "id": 2,
-      "slug": "sousy-dzhemy-namazky",
-      "name": "Соуси, джеми, намазки",
-      "sortOrder": 2
+      "id": 63,
+      "slug": "viyavo-bakaliia",
+      "name": "Viyavo бакалія",
+      "sortOrder": 3,
+      "parentId": null
     },
     {
-      "id": 3,
-      "slug": "kava",
-      "name": "Кава",
-      "sortOrder": 3
+      "id": 66,
+      "slug": "bakaliia-khoreka",
+      "name": "Бакалія хорека",
+      "sortOrder": 5,
+      "parentId": null
     },
     {
-      "id": 4,
-      "slug": "olyvky-konservy",
-      "name": "Оливки, консерви",
-      "sortOrder": 4
+      "id": 67,
+      "slug": "olyvky-sousy-tomaty-prypravy",
+      "name": "Оливки соуси томати приправи",
+      "sortOrder": 6,
+      "parentId": null
     },
     {
-      "id": 5,
-      "slug": "vafli-ta-solodoshchi",
-      "name": "Вафлі та солодощі",
-      "sortOrder": 5
+      "id": 68,
+      "slug": "kondyterka",
+      "name": "Кондитерка",
+      "sortOrder": 7,
+      "parentId": null
+    },
+    {
+      "id": 57,
+      "slug": "makarony",
+      "name": "Макарони",
+      "sortOrder": 10,
+      "parentId": null
+    },
+    {
+      "id": 59,
+      "slug": "kava-i-chai",
+      "name": "Кава і чай",
+      "sortOrder": 12,
+      "parentId": null
+    },
+    {
+      "id": 73,
+      "slug": "barilla",
+      "name": "Barilla",
+      "sortOrder": 1017,
+      "parentId": 57
+    },
+    {
+      "id": 85,
+      "slug": "green-garden",
+      "name": "Green garden",
+      "sortOrder": 1029,
+      "parentId": 66
+    },
+    {
+      "id": 88,
+      "slug": "helcom-adfe73bb-9411-11ec-b85d-860e5f5ec3c7",
+      "name": "Helcom",
+      "sortOrder": 1032,
+      "parentId": 66
+    },
+    {
+      "id": 91,
+      "slug": "horeca",
+      "name": "Horeca",
+      "sortOrder": 1035,
+      "parentId": 66
+    },
+    {
+      "id": 92,
+      "slug": "knoppers",
+      "name": "Knoppers",
+      "sortOrder": 1036,
+      "parentId": 68
+    },
+    {
+      "id": 101,
+      "slug": "sante",
+      "name": "Sante",
+      "sortOrder": 1045,
+      "parentId": 68
+    },
+    {
+      "id": 103,
+      "slug": "tomadini",
+      "name": "Tomadini",
+      "sortOrder": 1047,
+      "parentId": 57
+    },
+    {
+      "id": 105,
+      "slug": "yoo-hoo",
+      "name": "Yoo!hoo",
+      "sortOrder": 1049,
+      "parentId": 68
+    },
+    {
+      "id": 107,
+      "slug": "vafli",
+      "name": "Вафлі",
+      "sortOrder": 1051,
+      "parentId": 62
+    },
+    {
+      "id": 113,
+      "slug": "inshi-tm-ee577d8e-1012-11ee-ba6b-860e5f5ec3c7",
+      "name": "Інші тм",
+      "sortOrder": 1057,
+      "parentId": 66
+    },
+    {
+      "id": 118,
+      "slug": "kondyterski-poroshky",
+      "name": "Кондитерські порошки",
+      "sortOrder": 1062,
+      "parentId": 67
     }
   ],
   "brands": [
@@ -40,10 +136,22 @@
       "country": "Італія"
     },
     {
+      "id": 33,
+      "slug": "green-garden",
+      "name": "Green Garden",
+      "country": null
+    },
+    {
       "id": 4,
       "slug": "helcom",
       "name": "HELCOM",
       "country": "Польща"
+    },
+    {
+      "id": 34,
+      "slug": "knoppers",
+      "name": "Knoppers",
+      "country": null
     },
     {
       "id": 1,
@@ -52,749 +160,1471 @@
       "country": "Польща"
     },
     {
-      "id": 2,
-      "slug": "vivavo",
-      "name": "VIVAVO",
-      "country": "Італія"
+      "id": 35,
+      "slug": "mokate",
+      "name": "Mokate",
+      "country": null
+    },
+    {
+      "id": 30,
+      "slug": "sante",
+      "name": "Sante",
+      "country": null
+    },
+    {
+      "id": 29,
+      "slug": "tomadini",
+      "name": "Tomadini",
+      "country": null
+    },
+    {
+      "id": 32,
+      "slug": "viyavo",
+      "name": "Viyavo",
+      "country": null
+    },
+    {
+      "id": 31,
+      "slug": "yoo-hoo",
+      "name": "Yoo!hoo",
+      "country": null
     }
   ],
   "products": [
     {
-      "id": 1,
-      "externalId": "00-00001201",
-      "sku": "MESS-STR-280",
-      "barcode": "4820000010009",
-      "slug": "dzhem-messis-polunytsia-280-h",
-      "name": "Джем MESSIS Полуниця, 280 г",
-      "description": "Джем MESSIS Полуниця — це насичений смак стиглої полуниці, виготовлений за традиційними європейськими рецептами. Ідеально підходить для сніданків, десертів та професійного використання у HoReCa.",
-      "netWeight": "280 г",
-      "unitsPerBox": 9,
+      "id": 132,
+      "externalId": "a921fff1-619a-11ed-b970-860e5f5ec3c7",
+      "sku": "00-00001456",
+      "barcode": "5902166703885",
+      "slug": "apelsyn-z-korytseiu-ta-hvozdykoiu-4tea-220g-sk-b-8-sht-280-iashch",
+      "name": "Апельсин з корицею та гвоздикою 4TEA 220g ск/б (8 шт/280 ящ)",
+      "description": "Маса нетто: 220 г. Об'єм 225 мл.\n\nПастеризований продукт.\n\nДо чаю, напоїв, лимонадів, пива.\n\nСклад: апельсини 60%, цукор, сік лимонний, гелеутворювач пектин, кориця 0,3%; гвоздика 0,2%.\n\nПеред використанням збовтати.\n\nВиготовляється з 70 г фруктів на 100 г продукту.\nТермін придатності: вказаний на етикетці.\nЗберігати в прохолодному і сухому місці. Після відкриття зберігати в холодильнику не більше 72 годин\n\nХарчова цінність в 100 г продукту 721кДж/170 ккал.\nжири- 0 г (з них насичені- 0 г),\nвуглеводи- 41 г, з них цукор- 40 г,\nклітковина -1,9 г,\nбілки <0,5 г,\nсіль -0,02 г.\n\nВиробник Польща",
+      "netWeight": "220 г",
+      "unitsPerBox": 8,
       "unit": "шт.",
-      "minOrder": 1,
-      "inStock": true,
-      "isPopular": true,
-      "isNew": false,
-      "isSale": false,
-      "sortOrder": 0,
-      "categoryId": 2,
-      "brandId": 1,
-      "createdAt": "2026-09-24T12:37:36.037Z",
-      "images": [
-        {
-          "url": "/demo/products/dzhem-messis-polunytsia-280-h.svg",
-          "alt": "Джем MESSIS Полуниця, 280 г"
-        }
-      ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Польща"
-        },
-        {
-          "name": "Вміст фруктів",
-          "value": "50 г на 100 г"
-        },
-        {
-          "name": "Термін придатності",
-          "value": "18 місяців"
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "externalId": "00-00001202",
-      "sku": "MESS-APR-280",
-      "barcode": "4820000010016",
-      "slug": "dzhem-messis-abrykos-280-h",
-      "name": "Джем MESSIS Абрикос, 280 г",
-      "description": "Ніжний абрикосовий джем із шматочками фруктів. Підходить для випічки, сирників і сніданків.",
-      "netWeight": "280 г",
-      "unitsPerBox": 9,
-      "unit": "шт.",
-      "minOrder": 1,
+      "minOrder": 8,
       "inStock": true,
       "isPopular": false,
       "isNew": false,
       "isSale": false,
-      "sortOrder": 1,
-      "categoryId": 2,
-      "brandId": 1,
-      "createdAt": "2026-09-24T12:37:36.055Z",
+      "sortOrder": 0,
+      "categoryId": 88,
+      "brandId": null,
+      "createdAt": "2026-10-26T15:17:38.938Z",
       "images": [
         {
-          "url": "/demo/products/dzhem-messis-abrykos-280-h.svg",
-          "alt": "Джем MESSIS Абрикос, 280 г"
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001456-1.jpeg",
+          "alt": "Апельсин з корицею та гвоздикою 4TEA 220g ск/б (8 шт/280 ящ)"
         }
       ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Польща"
-        },
-        {
-          "name": "Вміст фруктів",
-          "value": "50 г на 100 г"
-        },
-        {
-          "name": "Термін придатності",
-          "value": "18 місяців"
-        }
-      ]
+      "attributes": []
     },
     {
-      "id": 3,
-      "externalId": "00-00001203",
-      "sku": "MESS-BLC-280",
-      "barcode": "4820000010023",
-      "slug": "dzhem-messis-chorna-smorodyna-280-h",
-      "name": "Джем MESSIS Чорна смородина, 280 г",
-      "description": "Джем із чорної смородини з яскравою кислинкою. Добре поєднується з млинцями та десертами.",
-      "netWeight": "280 г",
-      "unitsPerBox": 9,
+      "id": 133,
+      "externalId": "9a7ad19f-69cf-11ee-bae2-860e5f5ec3c7",
+      "sku": "00-00001960",
+      "barcode": "5902166703823",
+      "slug": "buzyna-z-lymonnym-sokom-4tea-220g-sk-b-8-sht-280-iashch",
+      "name": "Бузина з лимонним соком 4TEA 220g ск/б (8 шт/280 ящ)",
+      "description": null,
+      "netWeight": "220 г",
+      "unitsPerBox": 8,
       "unit": "шт.",
-      "minOrder": 1,
+      "minOrder": 8,
       "inStock": true,
+      "isPopular": false,
+      "isNew": true,
+      "isSale": false,
+      "sortOrder": 1,
+      "categoryId": 88,
+      "brandId": null,
+      "createdAt": "2026-10-26T15:17:38.949Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001960-1.jpeg",
+          "alt": "Бузина з лимонним соком 4TEA 220g ск/б (8 шт/280 ящ)"
+        },
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001960-2.jpeg",
+          "alt": "Бузина з лимонним соком 4TEA 220g ск/б (8 шт/280 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 134,
+      "externalId": "a921ffeb-619a-11ed-b970-860e5f5ec3c7",
+      "sku": "00-00001454",
+      "barcode": "5902166703847",
+      "slug": "imbyr-z-lymonnym-sokom-4tea-220g-sk-b-8-sht-280-iashch",
+      "name": "Імбир з лимонним соком 4TEA 220g ск/б (8 шт/280 ящ)",
+      "description": "Маса нетто: 220 г. Об'єм 225 мл\n\nПастеризований продукт.\n\nДо чаю, напоїв, лимонадів, пива.\nСклад: цукор, імбир свіжий 30%, вода, сік лимонний 10%, гелеутворювач пектин.\n\nПеред використанням збовтати.\nВиготовляється з 40 г фруктів на 100 г продукту.\nТермін придатності: вказаний на етикетці.\nЗберігати в прохолодному і сухому місці. Після відкриття зберігати в холодильнику не більше 72 годин.\n\nХарчова цінність в 100 г продукту 724кДж/171 ккал.\nжири- 0 г (з них насичені- 0 г),\nвуглеводи- 42 г,\nз них цукор- 42 г,\nклітковина -1,3 г,\nбілки -0 г,\nсіль -0 г.\n\nВиробник Польща",
+      "netWeight": "220 г",
+      "unitsPerBox": 8,
+      "unit": "шт.",
+      "minOrder": 8,
+      "inStock": false,
       "isPopular": false,
       "isNew": false,
       "isSale": false,
       "sortOrder": 2,
-      "categoryId": 2,
-      "brandId": 1,
-      "createdAt": "2026-09-24T12:37:36.066Z",
+      "categoryId": 88,
+      "brandId": null,
+      "createdAt": "2026-10-26T15:17:38.953Z",
       "images": [
         {
-          "url": "/demo/products/dzhem-messis-chorna-smorodyna-280-h.svg",
-          "alt": "Джем MESSIS Чорна смородина, 280 г"
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001454-1.jpeg",
+          "alt": "Імбир з лимонним соком 4TEA 220g ск/б (8 шт/280 ящ)"
         }
       ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Польща"
-        },
-        {
-          "name": "Вміст фруктів",
-          "value": "50 г на 100 г"
-        },
-        {
-          "name": "Термін придатності",
-          "value": "18 місяців"
-        }
-      ]
+      "attributes": []
     },
     {
-      "id": 4,
-      "externalId": "00-00001204",
-      "sku": "MESS-CHR-280",
-      "barcode": "4820000010030",
-      "slug": "dzhem-messis-vyshnia-280-h",
-      "name": "Джем MESSIS Вишня, 280 г",
-      "description": "Вишневий джем з насиченим кольором і глибоким смаком стиглих ягід.",
-      "netWeight": "280 г",
-      "unitsPerBox": 9,
+      "id": 135,
+      "externalId": "1b9d674c-efd5-11ed-ba41-860e5f5ec3c7",
+      "sku": "00-00001755",
+      "barcode": "8032942821551",
+      "slug": "makarony-tomadini-500g-05-spaghetti-bronzo-karton-12-sht",
+      "name": "Макарони TOMADINI 500g  05  Spaghetti bronzo картон (12 шт)",
+      "description": null,
+      "netWeight": "500 г",
+      "unitsPerBox": 12,
       "unit": "шт.",
-      "minOrder": 1,
+      "minOrder": 12,
       "inStock": false,
       "isPopular": false,
       "isNew": false,
       "isSale": false,
       "sortOrder": 3,
-      "categoryId": 2,
-      "brandId": 1,
-      "createdAt": "2026-09-24T12:37:36.076Z",
+      "categoryId": 103,
+      "brandId": 29,
+      "createdAt": "2026-10-26T15:17:38.957Z",
       "images": [
         {
-          "url": "/demo/products/dzhem-messis-vyshnia-280-h.svg",
-          "alt": "Джем MESSIS Вишня, 280 г"
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001755-1.jpeg",
+          "alt": "Макарони TOMADINI 500g  05  Spaghetti bronzo картон (12 шт)"
         }
       ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Польща"
-        },
-        {
-          "name": "Вміст фруктів",
-          "value": "50 г на 100 г"
-        },
-        {
-          "name": "Термін придатності",
-          "value": "18 місяців"
-        }
-      ]
+      "attributes": []
     },
     {
-      "id": 5,
-      "externalId": "00-00001205",
-      "sku": "MESS-RSP-280",
-      "barcode": "4820000010047",
-      "slug": "dzhem-messis-malyna-280-h",
-      "name": "Джем MESSIS Малина, 280 г",
-      "description": "Малиновий джем з ароматом свіжих ягід для сніданків, випічки та десертів.",
-      "netWeight": "280 г",
-      "unitsPerBox": 9,
-      "unit": "шт.",
-      "minOrder": 1,
-      "inStock": true,
-      "isPopular": false,
-      "isNew": true,
-      "isSale": false,
-      "sortOrder": 4,
-      "categoryId": 2,
-      "brandId": 1,
-      "createdAt": "2026-09-24T12:37:36.085Z",
-      "images": [
-        {
-          "url": "/demo/products/dzhem-messis-malyna-280-h.svg",
-          "alt": "Джем MESSIS Малина, 280 г"
-        }
-      ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Польща"
-        },
-        {
-          "name": "Вміст фруктів",
-          "value": "50 г на 100 г"
-        },
-        {
-          "name": "Термін придатності",
-          "value": "18 місяців"
-        }
-      ]
-    },
-    {
-      "id": 6,
-      "externalId": "00-00002101",
-      "sku": "VIV-CRM-1000",
-      "barcode": "4820000010054",
-      "slug": "kava-vivavo-caffe-crema-1-kh",
-      "name": "Кава VIVAVO Caffè Crema, 1 кг",
-      "description": "Кава в зернах Caffè Crema з м'яким смаком і щільною пінкою. Оптимальний вибір для кав'ярень, офісів і HoReCa.",
-      "netWeight": "1 кг",
-      "unitsPerBox": 6,
-      "unit": "шт.",
-      "minOrder": 1,
-      "inStock": true,
-      "isPopular": true,
-      "isNew": false,
-      "isSale": true,
-      "sortOrder": 5,
-      "categoryId": 3,
-      "brandId": 2,
-      "createdAt": "2026-09-24T12:37:36.094Z",
-      "images": [
-        {
-          "url": "/demo/products/kava-vivavo-caffe-crema-1-kh.svg",
-          "alt": "Кава VIVAVO Caffè Crema, 1 кг"
-        }
-      ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Італія"
-        },
-        {
-          "name": "Тип",
-          "value": "Зерно"
-        },
-        {
-          "name": "Обсмаження",
-          "value": "Середнє"
-        },
-        {
-          "name": "Склад",
-          "value": "70% арабіка, 30% робуста"
-        }
-      ]
-    },
-    {
-      "id": 7,
-      "externalId": "00-00002102",
-      "sku": "VIV-ESP-1000",
-      "barcode": "4820000010061",
-      "slug": "kava-vivavo-espresso-intenso-1-kh",
-      "name": "Кава VIVAVO Espresso Intenso, 1 кг",
-      "description": "Інтенсивний еспресо-бленд з нотами какао та карамелі. Розрахований на професійні кавомашини.",
-      "netWeight": "1 кг",
-      "unitsPerBox": 6,
-      "unit": "шт.",
-      "minOrder": 1,
-      "inStock": true,
-      "isPopular": false,
-      "isNew": false,
-      "isSale": false,
-      "sortOrder": 6,
-      "categoryId": 3,
-      "brandId": 2,
-      "createdAt": "2026-09-24T12:37:36.103Z",
-      "images": [
-        {
-          "url": "/demo/products/kava-vivavo-espresso-intenso-1-kh.svg",
-          "alt": "Кава VIVAVO Espresso Intenso, 1 кг"
-        }
-      ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Італія"
-        },
-        {
-          "name": "Тип",
-          "value": "Зерно"
-        },
-        {
-          "name": "Обсмаження",
-          "value": "Темне"
-        },
-        {
-          "name": "Склад",
-          "value": "50% арабіка, 50% робуста"
-        }
-      ]
-    },
-    {
-      "id": 8,
-      "externalId": "00-00002103",
-      "sku": "VIV-GRD-250",
-      "barcode": "4820000010078",
-      "slug": "kava-melena-vivavo-classico-250-h",
-      "name": "Кава мелена VIVAVO Classico, 250 г",
-      "description": "Мелена кава для турки, гейзерної кавоварки та фільтра. Збалансований смак на щодень.",
-      "netWeight": "250 г",
-      "unitsPerBox": 12,
-      "unit": "шт.",
-      "minOrder": 1,
-      "inStock": true,
-      "isPopular": false,
-      "isNew": true,
-      "isSale": false,
-      "sortOrder": 7,
-      "categoryId": 3,
-      "brandId": 2,
-      "createdAt": "2026-09-24T12:37:36.111Z",
-      "images": [
-        {
-          "url": "/demo/products/kava-melena-vivavo-classico-250-h.svg",
-          "alt": "Кава мелена VIVAVO Classico, 250 г"
-        }
-      ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Італія"
-        },
-        {
-          "name": "Тип",
-          "value": "Мелена"
-        },
-        {
-          "name": "Обсмаження",
-          "value": "Середнє"
-        }
-      ]
-    },
-    {
-      "id": 9,
-      "externalId": "00-00003101",
-      "sku": "BAR-PEN-500",
-      "barcode": "4820000010085",
-      "slug": "makarony-barilla-penne-rigate-500-h",
-      "name": "Макарони Barilla Penne Rigate, 500 г",
-      "description": "Класичні пере з рифленою поверхнею, що добре тримають соус. Виготовлені з твердих сортів пшениці.",
+      "id": 136,
+      "externalId": "18253847-efd8-11ed-ba41-860e5f5ec3c7",
+      "sku": "00-00001758",
+      "barcode": "8032942821513",
+      "slug": "makarony-tomadini-500g-59-tortiglioni-bronzo-karton-12-sht",
+      "name": "Макарони TOMADINI 500g  59  Tortiglioni bronzo картон (12 шт)",
+      "description": null,
       "netWeight": "500 г",
       "unitsPerBox": 12,
       "unit": "шт.",
-      "minOrder": 1,
-      "inStock": true,
-      "isPopular": true,
-      "isNew": false,
-      "isSale": true,
-      "sortOrder": 8,
-      "categoryId": 1,
-      "brandId": 3,
-      "createdAt": "2026-09-24T12:37:36.119Z",
-      "images": [
-        {
-          "url": "/demo/products/makarony-barilla-penne-rigate-500-h.svg",
-          "alt": "Макарони Barilla Penne Rigate, 500 г"
-        }
-      ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Італія"
-        },
-        {
-          "name": "Час варіння",
-          "value": "11 хв"
-        },
-        {
-          "name": "Склад",
-          "value": "Борошно з твердих сортів пшениці, вода"
-        }
-      ]
-    },
-    {
-      "id": 10,
-      "externalId": "00-00003102",
-      "sku": "BAR-SPG-500",
-      "barcode": "4820000010092",
-      "slug": "makarony-barilla-spaghetti-n-5-500-h",
-      "name": "Макарони Barilla Spaghetti n.5, 500 г",
-      "description": "Спагеті середньої товщини — універсальна основа для більшості італійських страв.",
-      "netWeight": "500 г",
-      "unitsPerBox": 24,
-      "unit": "шт.",
-      "minOrder": 1,
-      "inStock": true,
-      "isPopular": false,
-      "isNew": false,
-      "isSale": false,
-      "sortOrder": 9,
-      "categoryId": 1,
-      "brandId": 3,
-      "createdAt": "2026-09-24T12:37:36.126Z",
-      "images": [
-        {
-          "url": "/demo/products/makarony-barilla-spaghetti-n-5-500-h.svg",
-          "alt": "Макарони Barilla Spaghetti n.5, 500 г"
-        }
-      ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Італія"
-        },
-        {
-          "name": "Час варіння",
-          "value": "9 хв"
-        },
-        {
-          "name": "Склад",
-          "value": "Борошно з твердих сортів пшениці, вода"
-        }
-      ]
-    },
-    {
-      "id": 11,
-      "externalId": "00-00003103",
-      "sku": "BAR-FUS-500",
-      "barcode": "4820000010108",
-      "slug": "makarony-barilla-fusilli-500-h",
-      "name": "Макарони Barilla Fusilli, 500 г",
-      "description": "Спіральки фузілі для салатів, запіканок і густих соусів.",
-      "netWeight": "500 г",
-      "unitsPerBox": 12,
-      "unit": "шт.",
-      "minOrder": 1,
-      "inStock": true,
-      "isPopular": false,
-      "isNew": false,
-      "isSale": false,
-      "sortOrder": 10,
-      "categoryId": 1,
-      "brandId": 3,
-      "createdAt": "2026-09-24T12:37:36.134Z",
-      "images": [
-        {
-          "url": "/demo/products/makarony-barilla-fusilli-500-h.svg",
-          "alt": "Макарони Barilla Fusilli, 500 г"
-        }
-      ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Італія"
-        },
-        {
-          "name": "Час варіння",
-          "value": "10 хв"
-        },
-        {
-          "name": "Склад",
-          "value": "Борошно з твердих сортів пшениці, вода"
-        }
-      ]
-    },
-    {
-      "id": 12,
-      "externalId": "00-00003104",
-      "sku": "BAR-FAR-500",
-      "barcode": "4820000010115",
-      "slug": "makarony-barilla-farfalle-500-h",
-      "name": "Макарони Barilla Farfalle, 500 г",
-      "description": "Метелики фарфалле — для легких соусів, салатів і дитячого меню.",
-      "netWeight": "500 г",
-      "unitsPerBox": 12,
-      "unit": "шт.",
-      "minOrder": 1,
+      "minOrder": 12,
       "inStock": false,
       "isPopular": false,
       "isNew": false,
       "isSale": false,
-      "sortOrder": 11,
-      "categoryId": 1,
-      "brandId": 3,
-      "createdAt": "2026-09-24T12:37:36.144Z",
+      "sortOrder": 4,
+      "categoryId": 103,
+      "brandId": 29,
+      "createdAt": "2026-10-26T15:17:38.960Z",
       "images": [
         {
-          "url": "/demo/products/makarony-barilla-farfalle-500-h.svg",
-          "alt": "Макарони Barilla Farfalle, 500 г"
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001758-1.jpeg",
+          "alt": "Макарони TOMADINI 500g  59  Tortiglioni bronzo картон (12 шт)"
         }
       ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Італія"
-        },
-        {
-          "name": "Час варіння",
-          "value": "11 хв"
-        },
-        {
-          "name": "Склад",
-          "value": "Борошно з твердих сортів пшениці, вода"
-        }
-      ]
+      "attributes": []
     },
     {
-      "id": 13,
-      "externalId": "00-00004101",
-      "sku": "HEL-GRN-340",
-      "barcode": "4820000010122",
-      "slug": "olyvky-helcom-zeleni-bez-kistochky-340-h",
-      "name": "Оливки HELCOM зелені без кісточки, 340 г",
-      "description": "Зелені оливки без кісточки в розсолі. Для закусок, салатів і піци.",
-      "netWeight": "340 г",
+      "id": 137,
+      "externalId": "a05269d2-efd7-11ed-ba41-860e5f5ec3c7",
+      "sku": "00-00001757",
+      "barcode": "8032942821520",
+      "slug": "makarony-tomadini-500g-73-pennette-karton-12-sht",
+      "name": "Макарони TOMADINI 500g  73  Pennette картон (12 шт)",
+      "description": null,
+      "netWeight": "500 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "minOrder": 12,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 5,
+      "categoryId": 103,
+      "brandId": 29,
+      "createdAt": "2026-10-26T15:17:38.963Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001757-1.jpeg",
+          "alt": "Макарони TOMADINI 500g  73  Pennette картон (12 шт)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 138,
+      "externalId": "b9e3c14e-efd6-11ed-ba41-860e5f5ec3c7",
+      "sku": "00-00001756",
+      "barcode": "8032942821537",
+      "slug": "makarony-tomadini-500g-82-fusilli-bronzo-karton-12-sht",
+      "name": "Макарони TOMADINI 500g  82  Fusilli bronzo картон (12 шт)",
+      "description": null,
+      "netWeight": "500 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "minOrder": 12,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 6,
+      "categoryId": 103,
+      "brandId": 29,
+      "createdAt": "2026-10-26T15:17:38.967Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001756-1.jpeg",
+          "alt": "Макарони TOMADINI 500g  82  Fusilli bronzo картон (12 шт)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 139,
+      "externalId": "e5a12434-69ce-11ee-bae2-860e5f5ec3c7",
+      "sku": "00-00001959",
+      "barcode": "5902166703861",
+      "slug": "malyna-z-lymonnym-sokom-4tea-220g-sk-b-8-sht-280-iashch",
+      "name": "Малина з лимонним соком 4TEA 220g ск/б (8 шт/280 ящ)",
+      "description": null,
+      "netWeight": "220 г",
+      "unitsPerBox": 8,
+      "unit": "шт.",
+      "minOrder": 8,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 7,
+      "categoryId": 88,
+      "brandId": null,
+      "createdAt": "2026-10-26T15:17:38.971Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001959-1.jpeg",
+          "alt": "Малина з лимонним соком 4TEA 220g ск/б (8 шт/280 ящ)"
+        },
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001959-2.jpeg",
+          "alt": "Малина з лимонним соком 4TEA 220g ск/б (8 шт/280 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 140,
+      "externalId": "85d6914f-2f41-11ed-b92c-860e5f5ec3c7",
+      "sku": "00-00001284",
+      "barcode": "5907431657405",
+      "slug": "abrykosy-helcom-850g-polovynky-u-syropi-zh-b-12-sht-72-iashch",
+      "name": "Абрикоси HELCOM 850g половинки у сиропі ж/б (12 шт/72 ящ)",
+      "description": "Абрикоси стануть прекрасним доповненням до тортів, десертів або як швидкий і корисний перекус.\n\nАбрикоси консервовані, 850г. Склад: абрикоси, вода, цукор. Пастеризований продукт.\n\nХарчова цінність в 100 г продукту\n\nЕнергетична цінність 248 кДж / 59 ккал\nЖир <0,5 г\nв тому числі насичених жирних кислот 0,0 г\nВуглеводи 13,0 г\nз них цукру 12,0 г\nКлітковина 2,0 г\nБілки 0,4 г\nСіль 0,02 г\n\nКраїна походження: Греція\nКраїна виробник: Польща",
+      "netWeight": "850 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "minOrder": 12,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 8,
+      "categoryId": 88,
+      "brandId": 4,
+      "createdAt": "2026-10-26T15:17:38.975Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001284-1.jpeg",
+          "alt": "Абрикоси HELCOM 850g половинки у сиропі ж/б (12 шт/72 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 141,
+      "externalId": "8be4682d-da59-11ef-bcc6-860e5f5ec3c7",
+      "sku": "00-00002588",
+      "barcode": "5907431657061",
+      "slug": "ananas-helcom-3100ml-shmatochky-6-sht-40-iashch",
+      "name": "Ананас HELCOM 3100ml шматочки (6 шт/40 ящ)",
+      "description": null,
+      "netWeight": "3100 мл",
       "unitsPerBox": 6,
       "unit": "шт.",
-      "minOrder": 1,
+      "minOrder": 6,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 9,
+      "categoryId": 91,
+      "brandId": 4,
+      "createdAt": "2026-10-26T15:17:38.978Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002588-1.jpeg",
+          "alt": "Ананас HELCOM 3100ml шматочки (6 шт/40 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 142,
+      "externalId": "c1a67932-883c-11ed-b9af-860e5f5ec3c7",
+      "sku": "00-00001588",
+      "barcode": "5907431657047",
+      "slug": "ananas-helcom-565g-kiltsia-zh-b-24-sht-54-iashch",
+      "name": "Ананас HELCOM 565g кільця ж/б (24 шт/54 ящ)",
+      "description": null,
+      "netWeight": "565 г",
+      "unitsPerBox": 24,
+      "unit": "шт.",
+      "minOrder": 24,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 10,
+      "categoryId": 88,
+      "brandId": 4,
+      "createdAt": "2026-10-26T15:17:38.982Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001588-1.jpeg",
+          "alt": "Ананас HELCOM 565g кільця ж/б (24 шт/54 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 143,
+      "externalId": "9e83ea4b-6378-11ed-b972-860e5f5ec3c7",
+      "sku": "00-00001492",
+      "barcode": "5907431657245",
+      "slug": "ananas-helcom-565g-shmatochky-zh-b-24-sht-54-iashch",
+      "name": "Ананас HELCOM 565g шматочки ж/б (24 шт/54 ящ)",
+      "description": null,
+      "netWeight": "565 г",
+      "unitsPerBox": 24,
+      "unit": "шт.",
+      "minOrder": 24,
       "inStock": true,
-      "isPopular": true,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 11,
+      "categoryId": 88,
+      "brandId": 4,
+      "createdAt": "2026-10-26T15:17:38.986Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001492-1.jpeg",
+          "alt": "Ананас HELCOM 565g шматочки ж/б (24 шт/54 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 144,
+      "externalId": "31bfdb0b-bfb9-11f0-bdf1-860e5f5ec3c7",
+      "sku": "00-00003073",
+      "barcode": "4820113380075",
+      "slug": "ananas-rio-580ml-shmatochky-zh-b-24-sht-60-iashch",
+      "name": "Ананас RIO 580ml шматочки ж/б (24 шт/60 ящ)",
+      "description": null,
+      "netWeight": "580 мл",
+      "unitsPerBox": 24,
+      "unit": "шт.",
+      "minOrder": 24,
+      "inStock": false,
+      "isPopular": false,
       "isNew": false,
       "isSale": false,
       "sortOrder": 12,
-      "categoryId": 4,
-      "brandId": 4,
-      "createdAt": "2026-09-24T12:37:36.152Z",
+      "categoryId": 113,
+      "brandId": null,
+      "createdAt": "2026-10-26T15:17:38.989Z",
       "images": [
         {
-          "url": "/demo/products/olyvky-helcom-zeleni-bez-kistochky-340-h.svg",
-          "alt": "Оливки HELCOM зелені без кісточки, 340 г"
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00003073-1.jpeg",
+          "alt": "Ананас RIO 580ml шматочки ж/б (24 шт/60 ящ)"
         }
       ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Польща"
-        },
-        {
-          "name": "Маса після відціджування",
-          "value": "150 г"
-        },
-        {
-          "name": "Упаковка",
-          "value": "Скляна банка"
-        }
-      ]
+      "attributes": []
     },
     {
-      "id": 14,
-      "externalId": "00-00004102",
-      "sku": "HEL-BLK-340",
-      "barcode": "4820000010139",
-      "slug": "olyvky-helcom-chorni-bez-kistochky-340-h",
-      "name": "Оливки HELCOM чорні без кісточки, 340 г",
-      "description": "Чорні оливки без кісточки з м'яким смаком для закусок і гарячих страв.",
-      "netWeight": "340 г",
-      "unitsPerBox": 6,
+      "id": 145,
+      "externalId": "b052d96f-9dce-11ef-bc79-860e5f5ec3c7",
+      "sku": "00-00002434",
+      "barcode": "5902166709177",
+      "slug": "anchousy-file-helcom-45g-v-soniashnykovii-olii-25-sht",
+      "name": "Анчоуси (філе) HELCOM 45g в соняшниковій олії (25 шт)",
+      "description": null,
+      "netWeight": "45 г",
+      "unitsPerBox": 25,
       "unit": "шт.",
-      "minOrder": 1,
-      "inStock": true,
+      "minOrder": 25,
+      "inStock": false,
       "isPopular": false,
       "isNew": false,
       "isSale": false,
       "sortOrder": 13,
-      "categoryId": 4,
+      "categoryId": 88,
       "brandId": 4,
-      "createdAt": "2026-09-24T12:37:36.160Z",
+      "createdAt": "2026-10-26T15:17:38.993Z",
       "images": [
         {
-          "url": "/demo/products/olyvky-helcom-chorni-bez-kistochky-340-h.svg",
-          "alt": "Оливки HELCOM чорні без кісточки, 340 г"
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002434-1.jpeg",
+          "alt": "Анчоуси (філе) HELCOM 45g в соняшниковій олії (25 шт)"
         }
       ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Польща"
-        },
-        {
-          "name": "Маса після відціджування",
-          "value": "150 г"
-        },
-        {
-          "name": "Упаковка",
-          "value": "Скляна банка"
-        }
-      ]
+      "attributes": []
     },
     {
-      "id": 15,
-      "externalId": "00-00004103",
-      "sku": "HEL-JAL-340",
-      "barcode": "4820000010146",
-      "slug": "olyvky-helcom-z-pertsem-khalapeno-340-h",
-      "name": "Оливки HELCOM з перцем халапеньо, 340 г",
-      "description": "Зелені оливки, фаршировані гострим перцем халапеньо.",
-      "netWeight": "340 г",
-      "unitsPerBox": 6,
+      "id": 146,
+      "externalId": "a5b85f48-8d47-11ef-bc63-860e5f5ec3c7",
+      "sku": "00-00002373",
+      "barcode": "5901858050696",
+      "slug": "aromatyzator-emix-24x5g-mix-10-sht",
+      "name": "Ароматизатор EMIX 24x5g mix (10 шт)",
+      "description": null,
+      "netWeight": "5 г",
+      "unitsPerBox": 10,
       "unit": "шт.",
-      "minOrder": 1,
-      "inStock": true,
+      "minOrder": 10,
+      "inStock": false,
       "isPopular": false,
-      "isNew": true,
+      "isNew": false,
       "isSale": false,
       "sortOrder": 14,
-      "categoryId": 4,
-      "brandId": 4,
-      "createdAt": "2026-09-24T12:37:36.167Z",
+      "categoryId": 118,
+      "brandId": null,
+      "createdAt": "2026-10-26T15:17:38.997Z",
       "images": [
         {
-          "url": "/demo/products/olyvky-helcom-z-pertsem-khalapeno-340-h.svg",
-          "alt": "Оливки HELCOM з перцем халапеньо, 340 г"
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002373-1.jpeg",
+          "alt": "Ароматизатор EMIX 24x5g mix (10 шт)"
         }
       ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Польща"
-        },
-        {
-          "name": "Маса після відціджування",
-          "value": "150 г"
-        },
-        {
-          "name": "Упаковка",
-          "value": "Скляна банка"
-        }
-      ]
+      "attributes": []
     },
     {
-      "id": 16,
-      "externalId": "00-00005101",
-      "sku": "MESS-WAF-180",
-      "barcode": "4820000010153",
-      "slug": "vafli-messis-z-kremom-180-h",
-      "name": "Вафлі MESSIS з кремом, 180 г",
-      "description": "Хрусткі вафлі з ніжним вершковим кремом. Популярна позиція для роздрібу та кав'ярень.",
-      "netWeight": "180 г",
-      "unitsPerBox": 12,
+      "id": 147,
+      "externalId": "673f65c8-73b8-11ec-b838-860e5f5ec3c7",
+      "sku": "00-00000733",
+      "barcode": "5902166727416",
+      "slug": "artyshoky-marynovani-helcom-225ml-sk-b-8-sht-280-iashch",
+      "name": "Артишоки мариновані HELCOM 225ml ск/б (8 шт/280 ящ)",
+      "description": "Об'єм: 225 мл. Маса нетто: 180г\n\nПастеризований продукт.\n\nСклад: артишоки, вода, рапсова олія, спиртовий оцет, спеції, цукор, регулятор кислотності: лимонна кислота, антиоксидант: аскорбінова кислота, сіль.\n\nТермін придатності вказаний на етикетці.\nЗберігати в прохолодному і сухому місці. Після відкриття зберігати в холодильнику не більше 72 годин.\n\nЕнергетична цінність: 364 кДж / 89 ккал,\nжири 8,1 г ( з них насичених жирних кислот 0,6 г),\nвуглеводи <0,5 г( з них цукру 0,0 г),\nклітковина 3,6 г,\nбілки 1,6 г,\nсіль 1,1 г.\n\nКраїна виробник: Польща",
+      "netWeight": "225 мл",
+      "unitsPerBox": 8,
       "unit": "шт.",
-      "minOrder": 1,
-      "inStock": true,
-      "isPopular": true,
+      "minOrder": 8,
+      "inStock": false,
+      "isPopular": false,
       "isNew": false,
       "isSale": false,
       "sortOrder": 15,
-      "categoryId": 5,
-      "brandId": 1,
-      "createdAt": "2026-09-24T12:37:36.175Z",
+      "categoryId": 88,
+      "brandId": 4,
+      "createdAt": "2026-10-26T15:17:39.000Z",
       "images": [
         {
-          "url": "/demo/products/vafli-messis-z-kremom-180-h.svg",
-          "alt": "Вафлі MESSIS з кремом, 180 г"
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00000733-1.jpeg",
+          "alt": "Артишоки мариновані HELCOM 225ml ск/б (8 шт/280 ящ)"
         }
       ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Польща"
-        },
-        {
-          "name": "Термін придатності",
-          "value": "12 місяців"
-        }
-      ]
+      "attributes": []
     },
     {
-      "id": 17,
-      "externalId": "00-00005102",
-      "sku": "MESS-WAC-180",
-      "barcode": "4820000010160",
-      "slug": "vafli-messis-shokoladni-180-h",
-      "name": "Вафлі MESSIS шоколадні, 180 г",
-      "description": "Вафлі з шоколадним кремом і насиченим какао-смаком.",
-      "netWeight": "180 г",
-      "unitsPerBox": 12,
+      "id": 148,
+      "externalId": "673f65cb-73b8-11ec-b838-860e5f5ec3c7",
+      "sku": "00-00000734",
+      "barcode": "5902166710173",
+      "slug": "artyshoky-marynovani-helcom-327ml-8-sht-200-iashch",
+      "name": "Артишоки мариновані HELCOM 327ml (8 шт/200 ящ)",
+      "description": "Об'єм: 327 мл. Маса нетто 280г\n\nПастеризований продукт.\n\nСклад: артишоки, вода, рапсова олія, спиртовий оцет, спеції, цукор, регулятор кислотності: лимонна кислота, антиоксидант: аскорбінова кислота, сіль.\n\nТермін придатності вказаний на етикетці.\nЗберігати в прохолодному і сухому місці. Після відкриття зберігати в холодильнику не більше 72 годин.\n\nЕнергетична цінність: 364 кДж / 89 ккал,\nжири 8,1 г ( з них насичених жирних кислот 0,6 г),\nвуглеводи <0,5 г( з них цукру 0,0 г),\nклітковина 3,6 г,\nбілки 1,6 г,\nсіль 1,1 г.\n\nКраїна виробник: Польща",
+      "netWeight": "327 мл",
+      "unitsPerBox": 8,
       "unit": "шт.",
-      "minOrder": 1,
+      "minOrder": 8,
       "inStock": true,
       "isPopular": false,
       "isNew": false,
       "isSale": false,
       "sortOrder": 16,
-      "categoryId": 5,
-      "brandId": 1,
-      "createdAt": "2026-09-24T12:37:36.182Z",
+      "categoryId": 88,
+      "brandId": 4,
+      "createdAt": "2026-10-26T15:17:39.003Z",
       "images": [
         {
-          "url": "/demo/products/vafli-messis-shokoladni-180-h.svg",
-          "alt": "Вафлі MESSIS шоколадні, 180 г"
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00000734-1.jpeg",
+          "alt": "Артишоки мариновані HELCOM 327ml (8 шт/200 ящ)"
         }
       ],
-      "attributes": [
-        {
-          "name": "Країна виробництва",
-          "value": "Польща"
-        },
-        {
-          "name": "Термін придатності",
-          "value": "12 місяців"
-        }
-      ]
+      "attributes": []
     },
     {
-      "id": 18,
-      "externalId": "00-00005103",
-      "sku": "MESS-WAL-180",
-      "barcode": "4820000010177",
-      "slug": "vafli-messis-lymonni-180-h",
-      "name": "Вафлі MESSIS лимонні, 180 г",
-      "description": "Легкі вафлі з освіжаючим лимонним кремом.",
-      "netWeight": "180 г",
-      "unitsPerBox": 12,
+      "id": 149,
+      "externalId": "6bd2b0ab-0bd5-11f0-bd08-860e5f5ec3c7",
+      "sku": "00-00002668",
+      "barcode": "5900617047151",
+      "slug": "batonchyk-sante-flips-23g-zi-smakom-polunychnoho-morozyva-24-sht-500-iashch",
+      "name": "Батончик SANTE Flips 23g зі смаком полуничного морозива (24 шт/500 ящ)",
+      "description": null,
+      "netWeight": "23 г",
+      "unitsPerBox": 24,
       "unit": "шт.",
-      "minOrder": 1,
+      "minOrder": 24,
       "inStock": false,
       "isPopular": false,
-      "isNew": true,
+      "isNew": false,
       "isSale": false,
       "sortOrder": 17,
-      "categoryId": 5,
-      "brandId": 1,
-      "createdAt": "2026-09-24T12:37:36.191Z",
+      "categoryId": 101,
+      "brandId": 30,
+      "createdAt": "2026-10-26T15:17:39.007Z",
       "images": [
         {
-          "url": "/demo/products/vafli-messis-lymonni-180-h.svg",
-          "alt": "Вафлі MESSIS лимонні, 180 г"
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002668-1.jpeg",
+          "alt": "Батончик SANTE Flips 23g зі смаком полуничного морозива (24 шт/500 ящ)"
         }
       ],
-      "attributes": [
+      "attributes": []
+    },
+    {
+      "id": 150,
+      "externalId": "ab07abdb-5c02-11ec-b81a-860e5f5ec3c7",
+      "sku": "00-00000617",
+      "barcode": "5900617037763",
+      "slug": "batonchyk-sante-flips-25g-karamel-24-sht-500-iashch",
+      "name": "Батончик SANTE Flips 25g карамель (24 шт/500 ящ)",
+      "description": "Батончик Flips — смачна та поживна закуска для маленьких дослідників! Улюблені сніданки какао-кульки тепер у вигляді смачного батончика, який можна хруснути за бажанням. Ми б'ємо рекорд смачності зі зниженим вмістом цукру на 30%! А замість цукру - какао та запах кориці. Крім того, є три види злаків: пшениця, рис і кукурудза. Не містить трансжирів.\n\nМаса нетто: 25 г\n\nСклад: борошно 33% (пшеничне цільнозернове, рисове, кукурудзяне), підсолоджувач: мальтитол; сироп цукру, розпушуючі кукурудзяні волокна), олія рослинна (пальмова, ши), обезжирене сухе молоко, карамель 3 % (карамелізований цукор), субстанція вологоутримуюча: гліцерол, сорбітол; арахіс, цукор тростинний нерафінований, сироватка в порошку (з молока), олія соняшникова, сіль морська, какао, ароматизатор, емульгатор: лецитин (з сої), ароматизатор.\n\nМоже містити арахіс, інші горіхи та кунжут.\n\nДата кінцевого споживання та номер партії вказані на упаковці.\nЗберігати в сухому і прохолодному місці за температури не вище 25 С та відносній вологості повітря 75%.\n\nЕнергетична цінність: в 100 г продукту 393 ккал.\nЖири - 10 г, (з них насичені - 5,9 г),\nвуглеводи - 65 г (з них цукор - 13 г),\nволокна - 9,5 г,\nбілок - 5,6 г,\nсіль 0,93 г.\n\nКраїна виробник: Польща",
+      "netWeight": "25 г",
+      "unitsPerBox": 24,
+      "unit": "шт.",
+      "minOrder": 24,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 18,
+      "categoryId": 101,
+      "brandId": 30,
+      "createdAt": "2026-10-26T15:17:39.010Z",
+      "images": [
         {
-          "name": "Країна виробництва",
-          "value": "Польща"
-        },
-        {
-          "name": "Термін придатності",
-          "value": "12 місяців"
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00000617-1.jpeg",
+          "alt": "Батончик SANTE Flips 25g карамель (24 шт/500 ящ)"
         }
-      ]
+      ],
+      "attributes": []
+    },
+    {
+      "id": 151,
+      "externalId": "ab07abd8-5c02-11ec-b81a-860e5f5ec3c7",
+      "sku": "00-00000616",
+      "barcode": "5900617034878",
+      "slug": "batonchyk-sante-flips-25g-shokoladnyi-24-sht-500-iashch",
+      "name": "Батончик SANTE Flips 25g шоколадний (24 шт/500 ящ)",
+      "description": "Батончик Flips — смачна та поживна закуска для маленьких дослідників! Улюблені сніданки какао-кульки тепер у вигляді смачного батончика, який можна хруснути за бажанням. Ми б'ємо рекорд смачності зі зниженим вмістом цукру на 30%! А замість цукру - какао та запах кориці. Крім того, є три види злаків: пшениця, рис і кукурудза. Не містить трансжирів.\n\nМаса нетто: 25 г.\n\nСклад: борошно 33% (пшеничне цільнозернова 24%, рисова, кукурудзяна), підсолоджувач: мальтитол; сироп цукру, розпушуючі кукурудзяні волокна), олія рослинна (пальмова, ши), обезжирене сухе молоко 4,4%, какао 3,4%, субстанція вологоутримуюча: гліцерол, сорбітол; цукор тростинний нерафінований, сироватка в порошку (з молока) 2%, олія соняшникова, сіль морська, кориця, емульгатор: лецитин (з сої), ароматизатори.\n\nМоже містити арахіс та інші горіхи та кунжут.\n\nДата кінцевого споживання та номер партії вказані на упаковці.\nЗберігати в сухому і прохолодному місці за температури не вище 25 С та відносній вологості повітря 75%.\n\nЕнергетична цінність: в 100 г продукту 358 ккал.\nЖири - 10 г, (з них насичені -6,3 г),\nвуглеводи -66 г (з них цукор - 15 г),\nволокна - 7,6 г,\nбілок - 6,8 г,\nсіль 0,4 г.\n\nКраїна виробник: Польща",
+      "netWeight": "25 г",
+      "unitsPerBox": 24,
+      "unit": "шт.",
+      "minOrder": 24,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 19,
+      "categoryId": 101,
+      "brandId": 30,
+      "createdAt": "2026-10-26T15:17:39.014Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00000616-1.jpeg",
+          "alt": "Батончик SANTE Flips 25g шоколадний (24 шт/500 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 152,
+      "externalId": "83f5be99-84af-11ef-bc58-860e5f5ec3c7",
+      "sku": "00-00002290",
+      "barcode": "5205422880000",
+      "slug": "belhiiski-vafli-yoo-hoo-50g-z-abrykosovoiu-nachynkoiu-12-sht-448-iashch",
+      "name": "Бельгійські вафлі YOO!HOO 50g з абрикосовою начинкою (12 шт/448 ящ)",
+      "description": null,
+      "netWeight": "50 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "minOrder": 12,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 20,
+      "categoryId": 105,
+      "brandId": 31,
+      "createdAt": "2026-10-26T15:17:39.018Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002290-1.jpeg",
+          "alt": "Бельгійські вафлі YOO!HOO 50g з абрикосовою начинкою (12 шт/448 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 153,
+      "externalId": "06e22b03-84b0-11ef-bc58-860e5f5ec3c7",
+      "sku": "00-00002291",
+      "barcode": "5205422400017",
+      "slug": "belhiiski-vafli-yoo-hoo-50g-z-vanilnoiu-nachynkoiu-12-sht-448-iashch",
+      "name": "Бельгійські вафлі YOO!HOO 50g з ванільною начинкою (12 шт/448 ящ)",
+      "description": null,
+      "netWeight": "50 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "minOrder": 12,
+      "inStock": true,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 21,
+      "categoryId": 105,
+      "brandId": 31,
+      "createdAt": "2026-10-26T15:17:39.021Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002291-1.jpeg",
+          "alt": "Бельгійські вафлі YOO!HOO 50g з ванільною начинкою (12 шт/448 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 154,
+      "externalId": "604dbf2b-84ae-11ef-bc58-860e5f5ec3c7",
+      "sku": "00-00002289",
+      "barcode": "5205422882011",
+      "slug": "belhiiski-vafli-yoo-hoo-50g-z-molochnoiu-nachynkoiu-12-sht-448-iashch",
+      "name": "Бельгійські вафлі YOO!HOO 50g з молочною начинкою (12 шт/448 ящ)",
+      "description": null,
+      "netWeight": "50 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "minOrder": 12,
+      "inStock": true,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 22,
+      "categoryId": 105,
+      "brandId": 31,
+      "createdAt": "2026-10-26T15:17:39.024Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002289-1.jpeg",
+          "alt": "Бельгійські вафлі YOO!HOO 50g з молочною начинкою (12 шт/448 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 155,
+      "externalId": "84e4af3c-a86c-11ed-b9dd-860e5f5ec3c7",
+      "sku": "00-00001623",
+      "barcode": "5205422170002",
+      "slug": "belhiiski-vafli-yoo-hoo-50g-z-nachynkoiu-kakao-12-sht-448-iashch",
+      "name": "Бельгійські вафлі YOO!HOO 50g з начинкою какао (12 шт/448 ящ)",
+      "description": null,
+      "netWeight": "50 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "minOrder": 12,
+      "inStock": true,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 23,
+      "categoryId": 105,
+      "brandId": 31,
+      "createdAt": "2026-10-26T15:17:39.027Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001623-1.jpeg",
+          "alt": "Бельгійські вафлі YOO!HOO 50g з начинкою какао (12 шт/448 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 156,
+      "externalId": "ad46026c-a86c-11ed-b9dd-860e5f5ec3c7",
+      "sku": "00-00001624",
+      "barcode": "5205422170163",
+      "slug": "belhiiski-vafli-yoo-hoo-50g-z-nachynkoiu-kakao-i-lisovyi-horikh-12-sht-448-iashc",
+      "name": "Бельгійські вафлі YOO!HOO 50g з начинкою какао і лісовий горіх (12 шт/448 ящ)",
+      "description": null,
+      "netWeight": "50 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "minOrder": 12,
+      "inStock": true,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 24,
+      "categoryId": 105,
+      "brandId": 31,
+      "createdAt": "2026-10-26T15:17:39.030Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001624-1.jpeg",
+          "alt": "Бельгійські вафлі YOO!HOO 50g з начинкою какао і лісовий горіх (12 шт/448 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 157,
+      "externalId": "213192c7-a86c-11ed-b9dd-860e5f5ec3c7",
+      "sku": "00-00001622",
+      "barcode": "5205422014122",
+      "slug": "belhiiski-vafli-yoo-hoo-50g-z-nachynkoiu-polunytsia-12-sht-448-iashch",
+      "name": "Бельгійські вафлі YOO!HOO 50g з начинкою полуниця (12 шт/448 ящ)",
+      "description": null,
+      "netWeight": "50 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "minOrder": 12,
+      "inStock": true,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 25,
+      "categoryId": 105,
+      "brandId": 31,
+      "createdAt": "2026-10-26T15:17:39.033Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001622-1.jpeg",
+          "alt": "Бельгійські вафлі YOO!HOO 50g з начинкою полуниця (12 шт/448 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 158,
+      "externalId": "717d9dc1-a86b-11ed-b9dd-860e5f5ec3c7",
+      "sku": "00-00001621",
+      "barcode": "5205422000002",
+      "slug": "belhiiski-vafli-yoo-hoo-50g-temni-z-nachynkoiu-solona-karamel-12-sht-448-iashch",
+      "name": "Бельгійські вафлі YOO!HOO 50g темні з начинкою солона карамель (12 шт/448 ящ)",
+      "description": null,
+      "netWeight": "50 г",
+      "unitsPerBox": 12,
+      "unit": "шт.",
+      "minOrder": 12,
+      "inStock": true,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 26,
+      "categoryId": 105,
+      "brandId": 31,
+      "createdAt": "2026-10-26T15:17:39.036Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001621-1.jpeg",
+          "alt": "Бельгійські вафлі YOO!HOO 50g темні з начинкою солона карамель (12 шт/448 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 159,
+      "externalId": "7adfc403-b374-11f0-bddf-860e5f5ec3c7",
+      "sku": "00-00003063",
+      "barcode": "8076809581998",
+      "slug": "boroshno-semola-barilla-300g-semola-di-grano-duro-15-sht",
+      "name": "Борошно семола BARILLA 300g Semola di Grano Duro (15 шт)",
+      "description": null,
+      "netWeight": "300 г",
+      "unitsPerBox": 15,
+      "unit": "шт.",
+      "minOrder": 15,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 27,
+      "categoryId": 73,
+      "brandId": 3,
+      "createdAt": "2026-10-26T15:17:39.039Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00003063-1.jpeg",
+          "alt": "Борошно семола BARILLA 300g Semola di Grano Duro (15 шт)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 160,
+      "externalId": "37687efd-fb91-11f0-be3c-860e5f5ec3c7",
+      "sku": "00-00003165",
+      "barcode": "5904863001745",
+      "slug": "buriachky-z-khronom-viyavo-320ml-290g-10-sht-144-iashch",
+      "name": "Бурячки з хроном VIYAVO 320ml/290g (10 шт/144 ящ)",
+      "description": null,
+      "netWeight": "320 мл",
+      "unitsPerBox": 10,
+      "unit": "шт.",
+      "minOrder": 10,
+      "inStock": true,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 28,
+      "categoryId": 63,
+      "brandId": 32,
+      "createdAt": "2026-10-26T15:17:39.043Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00003165-1.jpeg",
+          "alt": "Бурячки з хроном VIYAVO 320ml/290g (10 шт/144 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 161,
+      "externalId": "8b2ebf17-229d-11ec-b860-3cecef211409",
+      "sku": "00-00000517",
+      "barcode": "5905999154497",
+      "slug": "buriachky-konservovani-green-garden-480g-sk-b-8-sht-108-iashch",
+      "name": "Бурячки консервовані GREEN GARDEN 480g ск/б (8 шт/108 ящ)",
+      "description": "Буряк стане відмінним помічником для приготування борщу та улюблених салатів.\n\nМаса 480 г.\nБуряк консервований, тертий. Продукт пастеризований.\n\nСклад: буряк червоний, вода, оцет спиртовий (столовий), цукор, сіль.\n\nТермін придатності вказаний на кришці.\nЗберігати в сухому, холодному місці.\nПісля відкриття, зберігати в холодильнику не більше 48 годин.\n\nЕнергетична цінність у 100 г: 163 кДж/38 ккал,\nжири 0 г (насичених жирів 0 г),\nвуглеводи 8 г (цукру з них 7,9 г),\nбілки 1,0 г,\nсіль 0, 74 г.\n\nКраїна виробник: Польща",
+      "netWeight": "480 г",
+      "unitsPerBox": 8,
+      "unit": "шт.",
+      "minOrder": 8,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 29,
+      "categoryId": 85,
+      "brandId": 33,
+      "createdAt": "2026-10-26T15:17:39.046Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00000517-1.jpeg",
+          "alt": "Бурячки консервовані GREEN GARDEN 480g ск/б (8 шт/108 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 162,
+      "externalId": "c58ba30f-e475-11ef-bcd4-860e5f5ec3c7",
+      "sku": "00-00002610",
+      "barcode": "5904863001004",
+      "slug": "buriachky-konservovani-terti-fructos-500ml-400g-sk-b-8-sht-126-iashch",
+      "name": "Бурячки консервовані терті FRUCTOS 500ml/400g ск/б (8 шт/126 ящ)",
+      "description": "Буряк тертий. Продукт пастеризований.\nСклад: буряк (62%), вода, оцет, цукор, сіль.\nКраще спожити до/ номер партії: вказано на кришці банки.\nЗберігати в сухому і прохолодному місці. Після відкриття зберігати в холодильнику і використати протягом 7 днів.\n\nЕнергетична цінність\n\n181 kJ/кДж\n43 kcal/ккал\n\nЖири 0,4 g/г\nу тому числі насичені жирні кислоти 0,2 g/г\nВуглеводи 7,98 g/г\nв тому числі цукри 6,31 g/г\nБілки 1,05 g/г\nСіль 1,13 g/г",
+      "netWeight": "500 мл",
+      "unitsPerBox": 8,
+      "unit": "шт.",
+      "minOrder": 8,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 30,
+      "categoryId": 113,
+      "brandId": null,
+      "createdAt": "2026-10-26T15:17:39.050Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002610-1.jpeg",
+          "alt": "Бурячки консервовані терті FRUCTOS 500ml/400g ск/б (8 шт/126 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 163,
+      "externalId": "de75f4ff-1f64-11f0-bd21-860e5f5ec3c7",
+      "sku": "00-00002706",
+      "barcode": "5904863002759",
+      "slug": "buriachky-smazheni-viyavo-500ml-490g-sk-b-8-sht-126-iashch",
+      "name": "Бурячки смажені VIYAVO 500ml/490g ск/б (8 шт/126 ящ)",
+      "description": null,
+      "netWeight": "500 мл",
+      "unitsPerBox": 8,
+      "unit": "шт.",
+      "minOrder": 8,
+      "inStock": true,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 31,
+      "categoryId": 63,
+      "brandId": 32,
+      "createdAt": "2026-10-26T15:17:39.053Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002706-1.jpeg",
+          "alt": "Бурячки смажені VIYAVO 500ml/490g ск/б (8 шт/126 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 164,
+      "externalId": "b664be96-1f61-11f0-bd21-860e5f5ec3c7",
+      "sku": "00-00002696",
+      "barcode": "5904863002315",
+      "slug": "buriachky-terti-konservovani-viyavo-500ml-480g-sk-b-8-sht-126-iashch",
+      "name": "Бурячки терті консервовані VIYAVO 500ml/480g ск/б (8 шт/126 ящ)",
+      "description": null,
+      "netWeight": "500 мл",
+      "unitsPerBox": 8,
+      "unit": "шт.",
+      "minOrder": 8,
+      "inStock": true,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 32,
+      "categoryId": 63,
+      "brandId": 32,
+      "createdAt": "2026-10-26T15:17:39.056Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002696-1.jpeg",
+          "alt": "Бурячки терті консервовані VIYAVO 500ml/480g ск/б (8 шт/126 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 165,
+      "externalId": "72d8b07d-1f65-11f0-bd21-860e5f5ec3c7",
+      "sku": "00-00002707",
+      "barcode": "5904863002766",
+      "slug": "buriachky-tsili-marynovani-kulky-viyavo-500ml-450g-sk-b-8-sht-126-iashch",
+      "name": "Бурячки цілі мариновані кульки VIYAVO 500ml/450g ск/б (8 шт/126 ящ)",
+      "description": null,
+      "netWeight": "500 мл",
+      "unitsPerBox": 8,
+      "unit": "шт.",
+      "minOrder": 8,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 33,
+      "categoryId": 63,
+      "brandId": 32,
+      "createdAt": "2026-10-26T15:17:39.060Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002707-1.jpeg",
+          "alt": "Бурячки цілі мариновані кульки VIYAVO 500ml/450g ск/б (8 шт/126 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 166,
+      "externalId": "bedc16a5-942d-11ee-bb18-860e5f5ec3c7",
+      "sku": "00-00002060",
+      "barcode": "5900797008416",
+      "slug": "vafli-messis-50g-horikhovi-30-sht-320-iashch",
+      "name": "Вафлі MESSIS 50g горіхові (30 шт/320 ящ)",
+      "description": "Вафлі Messis - це надзвичайно хрусткі десертні вафельки в шоколаді з смачними начинками.\n\nВага вафель 50г, що робить їх ідеальним перекусом в будь-яку пору дня\nЧастка начинки 53,8% від загальної ваги вафлі, що гарантує насичений ніжний смак\nЧотири популярні смаки: какао, тоффі, горіх, кокос\nВиготовлено в Польщі за європейськими стандартами\n\nВафлі в молочному шоколаді з начинкою (53,8 %) горіховою.\nСклад: Молочний шоколад 30 % (цукор, сухе незбиране молоко, какао-масло, какао терте, пальмовий жир, суха сироватка (з молока), лактоза (з молока), емульгатори: лецитин (з сої), полігліцерол полірицинолеат; ароматизатор), пшеничне борошно, пальмовий жир, цукор, суха сироватка (з молока), тертий лісовий горіх 2,8 %, какао зі зниженим вмістом жиру, сухе знежирене молоко, ріпакова олія, ароматизатор, сіль, емульгатор: лецитин; розпушувачі: карбонат натрію, карбонат амонію; картопляний крохмаль. Може містити яйця, арахіс, інші горіхи, кунжут.\n\nЗберігати в сухому і прохолодному місці за температури не вище +25С та відносній вологості повітря <75%.",
+      "netWeight": "50 г",
+      "unitsPerBox": 30,
+      "unit": "шт.",
+      "minOrder": 30,
+      "inStock": true,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 34,
+      "categoryId": 107,
+      "brandId": 1,
+      "createdAt": "2026-10-26T15:17:39.063Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002060-1.jpeg",
+          "alt": "Вафлі MESSIS 50g горіхові (30 шт/320 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 167,
+      "externalId": "7bf62093-942d-11ee-bb18-860e5f5ec3c7",
+      "sku": "00-00002059",
+      "barcode": "5900797008379",
+      "slug": "vafli-messis-50g-z-kakao-kremom-30-sht-320-iashch",
+      "name": "Вафлі MESSIS 50g з какао-кремом (30 шт/320 ящ)",
+      "description": "Вафлі Messis - це надзвичайно хрусткі десертні вафельки в шоколаді з смачними начинками.\n\nВага вафель 50г, що робить їх ідеальним перекусом в будь-яку пору дня\nЧастка начинки 53,8% від загальної ваги вафлі, що гарантує насичений ніжний смак\nЧотири популярні смаки: какао, тоффі, горіх, кокос\nВиготовлено в Польщі за європейськими стандартами\n\nВафлі в шоколаді з какао-кремом (53,8 %).\nСклад: Шоколад 30 % (цукор, какао терте, какао-масло, молочний жир, емульгатори: лецитин (з сої), полігліцерол полірицинолеат; ароматизатор), пшеничне борошно, пальмовий жир, цукор, суха сироватка (з молока), какао зі зниженим вмістом жиру 3 %, сухе знежирене молоко, ріпакова олія, ароматизатор, сіль, емульгатор: лецитин; розпушувачі: карбонат натрію, карбонат амонію; картопляний крохмаль. Може містити яйця, арахіс, горіхи, кунжут.\nЗберігати в сухому і прохолодному місці за температури не вище +25С та відносній вологості повітря <75%.",
+      "netWeight": "50 г",
+      "unitsPerBox": 30,
+      "unit": "шт.",
+      "minOrder": 30,
+      "inStock": true,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 35,
+      "categoryId": 107,
+      "brandId": 1,
+      "createdAt": "2026-10-26T15:17:39.068Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002059-1.jpeg",
+          "alt": "Вафлі MESSIS 50g з какао-кремом (30 шт/320 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 168,
+      "externalId": "fb75ce8c-942d-11ee-bb18-860e5f5ec3c7",
+      "sku": "00-00002061",
+      "barcode": "5900797008430",
+      "slug": "vafli-messis-50g-z-smakom-toffi-30-sht-320-iashch",
+      "name": "Вафлі MESSIS 50g з смаком тоффі (30 шт/320 ящ)",
+      "description": "Вафлі Messis - це надзвичайно хрусткі десертні вафельки в шоколаді з смачними начинками.\n\nВага вафель 50г, що робить їх ідеальним перекусом в будь-яку пору дня\nЧастка начинки 53,8% від загальної ваги вафлі, що гарантує насичений ніжний смак\nЧотири популярні смаки: какао, тоффі, горіх, кокос\nВиготовлено в Польщі за європейськими стандартами\n\nВафлі в молочному шоколаді з начинкою (53,8 %) з смаком тоффі.\nСклад: Молочний шоколад 30 % (цукор, сухе незбиране молоко, какао-масло, какао терте, пальмовий жир, суха сироватка (з молока), лактоза (з молока), емульгатор: лецитин (з сої), полігліцерол полірицинолеат; ароматизатор), пшеничне борошно, пальмовий жир, цукор, суха сироватка (з молока), сухе знежирене молоко, ароматизатор (містить молоко), какао зі зниженим вмістом жиру, ріпакова олія, сіль, емульгатор: лецитин; барвник: каротин; розпушувачі: карбонат натрію, карбонат амонію; картопляний крохмаль. Може містити яйця, арахіс, горіхи, кунжут.\n\nЗберігати в сухому і прохолодному місці за температури не вище +25С та відносній вологості повітря <75%.",
+      "netWeight": "50 г",
+      "unitsPerBox": 30,
+      "unit": "шт.",
+      "minOrder": 30,
+      "inStock": true,
+      "isPopular": true,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 36,
+      "categoryId": 107,
+      "brandId": 1,
+      "createdAt": "2026-10-26T15:17:39.071Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002061-1.jpeg",
+          "alt": "Вафлі MESSIS 50g з смаком тоффі (30 шт/320 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 169,
+      "externalId": "e8893e9b-942c-11ee-bb18-860e5f5ec3c7",
+      "sku": "00-00002058",
+      "barcode": "5900797008393",
+      "slug": "vafli-messis-50g-kokosovi-30-sht-320-iashch",
+      "name": "Вафлі MESSIS 50g кокосові (30 шт/320 ящ)",
+      "description": "Вафлі Messis - це надзвичайно хрусткі десертні вафельки в шоколаді з смачними начинками.\n\nВага вафель 50г, що робить їх ідеальним перекусом в будь-яку пору дня\nЧастка начинки 53,8% від загальної ваги вафлі, що гарантує насичений ніжний смак\nЧотири популярні смаки: какао, тоффі, горіх, кокос\nВиготовлено в Польщі за європейськими стандартами\n\nВафлі в молочному шоколаді з начинкою (53,8 %) кокосовою.\nСклад: Молочний шоколад 30 % (цукор, сухе незбиране молоко, какао-масло, какао терте, пальмовий жир, суха сироватка (з молока), лактоза (з молока), емульгатори: лецитин (з сої), полігліцерол полірицинолеат; ароматизатор), пшеничне борошно, пальмовий жир, цукор, суха сироватка (з молока), кокосова стружка 2,7 %, сухе знежирене молоко, ріпакова олія, ароматизатор, сіль, емульгатор: лецитин; розпушувачі: карбонат натрію, карбонат амонію; картопляний крохмаль. Може містити яйця, арахіс, горіхи, кунжут.\n\nЗберігати в сухому і прохолодному місці за температури не вище +25С та відносній вологості повітря <75%.",
+      "netWeight": "50 г",
+      "unitsPerBox": 30,
+      "unit": "шт.",
+      "minOrder": 30,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 37,
+      "categoryId": 107,
+      "brandId": 1,
+      "createdAt": "2026-10-26T15:17:39.075Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002058-1.jpeg",
+          "alt": "Вафлі MESSIS 50g кокосові (30 шт/320 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 170,
+      "externalId": "5df9adb9-9c25-11ef-bc77-860e5f5ec3c7",
+      "sku": "00-00002430",
+      "barcode": "40144559",
+      "slug": "vafli-storck-knoppers-25g-black-white-24-sht-288-iashch",
+      "name": "Вафлі Storck KNOPPERS 25g Black&White (24 шт/288 ящ)",
+      "description": "Маса нетто: 25 г.\nВафелька з начинкою: ( з нуги - 29,8 г , з кусочками печива 1.6%, з начинкою молочною 30,3%)\n\nСклад: цукор, рослинні жири (пальмова, ши), борошно пшеничне (17,2%), молоко сухе знежирене (13,2%), фундук (4,5%), цільнозернове борошно пшеничне (4,8%), какао, молочний жир (2,7%), знежирне какао, пшеничний крохмаль, емульгатор: лецитин(з сої), сироп карамельний, сіль, молочна сироватка (з молока), натуральні ароматизатори, розпушувач, мелений арахіс\nМоже містити: мигдаль,інші горіхи та яйця.\n\nДата кінцевого споживання та номер партії вказано на упаковці.\nЗберігати в сухому і прохолодному місці за температури не вище 25 С та відносній вологості повітря 75%.\n\nЕнергетична цінність: в 100 г продукту 2223 кДж/532 ккал.\nжири - 30,6 г,( з них насичені - 18,5 г),\nвуглеводи -53,5 г, (з них цукри - 35,1 г),\nбілок - 9,1 г, сіль - 0,44 г.\n\nАдреса виробника: вироблено для ТзОВ Сторк вул. Приокопова 26, 01-208 Варшава Польща",
+      "netWeight": "25 г",
+      "unitsPerBox": 24,
+      "unit": "шт.",
+      "minOrder": 24,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 38,
+      "categoryId": 92,
+      "brandId": 34,
+      "createdAt": "2026-10-26T15:17:39.078Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002430-1.jpeg",
+          "alt": "Вафлі Storck KNOPPERS 25g Black&White (24 шт/288 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 171,
+      "externalId": "49fda170-161c-11f0-bd15-860e5f5ec3c7",
+      "sku": "00-00002677",
+      "barcode": "40144665",
+      "slug": "vafli-storck-knoppers-25g-iohurtovi-24-sht-288-iashch",
+      "name": "Вафлі Storck KNOPPERS 25g йогуртові (24 шт/288 ящ)",
+      "description": null,
+      "netWeight": "25 г",
+      "unitsPerBox": 24,
+      "unit": "шт.",
+      "minOrder": 24,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 39,
+      "categoryId": 92,
+      "brandId": 34,
+      "createdAt": "2026-10-26T15:17:39.082Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002677-1.jpeg",
+          "alt": "Вафлі Storck KNOPPERS 25g йогуртові (24 шт/288 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 172,
+      "externalId": "1ced1108-807c-11ed-b9a5-860e5f5ec3c7",
+      "sku": "00-00001553",
+      "barcode": "40144382",
+      "slug": "vafli-storck-knoppers-25g-molochno-horikhovi-24-sht-288-iashch",
+      "name": "Вафлі Storck KNOPPERS 25g молочно-горіхові (24 шт/288 ящ)",
+      "description": "Маса нетто: 25 г.\nВафелька з начинкою: молочна-30,3%, з нуги - 29,4 г.\nСклад: цукор, рослинні жири (пальмова, ши), борошно пшеничне (13,5%), молоко сухе знежирене (13%), фундук (9,2%), цільнозернове борошно пшеничне (7,2%), какао, молочний жир (2,7%), нежирне какао, пшеничний крохмаль, емульгатор: лецитин(з сої), сіль, молочна сироватка (з молока), натуральні ароматизатори, розпушувач\nМоже містити: мигдаль,інші горіхи та яйця.\n\nДата кінцевого споживання та номер партії вказано на упаковці.\nЗберігати в сухому і прохолодному місці за температури не вище 25 С та відносній вологості повітря 75%.\n\nЕнергетична цінність: в 100 г продукту 2277 кДж/546 ккал.\nжири - 32,8 г, ( з них насичені - 18,4 г),\nвуглеводи -51,6 г, (з них цукри - 34,2 г),\nбілок - 9,2 г,\nсіль - 0,56 г.\n\nАдреса виробника: вироблено для ТзОВ Сторк вул. Приокопова 26, 01-208 Варшава Польща",
+      "netWeight": "25 г",
+      "unitsPerBox": 24,
+      "unit": "шт.",
+      "minOrder": 24,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 40,
+      "categoryId": 92,
+      "brandId": 34,
+      "createdAt": "2026-10-26T15:17:39.085Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00001553-1.jpeg",
+          "alt": "Вафлі Storck KNOPPERS 25g молочно-горіхові (24 шт/288 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 173,
+      "externalId": "94bc154e-1eb9-11f1-a21f-00155d6c8404",
+      "sku": "00-00003236",
+      "barcode": "5902891280644",
+      "slug": "vershky-sukhi-do-kavy-mokate-200g-carmen-classic-10-sht-160-iashch",
+      "name": "Вершки сухі до кави MOKATE 200g Carmen classic (10 шт/160 ящ)",
+      "description": null,
+      "netWeight": "200 г",
+      "unitsPerBox": 10,
+      "unit": "шт.",
+      "minOrder": 10,
+      "inStock": true,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 41,
+      "categoryId": 59,
+      "brandId": 35,
+      "createdAt": "2026-10-26T15:17:39.088Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00003236-1.jpeg",
+          "alt": "Вершки сухі до кави MOKATE 200g Carmen classic (10 шт/160 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 174,
+      "externalId": "181d8e3a-5f2f-11ec-b81f-860e5f5ec3c7",
+      "sku": "00-00000638",
+      "barcode": "5908258302325",
+      "slug": "vyshni-helcom-680g-bez-kistochky-sk-b-8-sht-96-iashch",
+      "name": "Вишні HELCOM 680g без кісточки ск/б (8 шт/96 ящ)",
+      "description": "Консервована вишня буде не тільки яскравою прикрасою багатьох страв та алкогольних коктейлів, але й пікантним доповненням до десертів, морозива, запеченого м'яса та птиці, особливо добре вишня поєднується з дичиною. Вишня без кісточок ідеально підходить як доповнення до тортів, морозива та напоїв або як освіжаючий напій у спекотні дні.\n\nМаса нетто: 680 г; маса основного продукту 350 г.\n\nСклад: вишні без кісточок, цукор, вода.\n\nПастеризований продукт. Продукт може містити: пшеничний глютен. Продукт може містити вишневі кісточки або їх фрагменти.\nТермін придатності: вказаний на кришці банки.\nЗберігати в прохолодному і сухому місці.\nПісля відкриття зберігати в холодильнику до 48 годин\n\nХарчова цінність в 100 г продукту\nЕнергетична цінність 268 кДж / 63 ккал\nЖир 0,0 г\nв тому числі насичених жирних кислот 0,0 г\nВуглеводи 16,0 г\nз них цукру 15,0 г\nКлітковина 0,0 г\nБілки 0,6 г\nСіль 0,0 г\n\nКраїна виробник: Польща",
+      "netWeight": "680 г",
+      "unitsPerBox": 8,
+      "unit": "шт.",
+      "minOrder": 8,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 42,
+      "categoryId": 88,
+      "brandId": 4,
+      "createdAt": "2026-10-26T15:17:39.092Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00000638-1.jpeg",
+          "alt": "Вишні HELCOM 680g без кісточки ск/б (8 шт/96 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 175,
+      "externalId": "4047faa9-fe64-11ef-bcf5-860e5f5ec3c7",
+      "sku": "00-00002659",
+      "barcode": "5907467900230",
+      "slug": "vyshni-bez-kistochky-viyavo-720ml-8-sht-112-iashch",
+      "name": "Вишні без кісточки VIYAVO 720ml (8 шт/112 ящ)",
+      "description": "ВИШНЯ БЕЗ КІТОЧКИ\n\nВишні без кісточок. Продукт пастеризований.\nСклад: вишні без кісточок, вода, цукор.\nКраще спожити до/ номер партії: вказано на кришці банки.\n\nКаламутність і осад є природним явищем і не є недоліком продукту. Продукт може містити кісточки або їх фрагменти.\nЗберігати в сухому і прохолодному місці. Після відкриття зберігати в холодильнику і спожити протягом 48 годин.\n\nЕнергетична цінність\n276 kJ/кДж\n66 kcal/ккал\nЖири < 0,5 г\nу тому числі насичені жирні кислоти 0,1 г\nВуглеводи 16 г\nв тому числі цукри 15,8 г\nБілки 0,6 г\nСіль 0 г\n\nВиробництво: Польща",
+      "netWeight": "720 мл",
+      "unitsPerBox": 8,
+      "unit": "шт.",
+      "minOrder": 8,
+      "inStock": true,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 43,
+      "categoryId": 63,
+      "brandId": 32,
+      "createdAt": "2026-10-26T15:17:39.095Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002659-1.jpeg",
+          "alt": "Вишні без кісточки VIYAVO 720ml (8 шт/112 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 176,
+      "externalId": "f05d132a-8d5b-11ef-bc63-860e5f5ec3c7",
+      "sku": "00-00002388",
+      "barcode": "5901858003838",
+      "slug": "halaretka-emix-75g-banan-27-sht-352-iashch",
+      "name": "Галаретка EMIX 75g банан (27 шт/352 ящ)",
+      "description": null,
+      "netWeight": "75 г",
+      "unitsPerBox": 27,
+      "unit": "шт.",
+      "minOrder": 27,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 44,
+      "categoryId": 118,
+      "brandId": null,
+      "createdAt": "2026-10-26T15:17:39.099Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002388-1.jpeg",
+          "alt": "Галаретка EMIX 75g банан (27 шт/352 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 177,
+      "externalId": "66bbbfa7-8d5c-11ef-bc63-860e5f5ec3c7",
+      "sku": "00-00002390",
+      "barcode": "5901858003760",
+      "slug": "halaretka-emix-75g-kivi-27-sht-352-iashch",
+      "name": "Галаретка EMIX 75g ківі (27 шт/352 ящ)",
+      "description": null,
+      "netWeight": "75 г",
+      "unitsPerBox": 27,
+      "unit": "шт.",
+      "minOrder": 27,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 45,
+      "categoryId": 118,
+      "brandId": null,
+      "createdAt": "2026-10-26T15:17:39.102Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002390-1.jpeg",
+          "alt": "Галаретка EMIX 75g ківі (27 шт/352 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 178,
+      "externalId": "1040a349-8d5c-11ef-bc63-860e5f5ec3c7",
+      "sku": "00-00002389",
+      "barcode": "5901858003746",
+      "slug": "halaretka-emix-75g-lymon-27-sht-352-iashch",
+      "name": "Галаретка EMIX 75g лимон (27 шт/352 ящ)",
+      "description": null,
+      "netWeight": "75 г",
+      "unitsPerBox": 27,
+      "unit": "шт.",
+      "minOrder": 27,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 46,
+      "categoryId": 118,
+      "brandId": null,
+      "createdAt": "2026-10-26T15:17:39.105Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002389-1.jpeg",
+          "alt": "Галаретка EMIX 75g лимон (27 шт/352 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 179,
+      "externalId": "799527d6-8d5c-11ef-bc63-860e5f5ec3c7",
+      "sku": "00-00002391",
+      "barcode": "5901858000035",
+      "slug": "halaretka-emix-75g-manho-25-sht-352-iashch",
+      "name": "Галаретка EMIX 75g манго (25 шт/352 ящ)",
+      "description": null,
+      "netWeight": "75 г",
+      "unitsPerBox": 25,
+      "unit": "шт.",
+      "minOrder": 25,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 47,
+      "categoryId": 118,
+      "brandId": null,
+      "createdAt": "2026-10-26T15:17:39.108Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002391-1.jpeg",
+          "alt": "Галаретка EMIX 75g манго (25 шт/352 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 180,
+      "externalId": "4d571db6-f010-11ee-bb8f-860e5f5ec3c7",
+      "sku": "00-00002133",
+      "barcode": "5901858003777",
+      "slug": "halaretka-emix-75g-persyk-27-sht-352-iashch",
+      "name": "Галаретка EMIX 75g персик (27 шт/352 ящ)",
+      "description": null,
+      "netWeight": "75 г",
+      "unitsPerBox": 27,
+      "unit": "шт.",
+      "minOrder": 27,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 48,
+      "categoryId": 118,
+      "brandId": null,
+      "createdAt": "2026-10-26T15:17:39.111Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002133-1.jpeg",
+          "alt": "Галаретка EMIX 75g персик (27 шт/352 ящ)"
+        }
+      ],
+      "attributes": []
+    },
+    {
+      "id": 181,
+      "externalId": "b8dcd528-8d5c-11ef-bc63-860e5f5ec3c7",
+      "sku": "00-00002393",
+      "barcode": "5901858003715",
+      "slug": "halaretka-emix-75g-polunytsia-27-sht-352-iashch",
+      "name": "Галаретка EMIX 75g полуниця (27 шт/352 ящ)",
+      "description": null,
+      "netWeight": "75 г",
+      "unitsPerBox": 27,
+      "unit": "шт.",
+      "minOrder": 27,
+      "inStock": false,
+      "isPopular": false,
+      "isNew": false,
+      "isSale": false,
+      "sortOrder": 49,
+      "categoryId": 118,
+      "brandId": null,
+      "createdAt": "2026-10-26T15:17:39.114Z",
+      "images": [
+        {
+          "url": "https://lvivimport.com/assets/uploads/wpallimport/files/images_backup/00-00002393-1.jpeg",
+          "alt": "Галаретка EMIX 75g полуниця (27 шт/352 ящ)"
+        }
+      ],
+      "attributes": []
     }
   ],
   "reviews": [
+    {
+      "id": 10,
+      "author": "Тест mv4zf981",
+      "rating": 4,
+      "text": "Тестовий відгук: швидка доставка і чемні менеджери.",
+      "reply": "Дякуємо за відгук!",
+      "createdAt": "2026-10-12T08:20:34.984Z"
+    },
+    {
+      "id": 9,
+      "author": "Тест muzazgob",
+      "rating": 4,
+      "text": "Тестовий відгук: швидка доставка і чемні менеджери.",
+      "reply": "Дякуємо за відгук!",
+      "createdAt": "2026-10-08T08:57:35.882Z"
+    },
+    {
+      "id": 8,
+      "author": "Тест muz6ty7q",
+      "rating": 4,
+      "text": "Тестовий відгук: швидка доставка і чемні менеджери.",
+      "reply": "Дякуємо за відгук!",
+      "createdAt": "2026-10-08T07:01:22.198Z"
+    },
     {
       "id": 7,
       "author": "Ibrahim",

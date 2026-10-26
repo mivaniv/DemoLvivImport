@@ -29,7 +29,8 @@ export type SyncOptions = {
   mediaDir: string;
   archiveDir?: string;
   auth?: { user: string; password: string };
-  priceType?: string; // тип ціни CommerceML (Ид або назва)
+  priceType?: string; // тип ціни: CommerceML — Ид або назва; <goods> — номер price_tier
+  imageBase?: string; // <goods>: адреса теки з фото (типово images_backup/ поруч із файлом)
 };
 
 export async function runSync(db: PrismaClient, source: string, opts: SyncOptions): Promise<SyncResult> {
@@ -62,7 +63,7 @@ export async function runSync(db: PrismaClient, source: string, opts: SyncOption
     let raw: unknown;
     try {
       const { text } = await fetchSource(source, { archiveDir: opts.archiveDir, auth: opts.auth });
-      raw = parseCatalogText(text, isUrl ? source : undefined, { priceType: opts.priceType }).raw;
+      raw = parseCatalogText(text, isUrl ? source : undefined, { priceType: opts.priceType, imageBase: opts.imageBase }).raw;
     } catch (e) {
       throw new ImportAbort(e instanceof SourceError ? e.message : `Не вдалося розібрати файл: ${(e as Error).message}`);
     }

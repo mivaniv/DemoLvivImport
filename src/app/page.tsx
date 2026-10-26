@@ -101,7 +101,7 @@ export default async function HomePage() {
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
         <SectionHeader title="Категорії товарів" href="/catalog" linkLabel="Увесь каталог" />
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
-          {categories.map((c) => (
+          {categories.filter((c) => c.depth === 0).map((c) => (
             <Link
               key={c.id}
               href={`/catalog?category=${c.slug}`}
@@ -113,7 +113,7 @@ export default async function HomePage() {
                     src={asset(c.products[0].images[0].url)}
                     alt=""
                     fill
-                    unoptimized={c.products[0].images[0].url.endsWith(".svg")}
+                    unoptimized={/\.svg$|^https?:\/\//.test(c.products[0].images[0].url)}
                     sizes="(min-width: 1024px) 240px, 45vw"
                     className="object-contain p-3 transition duration-300 group-hover:scale-105"
                   />
