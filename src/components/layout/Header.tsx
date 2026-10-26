@@ -1,4 +1,4 @@
-import { ChevronDown, Clock, Menu, Phone, Search, ShoppingCart, UserRound } from "lucide-react";
+import { Clock, Menu, Phone, Search, ShoppingCart, UserRound } from "lucide-react";
 import Link from "next/link";
 import { CallbackButton } from "@/components/layout/CallbackDialog";
 import { Logo } from "@/components/layout/Logo";
@@ -70,10 +70,6 @@ export async function Header() {
                 )}
               </Link>
             )}
-
-            <span className="hidden h-10 items-center gap-1 rounded-lg px-2 text-sm font-semibold sm:inline-flex" title="Інші мови з'являться згодом">
-              UA <ChevronDown className="size-3.5 text-muted" />
-            </span>
 
             <details className="group relative lg:hidden">
               <summary
