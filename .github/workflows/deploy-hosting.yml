@@ -90,18 +90,22 @@ jobs:
             ftps-legacy) BASE="ftps://$FTP_SERVER"; TLS="" ;;
             *) BASE="ftp://$FTP_SERVER"; TLS="--ssl-reqd" ;;
           esac
-          ftp() { curl -sS --max-time 60 $TLS --user "$FTP_USERNAME:$FTP_PASSWORD" "$@"; }
+          list() { curl -sS --max-time 60 --ftp-pasv $TLS --user "$FTP_USERNAME:$FTP_PASSWORD" --list-only "$BASE$FTP_DIR" 2>"$RUNNER_TEMP/ftp.err"; }
 
-          if ! LIST=$(ftp --list-only "$BASE$FTP_DIR" | tr -d '\r'); then
-            echo "::error::Не вдалося відкрити FTP_DIR на сервері (логін, пароль або шлях)"; exit 1
+          if ! RAW=$(list); then
+            HINT=""
+            grep -qi 'certificate' "$RUNNER_TEMP/ftp.err" && HINT=" Сертифікат FTPS виданий на інше ім'я — вкажіть у FTP_SERVER ім'я сервера з сертифіката (напр. rocket-da8.hostsila.org)."
+            echo "::error::Не вдалося прочитати теку FTP_DIR на сервері: $(head -1 "$RUNNER_TEMP/ftp.err").$HINT"; exit 1
           fi
-          echo "Вміст цільової теки:"; echo "$LIST" | head -40
-          if echo "$LIST" | sed 's#.*/##' | grep -qxE 'wp-config\.php|wp-admin|wp-content|wp-includes|index\.php'; then
-            echo "::error::У цільовій теці є WordPress/PHP-сайт — заливку скасовано. Перевірте FTP_DIR і корінь FTP-акаунта."; exit 1
+          LIST=$(printf '%s\n' "$RAW" | tr -d '\r' | sed 's#.*/##' | grep -v '^$' || true)
+          SEEN=$(printf '%s\n' "$LIST" | head -30 | paste -sd ',' -)
+          echo "Вміст цільової теки: $SEEN"
+          if printf '%s\n' "$LIST" | grep -qxE 'wp-config\.php|wp-admin|wp-content|wp-includes|index\.php'; then
+            echo "::error::У цільовій теці є WordPress/PHP-сайт — заливку скасовано. Перевірте FTP_DIR і корінь FTP-акаунта. Вміст теки: $SEEN"; exit 1
           fi
-          # Файли з крапкою на початку FTP-сервер HostPro не показує й не віддає, тому позначка — без крапки
-          if ! echo "$LIST" | sed 's#.*/##' | grep -qxF 'lvivimport-demo.txt'; then
-            echo "::error::У цільовій теці немає файла-позначки lvivimport-demo.txt — заливку скасовано. Створіть порожній файл lvivimport-demo.txt у public_html демосайту (див. docs/hosting.md)."; exit 1
+          # Файли з крапкою на початку FTP-сервер може не показувати, тому позначка — без крапки
+          if ! printf '%s\n' "$LIST" | grep -qxF 'lvivimport-demo.txt'; then
+            echo "::error::У цільовій теці немає файла-позначки lvivimport-demo.txt — заливку скасовано. Вміст теки: ${SEEN:-(порожньо)}"; exit 1
           fi
           echo "ready=true" >> "$GITHUB_OUTPUT"
 
