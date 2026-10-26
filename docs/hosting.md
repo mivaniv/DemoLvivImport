@@ -11,13 +11,14 @@
 
 ## Налаштування — один раз
 
-### 1. cPanel HostPro: окремий FTP-акаунт для демосайту
+### 1. DirectAdmin HostPro: окремий FTP-акаунт для демосайту
 
-1. **Домени → Піддомени**: перевірте, що `demo.lvivimport.com` існує, і запишіть його **кореневу теку** (наприклад, `demo.lvivimport.com` або `public_html/demo`).
-2. **FTP-акаунти → Додати**: логін, наприклад `deploy`, надійний пароль. У полі **Directory** вкажіть кореневу теку демосайту з кроку 1.
-   Такий акаунт бачить лише цю теку й не може зачепити файли WordPress lvivimport.com.
-3. Запишіть **FTP-сервер** (у «Налаштування FTP-клієнта» біля акаунта, зазвичай `ftp.lvivimport.com` або ім'я сервера HostPro).
-4. **SSL/TLS Status** (AutoSSL): переконайтесь, що для `demo.lvivimport.com` є сертифікат.
+> **Увага.** FTP-акаунт належить домену, у якому його створено. Акаунт `…@lvivimport.com` з коренем «Домен» відкривається в теці **lvivimport.com** (WordPress), а не демо. 26.10.2026 через це сайт залився в lvivimport.com.
+
+1. У DirectAdmin угорі **оберіть домен `demo.lvivimport.com`**, потім **FTP Management → Створити FTP-акаунт**: логін, наприклад `deploy` (вийде `deploy@demo.lvivimport.com`), надійний пароль, коренева директорія **«Домен»**. Акаунт бачитиме лише `domains/demo.lvivimport.com`.
+2. У файловому менеджері відкрийте `domains/demo.lvivimport.com/public_html/` і створіть **порожній файл `.lvivimport-demo`**. Це позначка: workflow заливає лише в теку, де вона є, і відмовляється, якщо в теці є WordPress/PHP (`wp-config.php`, `index.php`, `wp-admin`…).
+3. Запишіть **FTP-сервер** (зазвичай `ftp.lvivimport.com` або ім'я сервера HostPro).
+4. Переконайтесь, що для `demo.lvivimport.com` є SSL-сертифікат (Let's Encrypt у панелі).
 
 ### 2. GitHub: підтвердження перед заливкою
 
@@ -33,18 +34,13 @@
 | Секрет | Значення |
 | --- | --- |
 | `FTP_SERVER` | FTP-сервер з кроку 1.3 |
-| `FTP_USERNAME` | логін FTP-акаунта (повний, як у cPanel, напр. `deploy@lvivimport.com`) |
+| `FTP_USERNAME` | логін FTP-акаунта повністю, напр. `deploy@demo.lvivimport.com` |
 | `FTP_PASSWORD` | пароль FTP-акаунта |
-| `FTP_DIR` | `/` для окремого акаунта з кроку 1.2 (обов'язково закінчується на `/`) |
+| `FTP_DIR` | `/public_html/` (для акаунта з коренем «Домен» з кроку 1.1; починається й закінчується на `/`) |
 
-**Environment variables → Add variable**:
+Змінна `FTP_PROTOCOL` (Environment variables) — не задавайте (типово `ftps`); якщо FTPS не працює — `ftp`.
 
-| Змінна | Значення |
-| --- | --- |
-| `FTP_DEDICATED_ACCOUNT` | `true` — підтверджує, що акаунт бачить лише теку демосайту |
-| `FTP_PROTOCOL` | не задавайте (типово `ftps`); якщо FTPS не працює — `ftp` |
-
-> Без окремого акаунта `FTP_DIR` має вести саме в теку демосайту й містити «demo», інакше workflow відмовиться заливати.
+Перед заливкою workflow показує в журналі вміст цільової теки й зупиняється, якщо там немає `.lvivimport-demo` або є файли WordPress.
 
 Паролі зберігаються лише в GitHub Secrets. У репозиторій і в чат вони не потрапляють.
 

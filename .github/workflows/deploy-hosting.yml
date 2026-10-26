@@ -3,9 +3,11 @@
 # 1. Після push у main сайт збирається (статична версія: каталог без цін, база не потрібна).
 # 2. Крок «deploy» прив'язаний до GitHub Environment «hosting» з обов'язковим рецензентом:
 #    GitHub чекає, доки власник натисне «Review deployments → Approve and deploy».
-# 3. Після підтвердження змінені файли заливаються по FTP у теку демосайту.
+# 3. Перед заливкою перевіряється цільова тека на сервері: у ній має лежати файл-позначка
+#    .lvivimport-demo і не повинно бути WordPress/PHP (wp-config.php, index.php, wp-admin...).
+# 4. Лише тоді змінені файли заливаються по FTP у теку демосайту.
 #
-# Налаштування (один раз): див. docs/hosting.md — Environment «hosting», секрети FTP_*.
+# Налаштування (один раз): див. docs/hosting.md — Environment «hosting», секрети FTP_*, позначка.
 name: Deploy to hosting (demo.lvivimport.com)
 
 on:
@@ -62,33 +64,43 @@ jobs:
       name: hosting
       url: https://demo.lvivimport.com
     steps:
-      - name: Check FTP settings
+      - name: Check FTP settings and target folder
         id: cfg
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_DIR: ${{ secrets.FTP_DIR }}
-          # true — FTP-акаунт бачить лише теку демосайту (рекомендовано), тоді FTP_DIR = "/"
-          # (змінна у Variables або, якщо створено як секрет, у Secrets; регістр і пробіли не важливі)
-          DEDICATED: ${{ vars.FTP_DEDICATED_ACCOUNT || secrets.FTP_DEDICATED_ACCOUNT }}
+          FTP_PROTOCOL: ${{ vars.FTP_PROTOCOL || 'ftps' }}
         run: |
-          DEDICATED=$(printf '%s' "$DEDICATED" | tr -d '[:space:]"' | tr '[:upper:]' '[:lower:]')
           if [ -z "$FTP_SERVER" ] || [ -z "$FTP_USERNAME" ] || [ -z "$FTP_PASSWORD" ] || [ -z "$FTP_DIR" ]; then
             echo "::warning::FTP ще не налаштовано (секрети FTP_SERVER, FTP_USERNAME, FTP_PASSWORD, FTP_DIR) — заливку пропущено. Див. docs/hosting.md"
             echo "ready=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           case "$FTP_DIR" in
-            */) ;;
-            *) echo "::error::FTP_DIR має закінчуватись на «/»"; exit 1 ;;
+            /*/ | /) ;;
+            *) echo "::error::FTP_DIR має починатись і закінчуватись на «/», напр. /public_html/"; exit 1 ;;
           esac
-          # Захист від заливки в теку lvivimport.com: спільний FTP-акаунт — лише в теку з «demo» у шляху
-          if [ "$DEDICATED" != "true" ]; then
-            case "$FTP_DIR" in
-              *demo*) ;;
-              *) echo "::error::FTP_DIR має вказувати на теку демосайту (містити «demo»), або створіть окремий FTP-акаунт лише для неї і задайте змінну FTP_DEDICATED_ACCOUNT=true"; exit 1 ;;
-            esac
+
+          # Захист від заливки не туди (26.10 сайт потрапив у теку lvivimport.com):
+          # заливаємо лише в теку з файлом-позначкою .lvivimport-demo і без WordPress/PHP.
+          case "$FTP_PROTOCOL" in
+            ftp) BASE="ftp://$FTP_SERVER"; TLS="" ;;
+            ftps-legacy) BASE="ftps://$FTP_SERVER"; TLS="" ;;
+            *) BASE="ftp://$FTP_SERVER"; TLS="--ssl-reqd" ;;
+          esac
+          ftp() { curl -sS --max-time 60 $TLS --user "$FTP_USERNAME:$FTP_PASSWORD" "$@"; }
+
+          if ! LIST=$(ftp --list-only "$BASE$FTP_DIR" | tr -d '\r'); then
+            echo "::error::Не вдалося відкрити FTP_DIR на сервері (логін, пароль або шлях)"; exit 1
+          fi
+          echo "Вміст цільової теки:"; echo "$LIST" | head -40
+          if echo "$LIST" | sed 's#.*/##' | grep -qxE 'wp-config\.php|wp-admin|wp-content|wp-includes|index\.php'; then
+            echo "::error::У цільовій теці є WordPress/PHP-сайт — заливку скасовано. Перевірте FTP_DIR і корінь FTP-акаунта."; exit 1
+          fi
+          if ! ftp -o /dev/null "$BASE${FTP_DIR}.lvivimport-demo"; then
+            echo "::error::У цільовій теці немає файла-позначки .lvivimport-demo — заливку скасовано. Створіть порожній файл .lvivimport-demo у public_html демосайту (див. docs/hosting.md)."; exit 1
           fi
           echo "ready=true" >> "$GITHUB_OUTPUT"
 
@@ -98,7 +110,7 @@ jobs:
           name: site
           path: site
 
-      # Заливаються лише змінені файли; чужі файли в теці не видаляються
+      # Заливаються лише змінені файли; чужі файли в теці (зокрема .lvivimport-demo) не видаляються
       - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         if: steps.cfg.outputs.ready == 'true'
         with:
