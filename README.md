@@ -88,7 +88,8 @@ Workflow [.github/workflows/pages.yml](.github/workflows/pages.yml) збирає
 
 ```powershell
 npm run import -- шлях/до/вивантаження.json   # за потреби
-npm run snapshot -- --limit 50                  # перші 50 товарів → src/data/catalog-snapshot.json
+npm run snapshot                                # усі активні товари (без цін) → src/data/catalog-snapshot.json
+# npm run snapshot -- --limit 50                # або лише перші N товарів
 git add -A; git commit -m "Update catalog snapshot"; git push
 ```
 
