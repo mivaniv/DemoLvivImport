@@ -78,6 +78,14 @@ jobs:
             echo "ready=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          # Прибираємо випадкові пробіли/переноси й префікс ftp:// (часто потрапляють під час копіювання)
+          FTP_SERVER=$(printf '%s' "$FTP_SERVER" | tr -d '[:space:]' | sed -E 's#^[A-Za-z]+://##; s#/.*$##')
+          FTP_DIR=$(printf '%s' "$FTP_DIR" | tr -d '[:space:]')
+          if printf '%s' "$FTP_SERVER" | LC_ALL=C grep -q '[^A-Za-z0-9.:-]'; then
+            echo "::error::FTP_SERVER містить недопустимі символи (можливо, кирилиця). Введіть секрет заново латиницею, напр. rocket-da8.hostsila.org"; exit 1
+          fi
+          echo "FTP_HOST=$FTP_SERVER" >> "$GITHUB_ENV"
+          echo "FTP_PATH=$FTP_DIR" >> "$GITHUB_ENV"
           case "$FTP_DIR" in
             /*/ | /) ;;
             *) echo "::error::FTP_DIR має починатись і закінчуватись на «/», напр. /public_html/"; exit 1 ;;
@@ -119,9 +127,9 @@ jobs:
       - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         if: steps.cfg.outputs.ready == 'true'
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ env.FTP_HOST }} # очищені значення з кроку перевірки
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
           local-dir: ./site/
-          server-dir: ${{ secrets.FTP_DIR }}
+          server-dir: ${{ env.FTP_PATH }}
