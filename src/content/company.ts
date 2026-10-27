@@ -17,14 +17,15 @@ export const OFFICE = { title: "Офіс", phone: "+38 (067) 011 22 12", email: 
 export const WAREHOUSE = { title: "Склад", phone: "+38 (067) 011 22 13", email: "sklad@lvivimport.com" };
 export const MAIN_PHONE = { label: OFFICE.phone, href: tel(OFFICE.phone) };
 
-export const HOURS = ["Пн. - Сб.: 08:00 - 20:00", "Склад: цілодобово 24/7"];
+export const WAREHOUSE_HOURS = "08:00 - 19:00";
+export const HOURS = ["Пн. - Сб.: 08:00 - 18:00", `Склад: ${WAREHOUSE_HOURS}`];
 
 export const DEPARTMENTS = [
-  { title: "Керівник відділу продажу", phone: "+38 (067) 011 22 42", email: "oleh.ohura@lvivimport.com" },
+  { title: "Керівник відділу продажу", phone: "+38 (067) 011 22 17", email: "natalia.riabchykova@lvivimport.com" },
   { title: "Бухгалтерія", phone: "+38 (067) 011 22 40", email: "buhgalteriya@lvivimport.com" },
-  { title: "Відділ закупівель", phone: "+38 (067) 011 22 04", email: "partners@lvivimport.com" },
+  { title: "Відділ закупівель", phone: "+38 (067) 011 22 56", email: "anastasiia.oliynik@lvivimport.com" },
   { title: "Відділ маркетингу", phone: "+38 (067) 011 22 60", email: "olga.moroz@lvivimport.com" },
-  { title: "Відділ по роботі з мережами", phone: "+38 (067) 011 22 86", email: "dpn@lvivimport.com" },
+  { title: "Відділ національних мереж", phone: "+38 (067) 011 22 97", email: "Mykola.Ryabchikov@lvivimport.com" },
 ].map((d) => ({ ...d, phoneHref: tel(d.phone) }));
 
 export const phoneHref = tel;
@@ -34,6 +35,7 @@ export const SOCIALS = {
   instagram: "https://www.instagram.com/lvivimport_2020/",
   telegram: "https://t.me/lvivimport",
   viber: "viber://chat?number=%2B380670112212",
+  tiktok: "https://www.tiktok.com/@lvivimport",
 };
 
 export const HERO_TAGLINE = "«Львівімпорт» провідна компанія імпортер високоякісних продуктів харчування європейських виробників";

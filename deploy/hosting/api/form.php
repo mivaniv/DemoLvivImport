@@ -16,13 +16,6 @@ const PHONE_RE = '/^[+\d][\d\s()-]{8,19}$/u';
 const MAX_BODY = 200000;
 const MAX_QTY = 100000;
 const MAX_LINES = 200;
-const DELIVERY = [
-    'OWN_LOGISTICS' => 'Власна логістика Львівімпорт',
-    'NOVA_POSHTA' => 'Нова пошта',
-    'DELIVERY' => 'Делівері',
-    'MEEST' => 'Meest',
-    'PICKUP' => 'Самовивіз зі складу (м. Львів, вул. В. Великого, 2)',
-];
 const PHONE_MSG = 'Вкажіть телефон, наприклад +380 67 123 45 67';
 
 function reply(int $code, array $body): void
@@ -324,17 +317,9 @@ switch ($type) {
         break;
 
     case 'request':
-        $method = field($in, 'deliveryMethod');
-        check('deliveryMethod', isset(DELIVERY[$method]), 'Оберіть спосіб доставки');
-        $city = text($in, 'deliveryCity', 0, 120, 'Населений пункт');
-        $point = text($in, 'deliveryPoint', 0, 300, 'Адреса');
-        if ($method !== 'PICKUP') {
-            check('deliveryCity', $city !== '', 'Вкажіть населений пункт');
-            check('deliveryPoint', $point !== '', $method === 'OWN_LOGISTICS' ? 'Вкажіть адресу доставки' : 'Вкажіть номер відділення');
-        }
-        $name = text($in, 'name', 2, 120, 'Вкажіть отримувача');
+        // доставку менеджер узгоджує з клієнтом сам — у формі лише контакти
+        $name = text($in, 'name', 2, 120, 'Вкажіть ПІБ');
         $phone = phone($in);
-        $company = text($in, 'company', 0, 200, 'Компанія');
         $replyTo = email($in, false);
         $comment = text($in, 'comment', 0, 2000, 'Коментар');
         $items = items($in);
@@ -346,15 +331,14 @@ switch ($type) {
             $rows[] = ($n + 1) . ". {$i['name']}" . ($i['sku'] !== '' ? " ({$i['sku']})" : '') . ' — ' . describe_qty($i);
             $rows[] = "   $page/product/{$i['slug']}/";
         }
-        $delivery = (DELIVERY[$method] ?? '') . ($method !== 'PICKUP' ? " — $city, $point" : '');
         $limit = [5, 600];
-        $subject = 'Заявка з кошика: ' . ($company !== '' ? $company : $name) . ', ' . count($items) . ' поз.';
+        $subject = "Заявка з кошика: $name, " . count($items) . ' поз.';
         $body = lines(array_merge(
-            ["Отримувач: $name", "Телефон: $phone", $company !== '' ? "Компанія: $company" : null, $replyTo !== '' ? "Email: $replyTo" : null, '', 'Товари:'],
+            ["ПІБ: $name", "Телефон: $phone", $replyTo !== '' ? "Email: $replyTo" : null, '', 'Товари:'],
             $rows,
-            ['', "Доставка: $delivery", $comment !== '' ? "Коментар: $comment" : null]
+            $comment !== '' ? ['', "Коментар: $comment"] : []
         ));
-        $done = "Дякуємо! Менеджер зв'яжеться з вами, щоб підтвердити ціни, наявність і доставку.";
+        $done = "Дякуємо! Менеджер зв'яжеться з вами, щоб узгодити ціни, наявність і доставку.";
         break;
 
     default:

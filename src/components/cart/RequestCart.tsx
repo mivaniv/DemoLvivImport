@@ -2,14 +2,13 @@
 
 import { CircleCheck, ShoppingCart, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { startTransition, useActionState, useEffect, useState } from "react";
+import { startTransition, useActionState, useEffect } from "react";
 import type { FormState } from "@/app/actions/form-state";
 import { submitRequest } from "@/app/actions/request";
 import { ProductImage } from "@/components/product/ProductImage";
 import { errorOf, Field, FormMessage, Honeypot, TextArea } from "@/components/ui/form";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import { plural } from "@/lib/format";
-import { DELIVERY_LABELS } from "@/lib/orders";
 import { byBox, describeQty, formatBoxes, minQty, nextHint, orderStep, requestTotals, type RequestItem } from "@/lib/request-cart";
 import { useRequestCart } from "./useRequestCart";
 
@@ -68,7 +67,7 @@ export function RequestCart() {
 
       <section className="h-fit rounded-2xl bg-white p-6 ring-1 ring-line">
         <h2 className="text-lg font-bold">Заявка менеджеру</h2>
-        <p className="mb-5 mt-1 text-sm text-muted">Ціни, наявність і терміни поставки менеджер підтвердить після отримання заявки.</p>
+        <p className="mb-5 mt-1 text-sm text-muted">Ціни, наявність, доставку й терміни поставки менеджер узгодить з вами після отримання заявки.</p>
         <RequestForm items={items} state={state} action={action} pending={pending} />
       </section>
     </div>
@@ -117,16 +116,11 @@ function Line({ item: i, onQty, onRemove }: { item: RequestItem; onQty: (qty: nu
   );
 }
 
-type Method = keyof typeof DELIVERY_LABELS;
-
 type FormProps = { items: RequestItem[]; state: FormState; action: (formData: FormData) => void; pending: boolean };
 
 function RequestForm({ items, state, action, pending }: FormProps) {
-  const [method, setMethod] = useState<Method>("OWN_LOGISTICS");
-  const carrier = method === "NOVA_POSHTA" || method === "DELIVERY" || method === "MEEST";
-
   // Надсилаємо через onSubmit, а не <form action>: React тоді не скидає форму після помилки,
-  // і обраний спосіб доставки та введені дані лишаються як є
+  // і введені дані лишаються як є
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -137,35 +131,9 @@ function RequestForm({ items, state, action, pending }: FormProps) {
     <form onSubmit={submit} className="relative space-y-5">
       <Honeypot />
       <input type="hidden" name="items" value={JSON.stringify(items)} />
-      <fieldset>
-        <legend className="mb-2 text-sm font-semibold">Спосіб доставки</legend>
-        <div className="space-y-2">
-          {(Object.keys(DELIVERY_LABELS) as Method[]).map((m) => (
-            <label key={m} className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm transition ${method === m ? "border-brand-600 bg-brand-50" : "border-line hover:border-brand-200"}`}>
-              <input type="radio" name="deliveryMethod" value={m} checked={method === m} onChange={() => setMethod(m)} className="accent-brand-600" />
-              {DELIVERY_LABELS[m]}
-            </label>
-          ))}
-        </div>
-      </fieldset>
-
-      {method !== "PICKUP" && (
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field name="deliveryCity" label="Населений пункт" required error={errorOf(state, "deliveryCity")} />
-          <Field
-            name="deliveryPoint"
-            label={carrier ? "Номер відділення / поштомату" : "Адреса доставки"}
-            required
-           
-            error={errorOf(state, "deliveryPoint")}
-          />
-        </div>
-      )}
-
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field name="name" label="Отримувач (ПІБ)" required autoComplete="name" error={errorOf(state, "name")} />
+        <Field name="name" label="ПІБ" required autoComplete="name" error={errorOf(state, "name")} className="sm:col-span-2" />
         <Field name="phone" label="Телефон" type="tel" required autoComplete="tel" error={errorOf(state, "phone")} />
-        <Field name="company" label="Компанія / ФОП" autoComplete="organization" error={errorOf(state, "company")} />
         <Field name="email" label="Email" type="email" autoComplete="email" error={errorOf(state, "email")} />
       </div>
       <TextArea name="comment" label="Коментар до заявки" rows={3} error={errorOf(state, "comment")} />

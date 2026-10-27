@@ -2,7 +2,7 @@ import { Building2, Package, Store, Truck } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { TextPage } from "@/components/ui/TextPage";
-import { COMPANY, MAIN_PHONE, OFFICE } from "@/content/company";
+import { COMPANY, MAIN_PHONE, OFFICE, WAREHOUSE_HOURS } from "@/content/company";
 import { deliveryPage } from "@/content/legal";
 import { PARTNER_CTA } from "@/lib/features";
 
@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: deliveryPage.title };
 const METHODS = [
   { icon: Truck, title: "Власна логістика", text: "Доставка власним автопарком Львівімпорт." },
   { icon: Package, title: "Перевізники", text: "Нова пошта, Делівері, Meest — по всій Україні." },
-  { icon: Store, title: "Самовивіз", text: `Зі складу: ${COMPANY.address}. Склад працює цілодобово.` },
+  { icon: Store, title: "Самовивіз", text: `Зі складу: ${COMPANY.address}. Склад працює з ${WAREHOUSE_HOURS.replace(" - ", " до ")}.` },
 ];
 
 export default function Page() {

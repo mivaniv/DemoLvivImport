@@ -51,7 +51,7 @@ export async function submitRequest(_prev: FormState, formData: FormData): Promi
   } catch {
     // порожній кошик — відповість обробник
   }
-  return send("request", formData, ["deliveryMethod", "deliveryCity", "deliveryPoint", "name", "phone", "company", "email", "comment"], { items });
+  return send("request", formData, ["name", "phone", "email", "comment"], { items });
 }
 
 export async function addToCart(_productId: number, _quantity: number) {

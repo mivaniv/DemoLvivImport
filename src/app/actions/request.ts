@@ -4,26 +4,21 @@ import { headers } from "next/headers";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { MANAGER_EMAIL, sendMail, siteUrl } from "@/lib/mail";
-import { DELIVERY_LABELS } from "@/lib/orders";
 import { rateLimit } from "@/lib/rate-limit";
 import { parseRequestItems, requestLines, type RequestItem } from "@/lib/request-cart";
-import { deliveryShape, refineDelivery } from "./delivery";
 import { fieldErrorsOf, PHONE_RE, valuesOf, type FormState } from "./form-state";
 
 // Кошик-заявка (каталог без цін): товари приходять з браузера, менеджер отримує заявку листом і в /admin/inquiries.
+// Доставку менеджер узгоджує з клієнтом сам — у формі лише контакти.
 
-const schema = z
-  .object({
-    ...deliveryShape,
-    name: z.string().trim().min(2, "Вкажіть отримувача").max(120),
-    phone: z.string().trim().regex(PHONE_RE, "Вкажіть телефон, наприклад +380 67 123 45 67"),
-    company: z.string().trim().max(200).optional(),
-    email: z.union([z.literal(""), z.email("Некоректний email")]).optional(),
-    comment: z.string().trim().max(2000).optional(),
-  })
-  .superRefine(refineDelivery);
+const schema = z.object({
+  name: z.string().trim().min(2, "Вкажіть ПІБ").max(120),
+  phone: z.string().trim().regex(PHONE_RE, "Вкажіть телефон, наприклад +380 67 123 45 67"),
+  email: z.union([z.literal(""), z.email("Некоректний email")]).optional(),
+  comment: z.string().trim().max(2000).optional(),
+});
 
-const FIELDS = ["deliveryMethod", "deliveryCity", "deliveryPoint", "name", "phone", "company", "email", "comment"] as const;
+const FIELDS = ["name", "phone", "email", "comment"] as const;
 
 export async function submitRequest(_prev: FormState, formData: FormData): Promise<FormState> {
   const values = valuesOf(formData, FIELDS);
@@ -45,21 +40,18 @@ export async function submitRequest(_prev: FormState, formData: FormData): Promi
   if (items.length === 0) return { ok: false, message: "Кошик порожній — додайте товари з каталогу.", values };
 
   const d = parsed.data;
-  const delivery = [DELIVERY_LABELS[d.deliveryMethod], d.deliveryMethod !== "PICKUP" && `${d.deliveryCity}, ${d.deliveryPoint}`].filter(Boolean).join(" — ");
-  const lines = requestLines(items);
-  const message = [...lines, "", `Доставка: ${delivery}`, d.comment ? `Коментар: ${d.comment}` : null].filter((l) => l !== null).join("\n");
+  const message = [...requestLines(items), ...(d.comment ? ["", `Коментар: ${d.comment}`] : [])].join("\n");
 
   await db.inquiry.create({
-    data: { kind: "REQUEST", name: d.name, phone: d.phone, email: d.email || null, organization: d.company || null, message, page: "/cart" },
+    data: { kind: "REQUEST", name: d.name, phone: d.phone, email: d.email || null, message, page: "/cart" },
   });
   await sendMail({
     to: MANAGER_EMAIL,
     replyTo: d.email || undefined,
-    subject: `Заявка з кошика: ${d.company || d.name}, ${items.length} поз.`,
+    subject: `Заявка з кошика: ${d.name}, ${items.length} поз.`,
     text: [
-      `Отримувач: ${d.name}`,
+      `ПІБ: ${d.name}`,
       `Телефон: ${d.phone}`,
-      d.company ? `Компанія: ${d.company}` : null,
       d.email ? `Email: ${d.email}` : null,
       "",
       message,
@@ -69,7 +61,7 @@ export async function submitRequest(_prev: FormState, formData: FormData): Promi
       .filter((l) => l !== null)
       .join("\n"),
   });
-  return { ok: true, message: "Дякуємо! Менеджер зв'яжеться з вами, щоб підтвердити ціни, наявність і доставку." };
+  return { ok: true, message: "Дякуємо! Менеджер зв'яжеться з вами, щоб узгодити ціни, наявність і доставку." };
 }
 
 // Назва, артикул і фасування — з бази, а не з браузера; товари, яких уже немає, відкидаються
