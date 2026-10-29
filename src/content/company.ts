@@ -5,7 +5,7 @@ export const COMPANY = {
   legalName: 'ТОВ "ЛЬВІВІМПОРТ"',
   edrpou: "43440447",
   legalAddress: "Україна, 79053, Львівська обл., місто Львів, вул. Володимира Великого, будинок 2",
-  address: "79004, м. Львів, вул. В. Великого, 2",
+  address: "79053, м. Львів, вул. В. Великого, 2",
   mapUrl: "https://goo.gl/maps/zAoAkp24P4LyxKjf8",
   mapEmbed: "https://www.google.com/maps?q=%D0%9B%D1%8C%D0%B2%D1%96%D0%B2%2C+%D0%B2%D1%83%D0%BB.+%D0%92%D0%BE%D0%BB%D0%BE%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D0%B0+%D0%92%D0%B5%D0%BB%D0%B8%D0%BA%D0%BE%D0%B3%D0%BE%2C+2&output=embed",
   foundedYear: 2020,
