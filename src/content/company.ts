@@ -24,7 +24,7 @@ export const DEPARTMENTS = [
   { title: "Керівник відділу продажу", phone: "+38 (067) 011 22 17", email: "natalia.riabchykova@lvivimport.com" },
   { title: "Бухгалтерія", phone: "+38 (067) 011 22 40", email: "buhgalteriya@lvivimport.com" },
   { title: "Відділ закупівель", phone: "+38 (067) 011 22 56", email: "anastasiia.oliynik@lvivimport.com" },
-  { title: "Відділ маркетингу", phone: "+38 (067) 011 22 60", email: "olga.moroz@lvivimport.com" },
+  { title: "Відділ маркетингу", phone: "+38 (067) 011 22 60", email: "vita.nahanda@lvivimport.com" },
   { title: "Відділ національних мереж", phone: "+38 (067) 011 22 97", email: "Mykola.Ryabchikov@lvivimport.com" },
 ].map((d) => ({ ...d, phoneHref: tel(d.phone) }));
 
