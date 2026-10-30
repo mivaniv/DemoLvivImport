@@ -159,6 +159,11 @@ jobs:
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PARALLEL: ${{ vars.FTP_PARALLEL || '6' }}
         run: |
+          # Логін іде в рядок команд lftp: прибираємо переноси й пробіли, що потрапляють у секрет під час копіювання
+          FTP_USERNAME=$(printf '%s' "$FTP_USERNAME" | tr -d '\r\n' | sed -E 's/^[[:space:]]+//; s/[[:space:]]+$//')
+          case "$FTP_USERNAME" in
+            *"'"*) echo "::error::FTP_USERNAME містить лапку — введіть секрет заново"; exit 1 ;;
+          esac
           MANIFEST=deploy-manifest.txt
           (cd site && find . -type f -print0 | sort -z | xargs -0 sha256sum) > "$RUNNER_TEMP/$MANIFEST"
 
