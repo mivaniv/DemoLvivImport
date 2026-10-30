@@ -8,12 +8,11 @@ Next.js 16 + TypeScript + Tailwind CSS 4 + PostgreSQL 17 (Prisma 7). Дизай�
 
 ## Запуск локально
 
-Потрібні Node.js 20.9+, Docker Desktop.
+Потрібні Node.js 20.9+ і PostgreSQL 17: встановлений локально або на сервері. Адреса бази задається в `DATABASE_URL` у `.env`.
 
 ```powershell
 npm install                 # також генерує Prisma Client
-copy .env.example .env
-npm run db:up               # PostgreSQL у Docker, порт 5433
+copy .env.example .env      # вкажіть DATABASE_URL своєї бази
 npx prisma migrate deploy   # створює таблиці
 npm run db:seed             # демоасортимент, демоціни, відгуки з lvivimport.com
 npm run admin:create -- <email> "<пароль>"   # адміністратор (вхід через /account/login)
