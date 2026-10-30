@@ -5,7 +5,7 @@
 #    GitHub чекає, доки власник натисне «Review deployments → Approve and deploy».
 # 3. Перед заливкою перевіряється цільова тека на сервері: у ній має лежати файл-позначка
 #    lvivimport-demo.txt і не повинно бути WordPress/PHP (wp-config.php, index.php, wp-admin...).
-# 4. Лише тоді змінені файли заливаються по FTP у теку демосайту.
+# 4. Лише тоді змінені файли заливаються по FTP (lftp, кілька з'єднань паралельно) у теку демосайту.
 #
 # Налаштування (один раз): див. docs/hosting.md — Environment «hosting», секрети FTP_*, позначка.
 name: Deploy to hosting (demo.lvivimport.com)
@@ -102,6 +102,8 @@ jobs:
             ftps-legacy) BASE="ftps://$FTP_SERVER"; TLS="" ;;
             *) BASE="ftp://$FTP_SERVER"; TLS="--ssl-reqd" ;;
           esac
+          echo "FTP_BASE=$BASE" >> "$GITHUB_ENV"
+          echo "FTP_TLS=$TLS" >> "$GITHUB_ENV"
           list() { curl -sS --max-time 60 --ftp-pasv $TLS --user "$FTP_USERNAME:$FTP_PASSWORD" --list-only "$BASE$FTP_DIR" 2>"$RUNNER_TEMP/ftp.err"; }
 
           if ! RAW=$(list); then
@@ -146,13 +148,53 @@ jobs:
           fi
           printf "<?php\nreturn ['to' => '%s', 'from' => '%s'];\n" "$TO" "$FROM" > site/api/config.php
 
-      # Заливаються лише змінені файли; чужі файли в теці (зокрема lvivimport-demo.txt) не видаляються
-      - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      # Заливаються лише змінені файли, кількома з'єднаннями паралельно (lftp).
+      # Що змінилось, визначає deploy-manifest.txt на сервері: контрольні суми SHA-256 файлів
+      # з попередньої заливки. Він оновлюється лише після успішної заливки; без нього заливається все.
+      # Чужі файли в теці (зокрема lvivimport-demo.txt) не видаляються.
+      - name: Upload changed files
         if: steps.cfg.outputs.ready == 'true'
-        with:
-          server: ${{ env.FTP_HOST }} # очищені значення з кроку перевірки
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
-          local-dir: ./site/
-          server-dir: ${{ env.FTP_PATH }}
+        env:
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PARALLEL: ${{ vars.FTP_PARALLEL || '6' }}
+        run: |
+          MANIFEST=deploy-manifest.txt
+          (cd site && find . -type f -print0 | sort -z | xargs -0 sha256sum) > "$RUNNER_TEMP/$MANIFEST"
+
+          if curl -sS --max-time 120 --ftp-pasv $FTP_TLS --user "$FTP_USERNAME:$FTP_PASSWORD" \
+               -o "$RUNNER_TEMP/old-manifest.txt" "$FTP_BASE$FTP_PATH$MANIFEST" 2>"$RUNNER_TEMP/ftp.err"; then
+            echo "Попередня заливка: $(wc -l < "$RUNNER_TEMP/old-manifest.txt") файлів"
+          elif [ $? -eq 78 ]; then
+            echo "Маніфесту попередньої заливки немає — заливається весь сайт"
+            : > "$RUNNER_TEMP/old-manifest.txt"
+          else
+            echo "::error::Не вдалося прочитати $MANIFEST з сервера: $(head -1 "$RUNNER_TEMP/ftp.err")"; exit 1
+          fi
+
+          # Рядки «хеш  ./шлях», яких не було в попередній заливці → нові або змінені файли
+          comm -13 <(sort "$RUNNER_TEMP/old-manifest.txt") <(sort "$RUNNER_TEMP/$MANIFEST") | cut -c67- > "$RUNNER_TEMP/changed.txt"
+          COUNT=$(grep -c . "$RUNNER_TEMP/changed.txt" || true)
+          echo "Змінених файлів: $COUNT з $(wc -l < "$RUNNER_TEMP/$MANIFEST")"
+          if [ "$COUNT" -eq 0 ]; then echo "Заливати нічого"; exit 0; fi
+          head -20 "$RUNNER_TEMP/changed.txt"
+
+          # Окрема тека лише зі зміненими файлами (час зміни — поточний, тож lftp їх не пропустить)
+          STAGE="$RUNNER_TEMP/stage"
+          rsync -r --files-from="$RUNNER_TEMP/changed.txt" site/ "$STAGE/"
+
+          case "${{ vars.FTP_PROTOCOL || 'ftps' }}" in
+            ftp) URL="ftp://$FTP_HOST"; SSL="set ftp:ssl-allow no" ;;
+            ftps-legacy) URL="ftps://$FTP_HOST"; SSL="" ;;
+            *) URL="ftp://$FTP_HOST"; SSL="set ftp:ssl-force yes; set ftp:ssl-protect-data yes" ;;
+          esac
+          sudo apt-get install -y -qq lftp > /dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq lftp > /dev/null; }
+          export LFTP_PASSWORD="$FTP_PASSWORD"
+          lftp -c "
+            set cmd:fail-exit yes; set net:max-retries 5; set net:reconnect-interval-base 5; set net:timeout 60;
+            set ftp:passive-mode on; set ssl:verify-certificate yes; $SSL;
+            open --env-password -u '$FTP_USERNAME' '$URL';
+            mirror -R --overwrite --no-perms --parallel=$FTP_PARALLEL --verbose=1 '$STAGE/' '$FTP_PATH';
+            put -O '$FTP_PATH' '$RUNNER_TEMP/$MANIFEST'
+          "
+          echo "Залито файлів: $COUNT"

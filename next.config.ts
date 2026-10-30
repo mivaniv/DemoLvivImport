@@ -25,6 +25,9 @@ const nextConfig: NextConfig = isStatic
       basePath: process.env.NEXT_PUBLIC_BASE_PATH || undefined,
       trailingSlash: true, // GitHub Pages віддає /catalog/ як /catalog/index.html
       images: { unoptimized: true },
+      // Сталий ідентифікатор: інакше Next вписує нове випадкове значення в кожен із ~7 тис. файлів,
+      // і заливка на хостинг щоразу передає весь сайт, а не лише змінені файли.
+      generateBuildId: async () => "lvivimport-static",
       // page.static.tsx — замінники сторінок кабінету; *.server.ts(x) (кабінет, кошик, адмінпанель,
       // /media, прайс) до статичної збірки не входять.
       pageExtensions: ["static.tsx", "static.ts", "tsx", "ts"],
