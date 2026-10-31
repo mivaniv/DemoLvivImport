@@ -5,7 +5,7 @@
 #    GitHub чекає, доки власник натисне «Review deployments → Approve and deploy».
 # 3. Перед заливкою перевіряється цільова тека на сервері: у ній має лежати файл-позначка
 #    lvivimport-demo.txt і не повинно бути WordPress/PHP (wp-config.php, index.php, wp-admin...).
-# 4. Лише тоді змінені файли заливаються по FTP (lftp, кілька з'єднань паралельно) у теку демосайту.
+# 4. Лише тоді змінені файли заливаються по FTP (curl, кілька з'єднань паралельно) у теку демосайту.
 #
 # Налаштування (один раз): див. docs/hosting.md — Environment «hosting», секрети FTP_*, позначка.
 name: Deploy to hosting (demo.lvivimport.com)
@@ -148,7 +148,7 @@ jobs:
           fi
           printf "<?php\nreturn ['to' => '%s', 'from' => '%s'];\n" "$TO" "$FROM" > site/api/config.php
 
-      # Заливаються лише змінені файли, кількома з'єднаннями паралельно (lftp).
+      # Заливаються лише змінені файли, кількома з'єднаннями паралельно (curl, пачками по 100 файлів).
       # Що змінилось, визначає deploy-manifest.txt на сервері: контрольні суми SHA-256 файлів
       # з попередньої заливки. Він оновлюється лише після успішної заливки; без нього заливається все.
       # Чужі файли в теці (зокрема lvivimport-demo.txt) не видаляються.
@@ -159,11 +159,8 @@ jobs:
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PARALLEL: ${{ vars.FTP_PARALLEL || '6' }}
         run: |
-          # Логін іде в рядок команд lftp: прибираємо переноси й пробіли, що потрапляють у секрет під час копіювання
+          # Прибираємо переноси й пробіли, що потрапляють у секрет під час копіювання
           FTP_USERNAME=$(printf '%s' "$FTP_USERNAME" | tr -d '\r\n' | sed -E 's/^[[:space:]]+//; s/[[:space:]]+$//')
-          case "$FTP_USERNAME" in
-            *"'"*) echo "::error::FTP_USERNAME містить лапку — введіть секрет заново"; exit 1 ;;
-          esac
           MANIFEST=deploy-manifest.txt
           (cd site && find . -type f -print0 | sort -z | xargs -0 sha256sum) > "$RUNNER_TEMP/$MANIFEST"
 
@@ -184,22 +181,30 @@ jobs:
           if [ "$COUNT" -eq 0 ]; then echo "Заливати нічого"; exit 0; fi
           head -20 "$RUNNER_TEMP/changed.txt"
 
-          # Окрема тека лише зі зміненими файлами (час зміни — поточний, тож lftp їх не пропустить)
-          STAGE="$RUNNER_TEMP/stage"
-          rsync -r --files-from="$RUNNER_TEMP/changed.txt" site/ "$STAGE/"
+          # Пачки по 100 файлів; кожна пачка — один curl і одне FTP-з'єднання, пачки йдуть паралельно
+          cd site
+          split -l 100 -d -a 4 "$RUNNER_TEMP/changed.txt" "$RUNNER_TEMP/batch-"
+          cat > "$RUNNER_TEMP/upload-batch.sh" <<'SH'
+          set -o pipefail
+          batch="$1"; conf="$batch.curl"; name=$(basename "$batch")
+          # Пари «файл → адреса» у конфігурації curl (без лапок і зворотних скісних у назвах файлів збірки)
+          sed 's#^\./##' "$batch" | while IFS= read -r f; do
+            enc=$(printf '%s' "$f" | sed 's/%/%25/g; s/ /%20/g; s/#/%23/g; s/?/%3F/g')
+            printf 'upload-file = "%s"\nurl = "%s%s%s"\n' "$f" "$FTP_BASE" "$FTP_PATH" "$enc"
+          done > "$conf"
+          if curl -sS --fail-early --ftp-create-dirs --ftp-pasv $FTP_TLS --connect-timeout 30 --max-time 300 \
+               --retry 3 --retry-all-errors -K "$RUNNER_TEMP/auth.curl" -K "$conf" 2>"$batch.err"; then
+            echo "$name: $(wc -l < "$batch") файлів"
+          else
+            echo "::error::Заливка пачки $name не вдалась: $(grep -v '^$' "$batch.err" | tail -1)"; exit 1
+          fi
+          SH
+          # Логін і пароль — у файлі конфігурації curl, а не в командному рядку процесів
+          ( umask 077; printf 'user = "%s:%s"\n' "$(printf '%s' "$FTP_USERNAME" | sed 's/[\\"]/\\&/g')" \
+              "$(printf '%s' "$FTP_PASSWORD" | tr -d '\r\n' | sed 's/[\\"]/\\&/g')" > "$RUNNER_TEMP/auth.curl" )
+          export FTP_BASE FTP_PATH FTP_TLS RUNNER_TEMP
+          find "$RUNNER_TEMP" -maxdepth 1 -name 'batch-[0-9][0-9][0-9][0-9]' | sort | xargs -P "$FTP_PARALLEL" -n 1 bash "$RUNNER_TEMP/upload-batch.sh"
 
-          case "${{ vars.FTP_PROTOCOL || 'ftps' }}" in
-            ftp) URL="ftp://$FTP_HOST"; SSL="set ftp:ssl-allow no" ;;
-            ftps-legacy) URL="ftps://$FTP_HOST"; SSL="" ;;
-            *) URL="ftp://$FTP_HOST"; SSL="set ftp:ssl-force yes; set ftp:ssl-protect-data yes" ;;
-          esac
-          sudo apt-get install -y -qq lftp > /dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq lftp > /dev/null; }
-          export LFTP_PASSWORD="$FTP_PASSWORD"
-          lftp -c "
-            set cmd:fail-exit yes; set net:max-retries 5; set net:reconnect-interval-base 5; set net:timeout 60;
-            set ftp:passive-mode on; set ssl:verify-certificate yes; $SSL;
-            open --env-password -u '$FTP_USERNAME' '$URL';
-            mirror -R --overwrite --no-perms --parallel=$FTP_PARALLEL --verbose=1 '$STAGE/' '$FTP_PATH';
-            put -O '$FTP_PATH' '$RUNNER_TEMP/$MANIFEST'
-          "
+          # Маніфест — останнім, лише коли всі пачки залито
+          curl -sS --ftp-pasv $FTP_TLS --retry 3 -K "$RUNNER_TEMP/auth.curl" -T "$RUNNER_TEMP/$MANIFEST" "$FTP_BASE$FTP_PATH$MANIFEST"
           echo "Залито файлів: $COUNT"
