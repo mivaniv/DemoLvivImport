@@ -148,21 +148,21 @@ jobs:
           fi
           printf "<?php\nreturn ['to' => '%s', 'from' => '%s'];\n" "$TO" "$FROM" > site/api/config.php
 
-      # Заливаються лише змінені файли, кількома з'єднаннями паралельно (curl, пачками по 100 файлів).
-      # Що змінилось, визначає deploy-manifest.txt на сервері: контрольні суми SHA-256 файлів
-      # з попередньої заливки. Він оновлюється лише після успішної заливки; без нього заливається все.
-      # Чужі файли в теці (зокрема lvivimport-demo.txt) не видаляються.
+      # Заливаються лише змінені файли, пачками по 50 у FTP_PARALLEL з'єднань (curl).
+      # Що змінилось, визначає deploy-manifest.txt на сервері: контрольні суми SHA-256 уже залитих файлів;
+      # без нього заливається все. Чужі файли в теці (зокрема lvivimport-demo.txt) не видаляються.
       - name: Upload changed files
         if: steps.cfg.outputs.ready == 'true'
         env:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          FTP_PARALLEL: ${{ vars.FTP_PARALLEL || '6' }}
+          FTP_PARALLEL: ${{ vars.FTP_PARALLEL || '2' }}
         run: |
+          export LC_ALL=C # однакове сортування для sort і comm
           # Прибираємо переноси й пробіли, що потрапляють у секрет під час копіювання
           FTP_USERNAME=$(printf '%s' "$FTP_USERNAME" | tr -d '\r\n' | sed -E 's/^[[:space:]]+//; s/[[:space:]]+$//')
           MANIFEST=deploy-manifest.txt
-          (cd site && find . -type f -print0 | sort -z | xargs -0 sha256sum) > "$RUNNER_TEMP/$MANIFEST"
+          (cd site && find . -type f -print0 | xargs -0 sha256sum) | sort > "$RUNNER_TEMP/$MANIFEST"
 
           if curl -sS --max-time 120 --ftp-pasv $FTP_TLS --user "$FTP_USERNAME:$FTP_PASSWORD" \
                -o "$RUNNER_TEMP/old-manifest.txt" "$FTP_BASE$FTP_PATH$MANIFEST" 2>"$RUNNER_TEMP/ftp.err"; then
@@ -174,27 +174,33 @@ jobs:
             echo "::error::Не вдалося прочитати $MANIFEST з сервера: $(head -1 "$RUNNER_TEMP/ftp.err")"; exit 1
           fi
 
+          sort -o "$RUNNER_TEMP/old-manifest.txt" "$RUNNER_TEMP/old-manifest.txt"
+
           # Рядки «хеш  ./шлях», яких не було в попередній заливці → нові або змінені файли
-          comm -13 <(sort "$RUNNER_TEMP/old-manifest.txt") <(sort "$RUNNER_TEMP/$MANIFEST") | cut -c67- > "$RUNNER_TEMP/changed.txt"
+          comm -13 "$RUNNER_TEMP/old-manifest.txt" "$RUNNER_TEMP/$MANIFEST" > "$RUNNER_TEMP/changed.txt"
           COUNT=$(grep -c . "$RUNNER_TEMP/changed.txt" || true)
           echo "Змінених файлів: $COUNT з $(wc -l < "$RUNNER_TEMP/$MANIFEST")"
           if [ "$COUNT" -eq 0 ]; then echo "Заливати нічого"; exit 0; fi
-          head -20 "$RUNNER_TEMP/changed.txt"
+          head -20 "$RUNNER_TEMP/changed.txt" | cut -c67-
 
-          # Пачки по 100 файлів; кожна пачка — один curl і одне FTP-з'єднання, пачки йдуть паралельно
+          # Пачки по 50 файлів; кожна пачка — один curl і одне FTP-з'єднання, пачки йдуть паралельно.
+          # Залита пачка позначається файлом .ok — з них крок «Save upload progress» складає маніфест.
           cd site
-          split -l 100 -d -a 4 "$RUNNER_TEMP/changed.txt" "$RUNNER_TEMP/batch-"
+          split -l 50 -d -a 4 "$RUNNER_TEMP/changed.txt" "$RUNNER_TEMP/batch-"
           cat > "$RUNNER_TEMP/upload-batch.sh" <<'SH'
           set -o pipefail
           batch="$1"; conf="$batch.curl"; name=$(basename "$batch")
           # Пари «файл → адреса» у конфігурації curl (без лапок і зворотних скісних у назвах файлів збірки)
-          sed 's#^\./##' "$batch" | while IFS= read -r f; do
+          cut -c67- "$batch" | sed 's#^\./##' | while IFS= read -r f; do
             enc=$(printf '%s' "$f" | sed 's/%/%25/g; s/ /%20/g; s/#/%23/g; s/?/%3F/g')
             printf 'upload-file = "%s"\nurl = "%s%s%s"\n' "$f" "$FTP_BASE" "$FTP_PATH" "$enc"
           done > "$conf"
-          if curl -sS --fail-early --ftp-create-dirs --ftp-pasv $FTP_TLS --connect-timeout 30 --max-time 300 \
-               --retry 3 --retry-all-errors -K "$RUNNER_TEMP/auth.curl" -K "$conf" 2>"$batch.err"; then
-            echo "$name: $(wc -l < "$batch") файлів"
+          # Сервер повільний: обриваємо лише завислу передачу (менше 1 байта/с упродовж 2 хв) і повторюємо
+          if curl -sS --fail-early --ftp-create-dirs --ftp-pasv $FTP_TLS --connect-timeout 60 \
+               --speed-limit 1 --speed-time 120 --retry 5 --retry-delay 10 --retry-all-errors \
+               -K "$RUNNER_TEMP/auth.curl" -K "$conf" 2>"$batch.err"; then
+            cp "$batch" "$batch.ok"
+            echo "$name: $(wc -l < "$batch") файлів, усього залито $(cat "$RUNNER_TEMP"/batch-*.ok | wc -l)"
           else
             echo "::error::Заливка пачки $name не вдалась: $(grep -v '^$' "$batch.err" | tail -1)"; exit 1
           fi
@@ -203,8 +209,24 @@ jobs:
           ( umask 077; printf 'user = "%s:%s"\n' "$(printf '%s' "$FTP_USERNAME" | sed 's/[\\"]/\\&/g')" \
               "$(printf '%s' "$FTP_PASSWORD" | tr -d '\r\n' | sed 's/[\\"]/\\&/g')" > "$RUNNER_TEMP/auth.curl" )
           export FTP_BASE FTP_PATH FTP_TLS RUNNER_TEMP
+          touch "$RUNNER_TEMP/upload-started"
           find "$RUNNER_TEMP" -maxdepth 1 -name 'batch-[0-9][0-9][0-9][0-9]' | sort | xargs -P "$FTP_PARALLEL" -n 1 bash "$RUNNER_TEMP/upload-batch.sh"
 
-          # Маніфест — останнім, лише коли всі пачки залито
-          curl -sS --ftp-pasv $FTP_TLS --retry 3 -K "$RUNNER_TEMP/auth.curl" -T "$RUNNER_TEMP/$MANIFEST" "$FTP_BASE$FTP_PATH$MANIFEST"
-          echo "Залито файлів: $COUNT"
+      # Виконується й після збою чи скасування заливки: маніфест = незмінені файли + залиті пачки.
+      # Тож повторний запуск («Re-run jobs») доллє лише те, що не встигло залитись.
+      - name: Save upload progress
+        if: always() && steps.cfg.outputs.ready == 'true'
+        run: |
+          export LC_ALL=C
+          [ -f "$RUNNER_TEMP/upload-started" ] || exit 0
+          MANIFEST=deploy-manifest.txt
+          { comm -12 "$RUNNER_TEMP/old-manifest.txt" "$RUNNER_TEMP/$MANIFEST"; cat "$RUNNER_TEMP"/batch-*.ok 2>/dev/null || true; } \
+            | sort -u > "$RUNNER_TEMP/upload-manifest.txt"
+          DONE=$( (cat "$RUNNER_TEMP"/batch-*.ok 2>/dev/null || true) | wc -l)
+          COUNT=$(wc -l < "$RUNNER_TEMP/changed.txt")
+          curl -sS --ftp-pasv $FTP_TLS --connect-timeout 60 --retry 5 --retry-delay 10 --retry-all-errors \
+            -K "$RUNNER_TEMP/auth.curl" -T "$RUNNER_TEMP/upload-manifest.txt" "$FTP_BASE$FTP_PATH$MANIFEST"
+          echo "Залито файлів: $DONE з $COUNT"
+          if [ "$DONE" -lt "$COUNT" ]; then
+            echo "::warning::Залито $DONE з $COUNT файлів. Запустіть заливку ще раз (Re-run all jobs) — вона продовжить з місця зупинки."
+          fi
