@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { AddToRequest } from "@/components/cart/AddToRequest";
 import { AddToCart } from "@/components/product/AddToCart";
 import { Badges } from "@/components/product/Badges";
 import { PriceTag } from "@/components/product/PriceTag";
 import { ProductImage } from "@/components/product/ProductImage";
+import { ProductLink } from "@/components/product/ProductLink";
 import type { ProductCardData } from "@/lib/catalog";
 import { B2B_ENABLED } from "@/lib/features";
 
@@ -16,7 +16,6 @@ type Props = {
 };
 
 export function ProductCard({ product, variant = "full", canOrder = false }: Props) {
-  const href = `/product/${product.slug}`;
   const image = product.images[0];
 
   const meta = (
@@ -39,16 +38,16 @@ export function ProductCard({ product, variant = "full", canOrder = false }: Pro
   if (variant === "row") {
     return (
       <article className="flex gap-4 rounded-2xl border border-line bg-white p-4 transition hover:shadow-lg hover:shadow-brand-600/5 sm:gap-6">
-        <Link href={href} className="relative block size-28 shrink-0 sm:size-36">
+        <ProductLink slug={product.slug} className="relative block size-28 shrink-0 sm:size-36">
           <Badges isPopular={product.isPopular} isNew={product.isNew} isSale={product.isSale} className="absolute left-0 top-0 z-10" />
           <ProductImage src={image?.url} alt={image?.alt ?? product.name} sizes="144px" />
-        </Link>
+        </ProductLink>
         <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
           <div className="min-w-0 flex-1 space-y-2">
             {product.brand && <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">{product.brand.name}</p>}
-            <Link href={href} className="block font-semibold leading-snug hover:text-brand-600">
+            <ProductLink slug={product.slug} className="block font-semibold leading-snug hover:text-brand-600">
               {product.name}
-            </Link>
+            </ProductLink>
             {meta}
           </div>
           <div className="space-y-3 sm:w-60">
@@ -62,7 +61,7 @@ export function ProductCard({ product, variant = "full", canOrder = false }: Pro
 
   return (
     <article className="group flex h-full flex-col rounded-2xl border border-line bg-white p-3 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-600/5 sm:p-4">
-      <Link href={href} className="relative mb-3 block aspect-square overflow-hidden rounded-xl">
+      <ProductLink slug={product.slug} className="relative mb-3 block aspect-square overflow-hidden rounded-xl">
         <Badges isPopular={product.isPopular} isNew={product.isNew} isSale={product.isSale} className="absolute left-2 top-2 z-10" />
         <ProductImage
           src={image?.url}
@@ -70,10 +69,10 @@ export function ProductCard({ product, variant = "full", canOrder = false }: Pro
           sizes="(min-width: 1280px) 260px, (min-width: 768px) 30vw, 45vw"
           className="transition duration-300 group-hover:scale-[1.03]"
         />
-      </Link>
-      <Link href={href} className="line-clamp-2 min-h-10 text-sm font-semibold leading-snug hover:text-brand-600">
+      </ProductLink>
+      <ProductLink slug={product.slug} className="line-clamp-2 min-h-10 text-sm font-semibold leading-snug hover:text-brand-600">
         {product.name}
-      </Link>
+      </ProductLink>
       <div className="mt-2">{meta}</div>
       <div className="mt-auto space-y-3 pt-3">
         <PriceTag canOrder={canOrder} price={product.price} oldPrice={product.oldPrice} unit={product.unit} />

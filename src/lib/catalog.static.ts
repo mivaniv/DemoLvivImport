@@ -1,38 +1,16 @@
 import snapshot from "@/data/catalog-snapshot.json";
 import type { CatalogState, Collection, SortKey } from "@/lib/catalog-params";
 import { buildCategoryTree, categoryScope, type FlatCategory } from "@/lib/category-tree";
+import { cardOf, findProduct, similarProducts, type SnapshotProduct } from "@/lib/product-data";
 
 // Каталог для статичної збірки (GitHub Pages): ті самі функції, що й у catalog.ts,
 // але дані — зі знімка бази, а пошук і фільтри виконуються в JS (зокрема в браузері).
 // Цін у знімку немає: на GitHub Pages кожен відвідувач — гість.
 
-type SnapshotProduct = (typeof snapshot.products)[number];
-
 const categoryById = new Map(snapshot.categories.map((c) => [c.id, c]));
 const brandById = new Map(snapshot.brands.map((b) => [b.id, b]));
 
-function toCard(p: SnapshotProduct) {
-  const brand = p.brandId ? brandById.get(p.brandId) : undefined;
-  return {
-    id: p.id,
-    externalId: p.externalId,
-    sku: p.sku,
-    slug: p.slug,
-    name: p.name,
-    netWeight: p.netWeight,
-    unitsPerBox: p.unitsPerBox,
-    unit: p.unit,
-    minOrder: p.minOrder,
-    inStock: p.inStock,
-    isPopular: p.isPopular,
-    isNew: p.isNew,
-    isSale: p.isSale,
-    price: null as number | null,
-    oldPrice: null as number | null,
-    brand: brand ? { name: brand.name, slug: brand.slug } : null,
-    images: p.images.slice(0, 1),
-  };
-}
+const toCard = (p: SnapshotProduct) => cardOf(snapshot, p);
 
 export type ProductCardData = ReturnType<typeof toCard>;
 
@@ -142,23 +120,11 @@ export async function getCollectionProducts(collection: Exclude<Collection, "">,
 }
 
 export async function getProduct(slug: string) {
-  const p = snapshot.products.find((x) => x.slug === slug);
-  if (!p) return null;
-  return {
-    ...p,
-    price: null as number | null,
-    oldPrice: null as number | null,
-    brand: p.brandId ? brandById.get(p.brandId) ?? null : null,
-    category: p.categoryId ? categoryById.get(p.categoryId) ?? null : null,
-  };
+  return findProduct(snapshot, slug);
 }
 
 export async function getSimilarProducts(product: { id: number; categoryId: number | null }, limit = 4) {
-  return snapshot.products
-    .filter((p) => p.id !== product.id && p.categoryId === product.categoryId)
-    .sort(COMPARE.popular)
-    .slice(0, limit)
-    .map(toCard);
+  return similarProducts(snapshot, product, limit);
 }
 
 export async function getAllProductSlugs() {

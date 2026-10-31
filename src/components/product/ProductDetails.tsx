@@ -1,7 +1,5 @@
 import { Boxes, CircleCheck, Clock, FileSpreadsheet, Lock, PackageCheck, Phone, ShieldCheck, Truck, Wallet } from "lucide-react";
-import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { AddToRequest } from "@/components/cart/AddToRequest";
 import { CallbackButton } from "@/components/layout/CallbackDialog";
 import { AddToCart } from "@/components/product/AddToCart";
@@ -13,30 +11,45 @@ import { ProductTabs } from "@/components/product/ProductTabs";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { MAIN_PHONE, PRODUCT_PERKS } from "@/content/company";
-import { getViewer } from "@/lib/auth/session";
-import { getAllProductSlugs, getProduct, getSimilarProducts } from "@/lib/catalog";
+import type { ProductCardData } from "@/lib/catalog";
 import { B2B_ENABLED } from "@/lib/features";
 
-export async function generateStaticParams() {
-  return (await getAllProductSlugs()).map((slug) => ({ slug }));
-}
+// Сторінка товару без завантаження даних: її рендерить і сервер (product/[slug]/page.server.tsx),
+// і шаблон статичної збірки в браузері (ProductScreen) — тому тут немає звернень до бази чи сесії.
 
-export async function generateMetadata(props: PageProps<"/product/[slug]">): Promise<Metadata> {
-  const { slug } = await props.params;
-  const product = await getProduct(slug);
-  if (!product) return { title: "Товар не знайдено" };
-  return { title: product.name, description: product.description?.slice(0, 160) };
-}
+export type ProductDetailsData = {
+  id: number;
+  slug: string;
+  sku: string | null;
+  barcode: string | null;
+  name: string;
+  description: string | null;
+  netWeight: string | null;
+  unitsPerBox: number | null;
+  unit: string;
+  minOrder: number;
+  inStock: boolean;
+  isPopular: boolean;
+  isNew: boolean;
+  isSale: boolean;
+  price: number | null;
+  oldPrice: number | null;
+  images: { url: string; alt: string | null }[];
+  attributes: { name: string; value: string }[];
+  brand: { name: string; slug: string } | null;
+  category: { name: string; slug: string } | null;
+};
+
+type Props = {
+  product: ProductDetailsData;
+  similar: ProductCardData[];
+  viewer: { canOrder: boolean } | null;
+};
 
 const PERK_ICONS = [Truck, Wallet, ShieldCheck];
 
-export default async function ProductPage(props: PageProps<"/product/[slug]">) {
-  const { slug } = await props.params;
-  const [product, viewer] = await Promise.all([getProduct(slug), getViewer()]);
-  if (!product) notFound();
+export function ProductDetails({ product, similar, viewer }: Props) {
   const canOrder = viewer?.canOrder ?? false;
-
-  const similar = await getSimilarProducts(product);
 
   const specs: [string, string][] = [
     ...(product.brand ? [["Бренд", product.brand.name] as [string, string]] : []),

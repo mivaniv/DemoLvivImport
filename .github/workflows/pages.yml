@@ -38,6 +38,8 @@ jobs:
         env:
           NEXT_PUBLIC_STATIC_EXPORT: "1"
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+          # Окрема сторінка на кожен товар: Pages не вміє віддавати один шаблон на всі адреси (див. next.config.ts)
+          STATIC_PRODUCT_PAGES: "1"
           DATABASE_URL: postgresql://build:build@localhost:5432/build
 
       - uses: actions/upload-pages-artifact@v4

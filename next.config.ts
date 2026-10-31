@@ -30,7 +30,10 @@ const nextConfig: NextConfig = isStatic
       generateBuildId: async () => "lvivimport-static",
       // page.static.tsx — замінники сторінок кабінету; *.server.ts(x) (кабінет, кошик, адмінпанель,
       // /media, прайс) до статичної збірки не входять.
-      pageExtensions: ["static.tsx", "static.ts", "tsx", "ts"],
+      // Товари: на хостингу — один шаблон product/page.static.tsx на всі адреси (.htaccess), щоб сайт
+      // складався з кількох десятків файлів, а не тисяч. GitHub Pages переадресацій не вміє, тож там
+      // (STATIC_PRODUCT_PAGES=1) додатково генерується сторінка на кожен товар: product/[slug]/page.pages.tsx.
+      pageExtensions: [...(process.env.STATIC_PRODUCT_PAGES === "1" ? ["pages.tsx"] : []), "static.tsx", "static.ts", "tsx", "ts"],
       turbopack: { resolveAlias: staticAliases },
       typescript: { tsconfigPath: "tsconfig.static.json" },
     }

@@ -99,7 +99,8 @@ git add -A; git commit -m "Update catalog snapshot"; git push
 - відвідувач завжди гість: цін і кабінету немає (у знімку цін немає);
 - кошик-заявка живе в браузері (localStorage, [src/lib/request-cart.ts](src/lib/request-cart.ts)): товари додаються з каталогу, кількість — ящиками;
 - форми й заявка надсилаються на PHP-обробник хостингу ([deploy/hosting/api/form.php](deploy/hosting/api/form.php)), адреса — `NEXT_PUBLIC_FORM_ENDPOINT`. Без неї (GitHub Pages) форми пропонують зателефонувати;
-- `page.static.tsx` замінюють сторінки кабінету поясненням.
+- `page.static.tsx` замінюють сторінки кабінету поясненням;
+- сторінки товарів — один шаблон `/product/` ([ProductScreen.tsx](src/components/product/ProductScreen.tsx)): хостинг віддає його на будь-яку адресу `/product/<slug>/`, а товар береться з `/data/products.json`. Тож сайт — ~265 файлів, а не тисячі, і правка шапки чи футера швидко заливається. Збірка для GitHub Pages (`STATIC_PRODUCT_PAGES=1`) генерує окрему сторінку на кожен товар, бо Pages не вміє переадресацій.
 
 Локальна перевірка: `npm run build:static`, результат у теці `out/`.
 

@@ -6,6 +6,7 @@ import { startTransition, useActionState, useEffect } from "react";
 import type { FormState } from "@/app/actions/form-state";
 import { submitRequest } from "@/app/actions/request";
 import { ProductImage } from "@/components/product/ProductImage";
+import { ProductLink } from "@/components/product/ProductLink";
 import { errorOf, Field, FormMessage, Honeypot, TextArea } from "@/components/ui/form";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import { plural } from "@/lib/format";
@@ -79,13 +80,13 @@ function Line({ item: i, onQty, onRemove }: { item: RequestItem; onQty: (qty: nu
   const step = orderStep(i);
   return (
     <li className="flex flex-wrap items-center gap-4 p-4 sm:flex-nowrap">
-      <Link href={`/product/${i.slug}`} className="relative size-16 shrink-0">
+      <ProductLink slug={i.slug} className="relative size-16 shrink-0">
         <ProductImage src={i.image ?? undefined} alt="" sizes="64px" />
-      </Link>
+      </ProductLink>
       <div className="min-w-0 flex-1">
-        <Link href={`/product/${i.slug}`} className="line-clamp-2 text-sm font-semibold hover:text-brand-600">
+        <ProductLink slug={i.slug} className="line-clamp-2 text-sm font-semibold hover:text-brand-600">
           {i.name}
-        </Link>
+        </ProductLink>
         <p className="mt-0.5 text-xs text-muted">
           {i.sku && <>Артикул {i.sku} · </>}
           {i.unitsPerBox ? `${i.unitsPerBox} ${i.unit} у ящику` : `від ${i.minOrder} ${i.unit}`}
