@@ -17,6 +17,7 @@
     "import:sync": "tsx scripts/import-sync.ts",
     "import:cleanup": "tsx scripts/import-cleanup.ts",
     "import:daily": "tsx scripts/import-daily.ts",
+    "catalog:from-feed": "tsx scripts/catalog-from-feed.ts",
     "test": "vitest run",
     "admin:create": "tsx scripts/create-admin.ts"
   },

@@ -1,8 +1,9 @@
 {
-  "generatedAt": "2026-10-26T16:57:25.488Z",
+  "generatedAt": "2026-11-01T16:31:15.822Z",
   "categories": [
     {
       "id": 56,
+      "externalId": "a9a9be43-bac8-11ee-bb4a-860e5f5ec3c7",
       "slug": "messis-soky",
       "name": "Messis соки",
       "sortOrder": 1,
@@ -10,6 +11,7 @@
     },
     {
       "id": 62,
+      "externalId": "7358961d-141d-11ee-ba70-860e5f5ec3c7",
       "slug": "messis-snidanky-dzhemy-vafli",
       "name": "Messis сніданки джеми вафлі",
       "sortOrder": 2,
@@ -17,6 +19,7 @@
     },
     {
       "id": 63,
+      "externalId": "978c6f2a-3546-11ef-bbf2-860e5f5ec3c7",
       "slug": "viyavo-bakaliia",
       "name": "Viyavo бакалія",
       "sortOrder": 3,
@@ -24,6 +27,7 @@
     },
     {
       "id": 65,
+      "externalId": "e4bfec30-b8a0-11f0-bde6-860e5f5ec3c7",
       "slug": "viyavo-olyvky",
       "name": "Viyavo оливки",
       "sortOrder": 4,
@@ -31,6 +35,7 @@
     },
     {
       "id": 66,
+      "externalId": "d0b54025-853c-11ee-bb05-860e5f5ec3c7",
       "slug": "bakaliia-khoreka",
       "name": "Бакалія хорека",
       "sortOrder": 5,
@@ -38,6 +43,7 @@
     },
     {
       "id": 67,
+      "externalId": "d6b26f56-c840-11ea-80fb-525400c30edc",
       "slug": "olyvky-sousy-tomaty-prypravy",
       "name": "Оливки соуси томати приправи",
       "sortOrder": 6,
@@ -45,6 +51,7 @@
     },
     {
       "id": 68,
+      "externalId": "ce40170a-8469-11ee-bb04-860e5f5ec3c7",
       "slug": "kondyterka",
       "name": "Кондитерка",
       "sortOrder": 7,
@@ -52,6 +59,7 @@
     },
     {
       "id": 70,
+      "externalId": "f607f0a7-846a-11ee-bb04-860e5f5ec3c7",
       "slug": "sneky-i-snidanky-sante",
       "name": "Снеки і сніданки sante",
       "sortOrder": 8,
@@ -59,6 +67,7 @@
     },
     {
       "id": 71,
+      "externalId": "0f58c58f-a3d4-11ea-80f5-525400c30edc",
       "slug": "pringles-moloko-capri-sun-lody",
       "name": "Pringles молоко capri sun льоди",
       "sortOrder": 9,
@@ -66,6 +75,7 @@
     },
     {
       "id": 57,
+      "externalId": "5d0fe91b-846b-11ee-bb04-860e5f5ec3c7",
       "slug": "makarony",
       "name": "Макарони",
       "sortOrder": 10,
@@ -73,6 +83,7 @@
     },
     {
       "id": 58,
+      "externalId": "51b5ec29-63f3-11f1-a274-00155d6c8404",
       "slug": "viyavo-kava-edel-queen",
       "name": "Viyavo кава edel & queen",
       "sortOrder": 11,
@@ -80,6 +91,7 @@
     },
     {
       "id": 59,
+      "externalId": "ec409a6d-db11-11ea-8105-525400c30edc",
       "slug": "kava-i-chai",
       "name": "Кава і чай",
       "sortOrder": 12,
@@ -87,6 +99,7 @@
     },
     {
       "id": 60,
+      "externalId": "f130c15e-4e72-11ef-bc13-860e5f5ec3c7",
       "slug": "sportyvne-kharchuvannia",
       "name": "Спортивне харчування",
       "sortOrder": 13,
@@ -94,6 +107,7 @@
     },
     {
       "id": 61,
+      "externalId": "11e2be30-d8d2-11ef-bcc4-860e5f5ec3c7",
       "slug": "khamon",
       "name": "Хамон",
       "sortOrder": 14,
@@ -101,6 +115,7 @@
     },
     {
       "id": 64,
+      "externalId": "40f5c1ba-caeb-11f0-bdff-860e5f5ec3c7",
       "slug": "330",
       "name": "330",
       "sortOrder": 1008,
@@ -108,6 +123,7 @@
     },
     {
       "id": 69,
+      "externalId": "66cf167f-caeb-11f0-bdff-860e5f5ec3c7",
       "slug": "750",
       "name": "750",
       "sortOrder": 1013,
@@ -115,6 +131,7 @@
     },
     {
       "id": 72,
+      "externalId": "56bc2fbc-1011-11ee-ba6b-860e5f5ec3c7",
       "slug": "athina",
       "name": "Athina",
       "sortOrder": 1016,
@@ -122,6 +139,7 @@
     },
     {
       "id": 73,
+      "externalId": "82b14fa5-7f07-11ee-bafd-860e5f5ec3c7",
       "slug": "barilla",
       "name": "Barilla",
       "sortOrder": 1017,
@@ -129,6 +147,7 @@
     },
     {
       "id": 74,
+      "externalId": "df4c9162-82e9-11ee-bb02-860e5f5ec3c7",
       "slug": "barilla-df4c9162-82e9-11ee-bb02-860e5f5ec3c7",
       "name": "Barilla",
       "sortOrder": 1018,
@@ -136,6 +155,7 @@
     },
     {
       "id": 75,
+      "externalId": "229779af-ab39-11ef-bc8a-860e5f5ec3c7",
       "slug": "barri",
       "name": "Barri",
       "sortOrder": 1019,
@@ -143,6 +163,7 @@
     },
     {
       "id": 76,
+      "externalId": "ec62d1ac-d6db-11ec-b8b8-860e5f5ec3c7",
       "slug": "belin",
       "name": "Belin",
       "sortOrder": 1020,
@@ -150,6 +171,7 @@
     },
     {
       "id": 77,
+      "externalId": "96b6cf79-cb7c-11ec-b8a9-860e5f5ec3c7",
       "slug": "cappuccino",
       "name": "Cappuccino",
       "sortOrder": 1021,
@@ -157,6 +179,7 @@
     },
     {
       "id": 78,
+      "externalId": "18d51a00-c594-11ec-b8a1-860e5f5ec3c7",
       "slug": "capri-sun",
       "name": "Capri sun",
       "sortOrder": 1022,
@@ -164,6 +187,7 @@
     },
     {
       "id": 79,
+      "externalId": "ec62d1ad-d6db-11ec-b8b8-860e5f5ec3c7",
       "slug": "celmar",
       "name": "Celmar",
       "sortOrder": 1023,
@@ -171,6 +195,7 @@
     },
     {
       "id": 80,
+      "externalId": "96b6cf77-cb7c-11ec-b8a9-860e5f5ec3c7",
       "slug": "coffe",
       "name": "Coffe",
       "sortOrder": 1024,
@@ -178,6 +203,7 @@
     },
     {
       "id": 81,
+      "externalId": "ec409a6a-db11-11ea-8105-525400c30edc",
       "slug": "cnidanky-sante",
       "name": "Cніданки sante",
       "sortOrder": 1025,
@@ -185,6 +211,7 @@
     },
     {
       "id": 82,
+      "externalId": "e7a3e9a2-7e6e-11f0-bd9c-860e5f5ec3c7",
       "slug": "dilmah",
       "name": "Dilmah",
       "sortOrder": 1026,
@@ -192,6 +219,7 @@
     },
     {
       "id": 83,
+      "externalId": "a7bbd1e3-d111-11ec-b8b1-860e5f5ec3c7",
       "slug": "fiesta-zheleiky",
       "name": "Fiesta желейки",
       "sortOrder": 1027,
@@ -199,6 +227,7 @@
     },
     {
       "id": 85,
+      "externalId": "adfe73bc-9411-11ec-b85d-860e5f5ec3c7",
       "slug": "green-garden",
       "name": "Green garden",
       "sortOrder": 1029,
@@ -206,6 +235,7 @@
     },
     {
       "id": 86,
+      "externalId": "f14db27f-06bc-11ed-b8f8-860e5f5ec3c7",
       "slug": "hearts",
       "name": "Hearts",
       "sortOrder": 1030,
@@ -213,6 +243,7 @@
     },
     {
       "id": 87,
+      "externalId": "e7951412-82fa-11ee-bb02-860e5f5ec3c7",
       "slug": "helcom",
       "name": "Helcom",
       "sortOrder": 1031,
@@ -220,6 +251,7 @@
     },
     {
       "id": 88,
+      "externalId": "adfe73bb-9411-11ec-b85d-860e5f5ec3c7",
       "slug": "helcom-adfe73bb-9411-11ec-b85d-860e5f5ec3c7",
       "name": "Helcom",
       "sortOrder": 1032,
@@ -227,6 +259,7 @@
     },
     {
       "id": 89,
+      "externalId": "b1e986f7-1011-11ee-ba6b-860e5f5ec3c7",
       "slug": "helcom-b1e986f7-1011-11ee-ba6b-860e5f5ec3c7",
       "name": "Helcom",
       "sortOrder": 1033,
@@ -234,6 +267,7 @@
     },
     {
       "id": 90,
+      "externalId": "ec62d1b0-d6db-11ec-b8b8-860e5f5ec3c7",
       "slug": "hit",
       "name": "Hit",
       "sortOrder": 1034,
@@ -241,6 +275,7 @@
     },
     {
       "id": 91,
+      "externalId": "94f72d02-ab9c-11ed-b9e1-860e5f5ec3c7",
       "slug": "horeca",
       "name": "Horeca",
       "sortOrder": 1035,
@@ -248,6 +283,7 @@
     },
     {
       "id": 92,
+      "externalId": "414aa9b4-ab34-11ef-bc8a-860e5f5ec3c7",
       "slug": "knoppers",
       "name": "Knoppers",
       "sortOrder": 1036,
@@ -255,6 +291,7 @@
     },
     {
       "id": 93,
+      "externalId": "d4d98801-92f9-11f0-bdb6-860e5f5ec3c7",
       "slug": "loyd",
       "name": "Loyd",
       "sortOrder": 1037,
@@ -262,6 +299,7 @@
     },
     {
       "id": 94,
+      "externalId": "62dddaf0-cd06-11ef-bcb5-860e5f5ec3c7",
       "slug": "milka",
       "name": "Milka",
       "sortOrder": 1038,
@@ -269,6 +307,7 @@
     },
     {
       "id": 95,
+      "externalId": "50ebb458-a8ef-11f0-bdd2-860e5f5ec3c7",
       "slug": "minutka",
       "name": "Minutka",
       "sortOrder": 1039,
@@ -276,6 +315,7 @@
     },
     {
       "id": 96,
+      "externalId": "001b30ce-0fd6-11f0-bd0d-860e5f5ec3c7",
       "slug": "mokate",
       "name": "Mokate",
       "sortOrder": 1040,
@@ -283,6 +323,7 @@
     },
     {
       "id": 97,
+      "externalId": "ea73ae32-c9c1-11ee-bb5e-860e5f5ec3c7",
       "slug": "pringles",
       "name": "Pringles",
       "sortOrder": 1041,
@@ -290,6 +331,7 @@
     },
     {
       "id": 98,
+      "externalId": "b62e1a66-c9c5-11ee-bb5e-860e5f5ec3c7",
       "slug": "pringles-2",
       "name": "Pringles 2",
       "sortOrder": 1042,
@@ -297,6 +339,7 @@
     },
     {
       "id": 99,
+      "externalId": "d6cbc5dc-a29d-11f0-bdca-860e5f5ec3c7",
       "slug": "reggia",
       "name": "Reggia",
       "sortOrder": 1043,
@@ -304,6 +347,7 @@
     },
     {
       "id": 100,
+      "externalId": "ec62d1ae-d6db-11ec-b8b8-860e5f5ec3c7",
       "slug": "rodzinna",
       "name": "Rodzinna",
       "sortOrder": 1044,
@@ -311,6 +355,7 @@
     },
     {
       "id": 101,
+      "externalId": "a7bbd1e4-d111-11ec-b8b1-860e5f5ec3c7",
       "slug": "sante",
       "name": "Sante",
       "sortOrder": 1045,
@@ -318,6 +363,7 @@
     },
     {
       "id": 102,
+      "externalId": "96b6cf78-cb7c-11ec-b8a9-860e5f5ec3c7",
       "slug": "tea",
       "name": "Tea",
       "sortOrder": 1046,
@@ -325,6 +371,7 @@
     },
     {
       "id": 103,
+      "externalId": "964d1b68-9b39-11ea-80f3-525400c30edc",
       "slug": "tomadini",
       "name": "Tomadini",
       "sortOrder": 1047,
@@ -332,6 +379,7 @@
     },
     {
       "id": 104,
+      "externalId": "6bb6a554-ab34-11ef-bc8a-860e5f5ec3c7",
       "slug": "tuc",
       "name": "Tuc",
       "sortOrder": 1048,
@@ -339,6 +387,7 @@
     },
     {
       "id": 105,
+      "externalId": "e14a8b11-ab33-11ef-bc8a-860e5f5ec3c7",
       "slug": "yoo-hoo",
       "name": "Yoo!hoo",
       "sortOrder": 1049,
@@ -346,6 +395,7 @@
     },
     {
       "id": 106,
+      "externalId": "671c365d-c0bf-11f1-a2f2-00155d6c8404",
       "slug": "beskyd",
       "name": "Бескид",
       "sortOrder": 1050,
@@ -353,6 +403,7 @@
     },
     {
       "id": 107,
+      "externalId": "34cd1825-bac8-11ee-bb4a-860e5f5ec3c7",
       "slug": "vafli",
       "name": "Вафлі",
       "sortOrder": 1051,
@@ -360,6 +411,7 @@
     },
     {
       "id": 108,
+      "externalId": "2d162b84-b193-11ef-bc92-860e5f5ec3c7",
       "slug": "hrisini",
       "name": "Грісіні",
       "sortOrder": 1052,
@@ -367,6 +419,7 @@
     },
     {
       "id": 109,
+      "externalId": "75bba997-bac8-11ee-bb4a-860e5f5ec3c7",
       "slug": "dzhemy",
       "name": "Джеми",
       "sortOrder": 1053,
@@ -374,6 +427,7 @@
     },
     {
       "id": 110,
+      "externalId": "a1e5e608-82fc-11ee-bb02-860e5f5ec3c7",
       "slug": "inshi-tm",
       "name": "Інші tm",
       "sortOrder": 1054,
@@ -381,6 +435,7 @@
     },
     {
       "id": 111,
+      "externalId": "6e828471-222e-11ee-ba82-860e5f5ec3c7",
       "slug": "inshi-tm-6e828471-222e-11ee-ba82-860e5f5ec3c7",
       "name": "Інші тм",
       "sortOrder": 1055,
@@ -388,6 +443,7 @@
     },
     {
       "id": 112,
+      "externalId": "c0f36885-2238-11ee-ba82-860e5f5ec3c7",
       "slug": "inshi-tm-c0f36885-2238-11ee-ba82-860e5f5ec3c7",
       "name": "Інші тм",
       "sortOrder": 1056,
@@ -395,6 +451,7 @@
     },
     {
       "id": 113,
+      "externalId": "ee577d8e-1012-11ee-ba6b-860e5f5ec3c7",
       "slug": "inshi-tm-ee577d8e-1012-11ee-ba6b-860e5f5ec3c7",
       "name": "Інші тм",
       "sortOrder": 1057,
@@ -402,6 +459,7 @@
     },
     {
       "id": 114,
+      "externalId": "5bdf14a9-b193-11ef-bc92-860e5f5ec3c7",
       "slug": "inshi-tm-5bdf14a9-b193-11ef-bc92-860e5f5ec3c7",
       "name": "Інші тм",
       "sortOrder": 1058,
@@ -409,6 +467,7 @@
     },
     {
       "id": 115,
+      "externalId": "ece81d81-5048-11ed-b95a-860e5f5ec3c7",
       "slug": "kava-v-zernakh",
       "name": "Кава в зернах",
       "sortOrder": 1059,
@@ -416,6 +475,7 @@
     },
     {
       "id": 116,
+      "externalId": "ece81d80-5048-11ed-b95a-860e5f5ec3c7",
       "slug": "kava-melena",
       "name": "Кава мелена",
       "sortOrder": 1060,
@@ -423,6 +483,7 @@
     },
     {
       "id": 117,
+      "externalId": "ece81d82-5048-11ed-b95a-860e5f5ec3c7",
       "slug": "kava-rozchynna",
       "name": "Кава розчинна",
       "sortOrder": 1061,
@@ -430,6 +491,7 @@
     },
     {
       "id": 118,
+      "externalId": "d6b26f55-c840-11ea-80fb-525400c30edc",
       "slug": "kondyterski-poroshky",
       "name": "Кондитерські порошки",
       "sortOrder": 1062,
@@ -437,6 +499,7 @@
     },
     {
       "id": 119,
+      "externalId": "9242ec8c-3aad-11ee-baa1-860e5f5ec3c7",
       "slug": "lody",
       "name": "Льоди",
       "sortOrder": 1063,
@@ -444,6 +507,7 @@
     },
     {
       "id": 120,
+      "externalId": "3ed17551-59ce-11ec-b817-860e5f5ec3c7",
       "slug": "moloko",
       "name": "Молоко",
       "sortOrder": 1064,
@@ -451,6 +515,7 @@
     },
     {
       "id": 121,
+      "externalId": "0f58c590-a3d4-11ea-80f5-525400c30edc",
       "slug": "olyvky",
       "name": "Оливки",
       "sortOrder": 1065,
@@ -458,6 +523,7 @@
     },
     {
       "id": 122,
+      "externalId": "964d1ba1-9b39-11ea-80f3-525400c30edc",
       "slug": "pomidory-i-tomaty",
       "name": "Помідори і томати",
       "sortOrder": 1066,
@@ -465,6 +531,7 @@
     },
     {
       "id": 123,
+      "externalId": "3da125ed-bf47-11ee-bb51-860e5f5ec3c7",
       "slug": "snidanky",
       "name": "Сніданки",
       "sortOrder": 1067,
@@ -472,6 +539,7 @@
     },
     {
       "id": 124,
+      "externalId": "d6b26f57-c840-11ea-80fb-525400c30edc",
       "slug": "sousy",
       "name": "Соуси",
       "sortOrder": 1068,

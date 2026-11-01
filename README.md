@@ -83,14 +83,17 @@ npm run dev                 # http://localhost:3000
 
 Workflow [.github/workflows/pages.yml](.github/workflows/pages.yml) збирає сайт після кожного push у `main`. База для цього не потрібна: дані беруться зі знімка [src/data/catalog-snapshot.json](src/data/catalog-snapshot.json).
 
-Щоб оновити товари в демоверсії:
+На demo.lvivimport.com каталог щодня оновлює крон самого хостингу — див. [docs/hosting.md](docs/hosting.md#щоденне-оновлення-каталогу). Знімок у репозиторії потрібен для збірки й GitHub Pages. Оновити його:
 
 ```powershell
-npm run import -- шлях/до/вивантаження.json   # за потреби
-npm run snapshot                                # усі активні товари (без цін) → src/data/catalog-snapshot.json
-# npm run snapshot -- --limit 50                # або лише перші N товарів
+npm run catalog:from-feed -- шлях/до/products_full.XML   # прямо з вивантаження 1С, без бази
+# або з бази повної версії:
+npm run snapshot                                          # усі активні товари (без цін)
+# npm run snapshot -- --limit 50                          # або лише перші N товарів
 git add -A; git commit -m "Update catalog snapshot"; git push
 ```
+
+Для локального файлу вивантаження задайте в `.env` `IMPORT_IMAGE_BASE_URL`: адресу теки `images_backup/` з фото.
 
 Чим статична версія відрізняється від повної (`NEXT_PUBLIC_STATIC_EXPORT=1` у [next.config.ts](next.config.ts)):
 
