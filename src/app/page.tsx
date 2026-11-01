@@ -1,15 +1,13 @@
 import { ArrowRight, BadgeCheck, Building2, Handshake, Headset, Store, Truck, Users, UtensilsCrossed } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { HeroArt } from "@/components/home/HeroArt";
+import { CategoryTiles, ProductRow } from "@/components/home/HomeCatalog";
 import { LogoMarquee } from "@/components/home/LogoMarquee";
-import { ProductCard } from "@/components/product/ProductCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { CLIENTS, HERO_TAGLINE, HOME_ABOUT } from "@/content/company";
-import { asset } from "@/lib/asset";
 import { getViewer } from "@/lib/auth/session";
 import { PARTNER_CTA } from "@/lib/features";
-import { getCategories, getCollectionProducts, type ProductCardData } from "@/lib/catalog";
+import { getCategories, getCollectionProducts } from "@/lib/catalog";
 
 const FEATURES = [
   { icon: BadgeCheck, label: "Оригінальні бренди" },
@@ -67,9 +65,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <ProductRow title="Популярні позиції" href="/popular" products={popular} canOrder={canOrder} />
-      <ProductRow title="Новинки" href="/new-products" products={fresh} canOrder={canOrder} />
-      <ProductRow title="Акційні позиції" href="/promo" products={sale} canOrder={canOrder} />
+      <ProductRow title="Популярні позиції" href="/popular" collection="popular" limit={10} products={popular} canOrder={canOrder} />
+      <ProductRow title="Новинки" href="/new-products" collection="new" limit={5} products={fresh} canOrder={canOrder} />
+      <ProductRow title="Акційні позиції" href="/promo" collection="sale" limit={5} products={sale} canOrder={canOrder} />
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
         <div className="grid gap-8 rounded-3xl bg-white p-6 ring-1 ring-line sm:p-10 lg:grid-cols-[1fr_1.2fr]">
@@ -100,32 +98,7 @@ export default async function HomePage() {
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
         <SectionHeader title="Категорії товарів" href="/catalog" linkLabel="Увесь каталог" />
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
-          {categories.filter((c) => c.depth === 0).map((c) => (
-            <Link
-              key={c.id}
-              href={`/catalog?category=${c.slug}`}
-              className="group overflow-hidden rounded-2xl border border-line bg-white transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-600/5"
-            >
-              <div className="relative aspect-[4/3] bg-gradient-to-br from-brand-50 to-white">
-                {c.products[0]?.images[0] && (
-                  <Image
-                    src={asset(c.products[0].images[0].url)}
-                    alt=""
-                    fill
-                    unoptimized={/\.svg$|^https?:\/\//.test(c.products[0].images[0].url)}
-                    sizes="(min-width: 1024px) 240px, 45vw"
-                    className="object-contain p-3 transition duration-300 group-hover:scale-105"
-                  />
-                )}
-              </div>
-              <div className="flex items-center justify-between gap-2 px-3 py-3 text-sm font-semibold">
-                <span className="leading-snug">{c.name}</span>
-                <ArrowRight className="size-4 shrink-0 text-brand-600 transition group-hover:translate-x-0.5" />
-              </div>
-            </Link>
-          ))}
-        </div>
+        <CategoryTiles categories={categories} />
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
@@ -158,20 +131,6 @@ export default async function HomePage() {
         </div>
       </section>
     </>
-  );
-}
-
-function ProductRow({ title, href, products, canOrder }: { title: string; href: string; products: ProductCardData[]; canOrder: boolean }) {
-  if (products.length === 0) return null;
-  return (
-    <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-      <SectionHeader title={title} href={href} linkLabel="Дивитися всі" />
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
-        {products.map((p) => (
-          <ProductCard key={p.id} product={p} variant="compact" canOrder={canOrder} />
-        ))}
-      </div>
-    </section>
   );
 }
 

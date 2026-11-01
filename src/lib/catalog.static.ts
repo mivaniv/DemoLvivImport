@@ -1,122 +1,42 @@
 import snapshot from "@/data/catalog-snapshot.json";
-import type { CatalogState, Collection, SortKey } from "@/lib/catalog-params";
-import { buildCategoryTree, categoryScope, type FlatCategory } from "@/lib/category-tree";
-import { cardOf, findProduct, similarProducts, type SnapshotProduct } from "@/lib/product-data";
+import {
+  boxSizes,
+  brandsWithCounts,
+  cardOf,
+  type CatalogFilters,
+  categoryTree,
+  collectionProducts,
+  findProduct,
+  queryCatalog,
+  similarProducts,
+} from "@/lib/catalog-data";
+import type { Collection } from "@/lib/catalog-params";
 
-// Каталог для статичної збірки (GitHub Pages): ті самі функції, що й у catalog.ts,
-// але дані — зі знімка бази, а пошук і фільтри виконуються в JS (зокрема в браузері).
-// Цін у знімку немає: на GitHub Pages кожен відвідувач — гість.
+// Каталог для статичної збірки: ті самі функції, що й у catalog.ts, але дані — зі знімка бази
+// (src/data/catalog-snapshot.json). Цін у знімку немає: у статичній версії кожен відвідувач — гість.
+// Сторінки рендеряться з нього під час збірки, а в браузері каталог, головна й товари беруть
+// свіжі дані з /data/products.json (useCatalogData) — на хостингу їх щодня оновлює крон.
 
-const categoryById = new Map(snapshot.categories.map((c) => [c.id, c]));
-const brandById = new Map(snapshot.brands.map((b) => [b.id, b]));
-
-const toCard = (p: SnapshotProduct) => cardOf(snapshot, p);
-
-export type ProductCardData = ReturnType<typeof toCard>;
-
-const collator = new Intl.Collator("uk");
-const COMPARE: Record<SortKey, (a: SnapshotProduct, b: SnapshotProduct) => number> = {
-  default: (a, b) => a.sortOrder - b.sortOrder,
-  popular: (a, b) => Number(b.isPopular) - Number(a.isPopular) || a.sortOrder - b.sortOrder,
-  new: (a, b) => b.createdAt.localeCompare(a.createdAt) || a.sortOrder - b.sortOrder,
-  // цін немає — сортування за ціною зводиться до типового
-  price_asc: (a, b) => a.sortOrder - b.sortOrder,
-  price_desc: (a, b) => a.sortOrder - b.sortOrder,
-  name_asc: (a, b) => collator.compare(a.name, b.name),
-};
-
-const IN_COLLECTION: Record<Collection, (p: SnapshotProduct) => boolean> = {
-  "": () => true,
-  sale: (p) => p.isSale,
-  new: (p) => p.isNew,
-  popular: (p) => p.isPopular,
-};
-
-type CatalogFilters = Omit<CatalogState, "view">;
-
-// Та сама логіка, що й buildWhere у catalog.ts: кожне слово запиту має знайтися хоча б в одному полі.
-export function querySnapshot(f: CatalogFilters) {
-  const words = f.q.toLocaleLowerCase("uk").trim().split(/\s+/).filter(Boolean).slice(0, 8);
-  const scope = f.category ? new Set(categoryScope(flatCategories(), f.category)) : null;
-  const matches = snapshot.products
-    .filter((p) => {
-      const category = p.categoryId ? categoryById.get(p.categoryId) : undefined;
-      const brand = p.brandId ? brandById.get(p.brandId) : undefined;
-      if (!IN_COLLECTION[f.collection](p)) return false;
-      if (scope && (p.categoryId === null || !scope.has(p.categoryId))) return false;
-      if (f.brands.length && (!brand || !f.brands.includes(brand.slug))) return false;
-      if (f.inStock && !p.inStock) return false;
-      if (f.box.length && (p.unitsPerBox === null || !f.box.includes(p.unitsPerBox))) return false;
-      const haystack = [p.name, p.sku, p.barcode, brand?.name, category?.name].filter(Boolean).join(" ").toLocaleLowerCase("uk");
-      return words.every((w) => haystack.includes(w));
-    })
-    .sort(COMPARE[f.sort]);
-
-  return {
-    items: matches.slice((f.page - 1) * f.perPage, (f.page - 1 + f.count) * f.perPage).map(toCard),
-    total: matches.length,
-    pages: Math.max(1, Math.ceil(matches.length / f.perPage)),
-  };
-}
+export type ProductCardData = ReturnType<typeof cardOf>;
 
 export async function searchProducts(f: CatalogFilters) {
-  return querySnapshot(f);
-}
-
-export function getBoxSizesSync(collection: Collection = "") {
-  const counts = new Map<number, number>();
-  for (const p of snapshot.products) {
-    if (p.unitsPerBox !== null && IN_COLLECTION[collection](p)) counts.set(p.unitsPerBox, (counts.get(p.unitsPerBox) ?? 0) + 1);
-  }
-  return [...counts].sort((a, b) => a[0] - b[0]).map(([value, count]) => ({ value, count }));
+  return queryCatalog(snapshot, f);
 }
 
 export async function getBoxSizes(collection: Collection = "") {
-  return getBoxSizesSync(collection);
-}
-
-// Як getFlatCategories у catalog.ts, але зі знімка
-function flatCategories(): FlatCategory[] {
-  return snapshot.categories.map((c) => {
-    const products = snapshot.products.filter((p) => p.categoryId === c.id).sort(COMPARE.popular);
-    return {
-      id: c.id,
-      slug: c.slug,
-      name: c.name,
-      parentId: (c as { parentId?: number | null }).parentId ?? null,
-      sortOrder: c.sortOrder,
-      ownCount: products.length,
-      image: products.find((p) => p.images.length > 0)?.images[0].url,
-    };
-  });
-}
-
-export function getCategoriesSync() {
-  return buildCategoryTree(flatCategories());
+  return boxSizes(snapshot, collection);
 }
 
 export async function getCategories() {
-  return getCategoriesSync();
-}
-
-export function getBrandsSync() {
-  return snapshot.brands.map((b) => ({
-    ...b,
-    _count: { products: snapshot.products.filter((p) => p.brandId === b.id).length },
-  }));
+  return categoryTree(snapshot);
 }
 
 export async function getBrands() {
-  return getBrandsSync();
+  return brandsWithCounts(snapshot);
 }
 
-// Як у catalog.ts: «Популярні» доповнюються першими товарами, якщо позначених замало.
 export async function getCollectionProducts(collection: Exclude<Collection, "">, limit: number) {
-  const picked = snapshot.products.filter(IN_COLLECTION[collection]).sort(COMPARE[collection === "new" ? "new" : "default"]);
-  if (collection === "popular" && picked.length < limit) {
-    picked.push(...snapshot.products.filter((p) => !p.isPopular).sort(COMPARE.default));
-  }
-  return picked.slice(0, limit).map(toCard);
+  return collectionProducts(snapshot, collection, limit);
 }
 
 export async function getProduct(slug: string) {
