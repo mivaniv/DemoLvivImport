@@ -130,15 +130,18 @@ jobs:
           path: site
 
       # Адреса для листів з форм — GitHub Variable FORM_TO_EMAIL (у репозиторій і артефакт збірки не потрапляє).
-      # Можна кілька через кому.
+      # Можна кілька через кому. Посилання на вивантаження 1С для щоденного крона (api/update-catalog.php) —
+      # секрет IMPORT_SOURCE_URL; у config.php воно закрите від відвідувачів (api/.htaccess).
       - name: Add form settings
         if: steps.cfg.outputs.ready == 'true'
         env:
           FORM_TO_EMAIL: ${{ vars.FORM_TO_EMAIL }}
           FORM_FROM_EMAIL: ${{ vars.FORM_FROM_EMAIL || 'noreply@demo.lvivimport.com' }}
+          IMPORT_SOURCE_URL: ${{ secrets.IMPORT_SOURCE_URL }}
         run: |
           TO=$(printf '%s' "$FORM_TO_EMAIL" | tr -d '[:space:]')
           FROM=$(printf '%s' "$FORM_FROM_EMAIL" | tr -d '[:space:]')
+          FEED=$(printf '%s' "$IMPORT_SOURCE_URL" | tr -d '[:space:]')
           EMAIL='[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
           if [ -z "$TO" ]; then
             echo "::error::Не задано адресу для листів з форм: Settings → Secrets and variables → Actions → Variables → FORM_TO_EMAIL. Див. docs/hosting.md"; exit 1
@@ -146,7 +149,14 @@ jobs:
           if ! printf '%s' "$TO" | grep -qxE "$EMAIL(,$EMAIL)*" || ! printf '%s' "$FROM" | grep -qxE "$EMAIL"; then
             echo "::error::FORM_TO_EMAIL або FORM_FROM_EMAIL — некоректна адреса"; exit 1
           fi
-          printf "<?php\nreturn ['to' => '%s', 'from' => '%s'];\n" "$TO" "$FROM" > site/api/config.php
+          if [ -z "$FEED" ]; then
+            echo "::warning::Не задано секрет IMPORT_SOURCE_URL — щоденне оновлення каталогу на хостингу не працюватиме. Див. docs/hosting.md"
+          elif ! printf '%s' "$FEED" | grep -qE '^https?://'; then
+            echo "::error::IMPORT_SOURCE_URL має починатись з https:// або http://"; exit 1
+          fi
+          # Посилання — у base64: будь-які лапки й скісні в ньому не зламають PHP-файл
+          printf "<?php\nreturn ['to' => '%s', 'from' => '%s', 'feed' => base64_decode('%s'), 'site' => 'https://demo.lvivimport.com'];\n" \
+            "$TO" "$FROM" "$(printf '%s' "$FEED" | base64 -w0)" > site/api/config.php
 
       # Заливаються лише змінені файли, пачками по 50 у FTP_PARALLEL з'єднань (curl).
       # Що змінилось, визначає deploy-manifest.txt на сервері: контрольні суми SHA-256 уже залитих файлів;
@@ -162,6 +172,14 @@ jobs:
           # Прибираємо переноси й пробіли, що потрапляють у секрет під час копіювання
           FTP_USERNAME=$(printf '%s' "$FTP_USERNAME" | tr -d '\r\n' | sed -E 's/^[[:space:]]+//; s/[[:space:]]+$//')
           MANIFEST=deploy-manifest.txt
+
+          # Каталог (data/products.json, sitemap.xml) щодня оновлює крон хостингу (api/update-catalog.php).
+          # Коли він уже спрацював (на сервері є data/catalog-status.json), заливка ці файли не перезаписує.
+          if curl -sS --max-time 60 --ftp-pasv $FTP_TLS --user "$FTP_USERNAME:$FTP_PASSWORD" --list-only "$FTP_BASE${FTP_PATH}data/" 2>/dev/null \
+               | tr -d '\r' | sed 's#.*/##' | grep -qxF catalog-status.json; then
+            echo "Каталог веде крон хостингу — data/products.json і sitemap.xml не заливаються"
+            rm -f site/data/products.json site/sitemap.xml
+          fi
           (cd site && find . -type f -print0 | xargs -0 sha256sum) | sort > "$RUNNER_TEMP/$MANIFEST"
 
           if curl -sS --max-time 120 --ftp-pasv $FTP_TLS --user "$FTP_USERNAME:$FTP_PASSWORD" \
