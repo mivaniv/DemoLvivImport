@@ -354,9 +354,13 @@ function PromoCard() {
   return (
     <div className="hidden overflow-hidden rounded-2xl bg-gradient-to-b from-brand-50 to-white p-5 lg:block">
       <p className="text-lg font-bold leading-snug text-navy-800">Якісні європейські продукти для вашого бізнесу</p>
-      <div className="relative mt-3 h-36">
-        <Image src={asset("/demo/products/olyvky-helcom-zeleni-bez-kistochky-340-h.svg")} alt="" fill unoptimized className="object-contain object-left" />
-        <Image src={asset("/demo/products/kava-vivavo-caffe-crema-1-kh.svg")} alt="" fill unoptimized className="object-contain object-right" />
+      <div className="mt-3 flex h-36 items-end justify-center gap-4">
+        <div className="relative h-full w-[30%] -rotate-3">
+          <Image src={asset("/home/viyavo-ketchup-lagidnyi.webp")} alt="Кетчуп Viyavo лагідний" fill unoptimized sizes="80px" className="object-contain drop-shadow-lg" />
+        </div>
+        <div className="relative h-[88%] w-[48%] rotate-2">
+          <Image src={asset("/home/helcom-ananas-plastry.webp")} alt="Ананас кільцями Helcom" fill unoptimized sizes="120px" className="object-contain drop-shadow-lg" />
+        </div>
       </div>
       <p className="mt-2 -rotate-3 font-script text-2xl text-brand-600">Смак, якому довіряють</p>
     </div>

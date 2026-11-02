@@ -88,7 +88,7 @@
 
 ## Щоденне оновлення каталогу
 
-Каталог оновлює сам хостинг, без GitHub. Щодня о 06:00 крон DirectAdmin запускає [api/update-catalog.php](../deploy/hosting/api/update-catalog.php). Скрипт:
+Каталог оновлює сам хостинг, без GitHub. Щодня о 08:00 крон DirectAdmin запускає [api/update-catalog.php](../deploy/hosting/api/update-catalog.php). Скрипт:
 
 1. **Скачує вивантаження 1С одним запитом** за посиланням `IMPORT_SOURCE_URL`.
    - Копія лягає в `public_html/api/data/imports/`: останню видно як `products_full.xml`, зберігаються 14 останніх.
@@ -117,7 +117,7 @@
 
 1. Додайте секрет `IMPORT_SOURCE_URL` (розділ «Налаштування», крок 5) і повторіть останню заливку: **Re-run all jobs → Approve and deploy**.
 2. DirectAdmin → домен `demo.lvivimport.com` → **Додатково → Cron Jobs (Завдання Cron)** → створити:
-   - хвилина `0`, година `6`, день `*`, місяць `*`, день тижня `*`;
+   - хвилина `0`, година `8`, день `*`, місяць `*`, день тижня `*`;
    - команда:
      ```
      /usr/local/bin/php -q /home/<користувач DirectAdmin>/domains/demo.lvivimport.com/public_html/api/update-catalog.php

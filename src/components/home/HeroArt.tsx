@@ -6,8 +6,8 @@ const ITEMS = [
   { src: "/home/viyavo-coffee-classic.webp", alt: "Кава в зернах Viyavo Classic", cls: "left-[0%] top-[6%] h-[64%] w-[32%] -rotate-6 z-0" },
   { src: "/home/barilla-farfalle.webp", alt: "Макарони Barilla Farfalle", cls: "left-[29%] top-[0%] h-[58%] w-[42%] rotate-1 z-0" },
   { src: "/home/viyavo-olyvky-chorni.webp", alt: "Чорні оливки Viyavo", cls: "right-[0%] top-[10%] h-[58%] w-[30%] rotate-3 z-0" },
-  { src: "/home/pringles-cheesy-cheese.webp", alt: "Pringles Cheesy Cheese", cls: "left-[22%] bottom-[5%] h-[56%] w-[18%] -rotate-2 z-10" },
-  { src: "/home/messis-sik-mango-yabluko-persyk.webp", alt: "Сік Messis манго, яблуко, персик", cls: "left-[42%] bottom-[1%] h-[50%] w-[20%] rotate-2 z-20" },
+  { src: "/home/messis-sik-mango-yabluko-persyk.webp", alt: "Сік Messis манго, яблуко, персик", cls: "left-[20%] bottom-[2%] h-[50%] w-[20%] -rotate-2 z-20" },
+  { src: "/home/pringles-cheesy-cheese.webp", alt: "Pringles Cheesy Cheese", cls: "left-[40%] bottom-[5%] h-[56%] w-[18%] rotate-2 z-10" },
   { src: "/home/go-on-protein-bar-chocolate.webp", alt: "Протеїновий батончик GO ON", cls: "right-[0%] bottom-[7%] h-[22%] w-[48%] -rotate-6 z-30" },
 ];
 
