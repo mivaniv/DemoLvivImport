@@ -3,7 +3,8 @@
 // 1. одним запитом скачує вивантаження 1С (<goods>, посилання — 'feed' у config.php) у api/data/imports/;
 // 2. перетворює його в data/products.json — той самий алгоритм, що src/importer/feed-to-catalog.ts
 //    (змінюючи щось тут, змініть і там; перевірка збігу — docs/hosting.md);
-// 3. фото кладе в images_backup/ поруч із сайтом: спершу перевіряє наявні, докачує лише відсутні;
+// 3. фото кладе в images_backup/ поруч із сайтом: спершу перевіряє наявні, докачує лише відсутні
+//    (чого немає в images_backup/ джерела — шукає в його теці photo/);
 // 4. оновлює sitemap.xml і data/catalog-status.json, прибирає старі теки сторінок товарів;
 // 5. якщо щось пішло не так — каталог лишається попередній, на FORM_TO_EMAIL іде лист.
 //
@@ -108,7 +109,7 @@ function main(array $args): int
             count($catalog['brands'])
         );
         if ($images !== null) {
-            $summary .= sprintf($dry ? '; фото: %d, докачати %d, видалити %4$d' : '; фото: %d, докачано %d, не вдалося %d, видалено %d', $images['total'], $images['downloaded'], $images['failed'], $images['deleted']);
+            $summary .= sprintf($dry ? '; фото: %d, докачати %d, видалити %4$d' : '; фото: %d, докачано %d (з теки photo %5$d), не вдалося %d, видалено %d', $images['total'], $images['downloaded'], $images['failed'], $images['deleted'], $images['fromPhoto']);
         }
         if ($oldDirs > 0) {
             $summary .= ($dry ? '; старих тек товарів видалити: ' : '; старих тек товарів видалено: ') . $oldDirs;
@@ -545,7 +546,19 @@ function category_name(string $raw): array
 // Фото на сервері лежать як .jpeg
 function image_file(string $name): string
 {
-    return preg_replace('/\.(jpe?g|png)$/iD', '.jpeg', js_trim($name));
+    $file = preg_replace('/\.(jpe?g|png)$/iD', '.jpeg', js_trim($name));
+    original_image($file, js_trim($name));
+    return $file;
+}
+
+// Назва фото у вивантаженні (00-…-1.jpg / .png): під нею оригінал лежить у теці photo/ джерела
+function original_image(string $file, ?string $name = null): ?string
+{
+    static $names = [];
+    if ($name !== null && !isset($names[$file])) {
+        $names[$file] = $name;
+    }
+    return $names[$file] ?? null;
 }
 
 // «… 4TEA 220g ск/б» → «220 г»
@@ -714,13 +727,18 @@ function http_to_file(string $url, string $path, int $maxBytes, int $timeout): a
     return $copied !== false && $copied <= $maxBytes ? [true, '', false] : [false, 'файл завеликий або обірвався', false];
 }
 
-// Фото з теки вивантаження → images_backup/ демосайту: наявні не качаються вдруге
+// Фото з теки вивантаження → images_backup/ демосайту: наявні не качаються вдруге.
+// Якщо в images_backup/ джерела фото немає, береться оригінал з сусідньої теки photo/
+// (та сама назва, що у вивантаженні) і зберігається під звичною назвою .jpeg.
 function localize_images(array &$catalog, string $imageBase, bool $dry): array
 {
     if (!$dry && !is_dir(IMAGES_DIR) && !@mkdir(IMAGES_DIR, 0755, true)) {
         throw new FeedError('Не вдалося створити теку ' . IMAGES_DIR);
     }
-    $stats = ['total' => 0, 'present' => 0, 'downloaded' => 0, 'failed' => 0, 'deleted' => 0];
+    $photoBase = substr($imageBase, -strlen('images_backup/')) === 'images_backup/'
+        ? substr($imageBase, 0, -strlen('images_backup/')) . 'photo/'
+        : null;
+    $stats = ['total' => 0, 'present' => 0, 'downloaded' => 0, 'fromPhoto' => 0, 'failed' => 0, 'deleted' => 0];
     $wanted = [];
     $failed = [];
     $requests = 0;
@@ -746,7 +764,15 @@ function localize_images(array &$catalog, string $imageBase, bool $dry): array
                     }
                     $tmp = IMAGES_DIR . "/$file.tmp";
                     [$ok] = http_to_file($img['url'], $tmp, MAX_IMAGE_BYTES, 60);
-                    if ($ok && valid_image($tmp) && rename($tmp, IMAGES_DIR . "/$file")) {
+                    $ok = $ok && valid_image($tmp);
+                    $original = original_image($file);
+                    if (!$ok && $photoBase !== null && $original !== null && preg_match('/^[A-Za-z0-9][A-Za-z0-9._-]*$/D', $original)) {
+                        usleep(IMAGE_PAUSE_US);
+                        [$ok] = http_to_file($photoBase . $original, $tmp, MAX_IMAGE_BYTES, 60);
+                        $ok = $ok && valid_image($tmp);
+                        $stats['fromPhoto'] += $ok ? 1 : 0;
+                    }
+                    if ($ok && rename($tmp, IMAGES_DIR . "/$file")) {
                         $stats['downloaded']++;
                     } else {
                         @unlink($tmp);
