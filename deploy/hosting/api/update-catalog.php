@@ -1,14 +1,17 @@
 <?php
 // Щоденне оновлення каталогу демосайту на хостингу (крон DirectAdmin, див. docs/hosting.md):
-// 1. одним запитом скачує вивантаження 1С (<goods>, посилання — 'feed' у config.php) у api/data/imports/;
+// 1. бере вивантаження 1С (<goods>) і зберігає копію в api/data/imports/:
+//    --source=ТЕКА — прямо з диска, з теки, куди 1С заливає файли по FTP (products_full.XML + photo/);
+//    без --source — одним запитом за посиланням 'feed' з config.php (старий режим, через сайт джерела);
 // 2. перетворює його в data/products.json — той самий алгоритм, що src/importer/feed-to-catalog.ts
 //    (змінюючи щось тут, змініть і там; перевірка збігу — docs/hosting.md);
-// 3. фото кладе в images_backup/ поруч із сайтом: спершу перевіряє наявні, докачує лише відсутні
-//    (чого немає в images_backup/ джерела — шукає в його теці photo/);
+// 3. фото кладе в images_backup/ поруч із сайтом:
+//    з --source — готує сам з оригіналів у photo/ (білий фон, до 1500 px, JPEG), лише нові й змінені;
+//    без --source — докачує відсутні з images_backup/ джерела (або з його теки photo/);
 // 4. оновлює sitemap.xml і data/catalog-status.json, прибирає старі теки сторінок товарів;
 // 5. якщо щось пішло не так — каталог лишається попередній, на FORM_TO_EMAIL іде лист.
 //
-// php update-catalog.php [--dry-run] [--feed=файл] [--image-base=URL] [--no-images] [--now=ISO]
+// php update-catalog.php [--source=ТЕКА] [--dry-run] [--feed=файл] [--image-base=URL] [--no-images] [--now=ISO]
 // Лише з командного рядка; з браузера закрито (тут і в api/.htaccess). Сумісно з PHP 7.4+.
 
 declare(strict_types=1);
@@ -31,6 +34,11 @@ const MAX_FEED_BYTES = 200 * 1024 * 1024;
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 const IMAGE_PAUSE_US = 1000000; // пауза між запитами фото, щоб не спрацював фаєрвол
 const USER_AGENT = 'demo.lvivimport.com catalog update';
+const PHOTO_MANIFEST = DATA_DIR . '/photos.json'; // фото → контрольна сума оригіналу, з якого воно зроблене
+const PHOTO_MAX_SIDE = 1500;
+const PHOTO_QUALITY = 82;
+const FEED_SETTLE_SEC = 120;      // файл, змінений щойно, ще може заливатись по FTP — чекаємо
+const FEED_STALE_SEC = 36 * 3600; // 1С заливає щоночі; старіший файл — привід написати листа
 
 // Ті самі пороги, що в run-sync.ts і IMPORT_CLEANUP_MAX_RATIO
 const MAX_INVALID_RATIO = 0.2;
@@ -50,7 +58,7 @@ exit(main(array_slice($argv, 1)));
 
 function main(array $args): int
 {
-    $opt = ['dry-run' => false, 'no-images' => false, 'feed' => '', 'image-base' => '', 'now' => ''];
+    $opt = ['dry-run' => false, 'no-images' => false, 'source' => '', 'feed' => '', 'image-base' => '', 'now' => ''];
     foreach ($args as $arg) {
         if (!preg_match('/^--([a-z-]+)(?:=(.*))?$/', $arg, $m) || !array_key_exists($m[1], $opt)) {
             fwrite(STDERR, "Невідомий параметр $arg\n");
@@ -77,25 +85,38 @@ function main(array $args): int
     try {
         $previous = read_json(ROOT . '/data/products.json') ?? ['categories' => [], 'brands' => [], 'products' => []];
 
+        $sourceUrl = null;
+        $sourceDir = null;
+        $feedTime = null;
+        $stale = null;
         if ($opt['feed'] !== '') {
-            $sourceUrl = null;
             $text = @file_get_contents((string) $opt['feed']);
             if ($text === false) {
                 throw new FeedError("Не вдалося прочитати файл {$opt['feed']}");
             }
+        } elseif ($opt['source'] !== '') {
+            $sourceDir = rtrim((string) $opt['source'], '/');
+            [$text, $feedTime] = read_local_feed($sourceDir, $dry);
+            if ($now->getTimestamp() - $feedTime > FEED_STALE_SEC) {
+                $stale = 'Файл 1С не оновлювався з ' . date('d.m.Y H:i', $feedTime) . ' — каталог зібрано з нього. Перевірте вивантаження з 1С.';
+            }
         } else {
             $sourceUrl = trim((string) ($config['feed'] ?? ''));
             if ($sourceUrl === '') {
-                throw new FeedError('Не задано посилання на вивантаження: GitHub Secret IMPORT_SOURCE_URL → повторна заливка сайту (див. docs/hosting.md)');
+                throw new FeedError('Не задано ні теку 1С (--source у команді крона), ні посилання на вивантаження (GitHub Secret IMPORT_SOURCE_URL) — див. docs/hosting.md');
             }
             $text = download_feed($sourceUrl, $dry);
         }
 
-        $imageBase = $opt['image-base'] !== '' ? (string) $opt['image-base'] : ($sourceUrl !== null ? image_base_for($sourceUrl) : null);
+        // Режим --source: фото одразу з локальними адресами, сайт джерела не потрібен
+        $imageBase = $opt['image-base'] !== '' ? (string) $opt['image-base']
+            : ($sourceDir !== null ? '/images_backup/' : ($sourceUrl !== null ? image_base_for($sourceUrl) : null));
         [$catalog, $report] = feed_to_catalog($text, $previous, $imageBase, $now);
 
         $images = null;
-        if ($opt['no-images'] !== true && $imageBase !== null) {
+        if ($opt['no-images'] !== true && $sourceDir !== null && $opt['image-base'] === '') {
+            $images = local_photos($catalog, "$sourceDir/photo", $dry);
+        } elseif ($opt['no-images'] !== true && $imageBase !== null) {
             $images = localize_images($catalog, $imageBase, $dry);
         }
         $oldDirs = remove_old_product_dirs($dry);
@@ -108,15 +129,29 @@ function main(array $args): int
             count($catalog['categories']),
             count($catalog['brands'])
         );
-        if ($images !== null) {
+        if ($images !== null && $sourceDir !== null) {
+            $summary .= sprintf(
+                $dry ? '; фото: %d, оновити %d, без змін %d, немає в 1С %d (є старі %d), видалити %d'
+                    : '; фото: %d, оновлено %d, без змін %d, немає в 1С %d (лишились старі %d), не вдалося %7$d, видалено %6$d',
+                $images['total'], $images['converted'], $images['present'], $images['missing'], $images['keptOld'], $images['deleted'], $images['failed']
+            );
+            if (!$images['gd']) {
+                $summary .= '; GD немає — фото скопійовано без обробки';
+            }
+        } elseif ($images !== null) {
             $summary .= sprintf($dry ? '; фото: %d, докачати %d, видалити %4$d' : '; фото: %d, докачано %d (з теки photo %5$d), не вдалося %d, видалено %d', $images['total'], $images['downloaded'], $images['failed'], $images['deleted'], $images['fromPhoto']);
         }
         if ($oldDirs > 0) {
             $summary .= ($dry ? '; старих тек товарів видалити: ' : '; старих тек товарів видалено: ') . $oldDirs;
         }
+        if ($feedTime !== null) {
+            $summary .= '; файл 1С від ' . date('d.m.Y H:i', $feedTime);
+        }
 
         if ($dry) {
             echo "Перевірка без змін: $summary\n";
+            // Крон не показує вивід, тож перевірку видно в журналі
+            log_line("ПЕРЕВІРКА: $summary" . ($stale !== null ? "; УВАГА: $stale" : ''));
         } else {
             write_atomic(ROOT . '/data/products.json', json_out($catalog));
             write_atomic(ROOT . '/sitemap.xml', sitemap($catalog['products'], (string) ($config['site'] ?? 'https://demo.lvivimport.com')));
@@ -131,10 +166,15 @@ function main(array $args): int
                 'removed' => $report['removed'],
                 'warnings' => count($report['warnings']),
                 'images' => $images,
-                'message' => null,
+                'source' => $sourceDir !== null ? '1c-folder' : ($sourceUrl !== null ? 'url' : 'file'),
+                'feedAt' => $feedTime !== null ? iso((new DateTimeImmutable())->setTimestamp($feedTime)) : null,
+                'message' => $stale,
             ]);
-            log_line("OK: $summary" . ($report['warnings'] ? '; попереджень: ' . count($report['warnings']) : ''));
+            log_line("OK: $summary" . ($report['warnings'] ? '; попереджень: ' . count($report['warnings']) : '') . ($stale !== null ? "; УВАГА: $stale" : ''));
             echo "Каталог оновлено: $summary\n";
+            if ($stale !== null) {
+                notify($config, $stale, 'Файл 1С для демосайту не оновлюється');
+            }
         }
         foreach (array_slice($report['warnings'], 0, 20) as $w) {
             echo "  ! $w\n";
@@ -191,7 +231,8 @@ function feed_to_catalog(string $text, array $previous, ?string $imageBase, Date
     }
     foreach ($items as $p) {
         foreach ($p['images'] as $url) {
-            if (!preg_match('~^https?://~i', $url)) {
+            // повна адреса або шлях від кореня сайту (режим --source: /images_backup/…)
+            if (!preg_match('~^(https?://|/[^/])~i', $url)) {
                 throw new FeedError("Фото «{$url}» без повної адреси: вкажіть адресу теки з фото (--image-base)");
             }
         }
@@ -671,19 +712,206 @@ function download_feed(string $url, bool $dry): string
         @unlink($tmp);
         throw new FeedError('Джерело повернуло порожній файл');
     }
-    if ($dry) {
-        @unlink($tmp);
-        return $text;
+    @unlink($tmp);
+    if (!$dry) {
+        save_feed_copy($text);
+    }
+    return $text;
+}
+
+// Копія вивантаження в api/data/imports/: остання — products_full.xml, плюс KEEP_FEEDS датованих
+function save_feed_copy(string $text): void
+{
+    if (!is_dir(IMPORTS_DIR) && !@mkdir(IMPORTS_DIR, 0755, true)) {
+        throw new FeedError('Не вдалося створити теку ' . IMPORTS_DIR);
     }
     $saved = IMPORTS_DIR . '/products_full-' . date('Y-m-d_His') . '.xml';
-    rename($tmp, $saved);
+    write_atomic($saved, $text);
     @copy($saved, IMPORTS_DIR . '/products_full.xml');
     $copies = glob(IMPORTS_DIR . '/products_full-*.xml') ?: [];
     rsort($copies);
     foreach (array_slice($copies, KEEP_FEEDS) as $old) {
         @unlink($old);
     }
-    return $text;
+}
+
+// Вивантаження з теки, куди 1С заливає файли по FTP (products_full.XML; регістр назви не важливий).
+// Повертає [текст, час зміни файла]. Якщо файл щойно змінювався — чекає, поки 1С його доллє.
+function read_local_feed(string $dir, bool $dry): array
+{
+    if (!is_dir($dir)) {
+        throw new FeedError("Немає теки 1С $dir (або PHP не має до неї доступу)");
+    }
+    $path = null;
+    foreach (scandir($dir) ?: [] as $name) {
+        if (strcasecmp($name, 'products_full.xml') === 0) {
+            $path = "$dir/$name";
+            break;
+        }
+    }
+    if ($path === null) {
+        throw new FeedError("У теці 1С $dir немає products_full.XML");
+    }
+    for ($wait = 0; $wait < 10; $wait++) {
+        clearstatcache(true, $path);
+        $mtime = (int) @filemtime($path);
+        if (time() - $mtime >= FEED_SETTLE_SEC) {
+            break;
+        }
+        sleep(60);
+    }
+    $text = @file_get_contents($path);
+    clearstatcache(true, $path);
+    if ($text === false || trim($text) === '') {
+        throw new FeedError("Файл $path порожній або не читається");
+    }
+    if ((int) @filemtime($path) !== $mtime) {
+        throw new FeedError('Файл 1С змінювався під час читання — спробуйте пізніше');
+    }
+    if (!$dry) {
+        save_feed_copy($text);
+    }
+    return [$text, $mtime];
+}
+
+// Фото з теки photo/ 1С → images_backup/ демосайту під назвою з каталогу (<код>-<N>.jpeg).
+// 1С щоночі переливає всі фото, тому зміну видно лише за вмістом: sha1 оригіналу пишеться в
+// api/data/photos.json, і фото переробляється, тільки коли оригінал інший.
+// Оригіналу немає — лишається попереднє фото, а якщо й його немає — товар показується без фото.
+function local_photos(array &$catalog, string $photoDir, bool $dry): array
+{
+    if (!is_dir($photoDir)) {
+        throw new FeedError("Немає теки з фото $photoDir");
+    }
+    if (!$dry && !is_dir(IMAGES_DIR) && !@mkdir(IMAGES_DIR, 0755, true)) {
+        throw new FeedError('Не вдалося створити теку ' . IMAGES_DIR);
+    }
+    $index = [];
+    foreach (scandir($photoDir) ?: [] as $name) {
+        if ($name[0] !== '.' && is_file("$photoDir/$name")) {
+            $index[strtolower($name)] = $name;
+        }
+    }
+    $manifest = read_json(PHOTO_MANIFEST) ?? [];
+    $gd = function_exists('imagecreatefromstring') && function_exists('imagejpeg');
+    $stats = ['total' => 0, 'present' => 0, 'converted' => 0, 'missing' => 0, 'keptOld' => 0, 'failed' => 0, 'deleted' => 0, 'gd' => $gd];
+    $result = []; // назва фото → чи показувати його
+    $newManifest = [];
+
+    foreach ($catalog['products'] as &$p) {
+        $kept = [];
+        foreach ($p['images'] as $img) {
+            if (strpos($img['url'], '/images_backup/') !== 0) {
+                $kept[] = $img; // повна адреса прямо з вивантаження — лишаємо як є
+                continue;
+            }
+            $file = substr($img['url'], strlen('/images_backup/'));
+            if (!isset($result[$file])) {
+                $stats['total']++;
+                $result[$file] = false;
+                $target = IMAGES_DIR . "/$file";
+                $source = preg_match('/^[A-Za-z0-9][A-Za-z0-9._-]*$/D', $file) ? source_photo($index, $file) : null;
+                if ($source === null) {
+                    $stats['missing']++;
+                    if (valid_image($target)) {
+                        $stats['keptOld']++;
+                        $result[$file] = true;
+                        if (isset($manifest[$file])) {
+                            $newManifest[$file] = $manifest[$file];
+                        }
+                    }
+                } else {
+                    // «-raw» — скопійоване без GD: коли GD з'явиться, фото переробиться
+                    $hash = sha1_file("$photoDir/$source") . ($gd ? '' : '-raw');
+                    if (($manifest[$file] ?? null) === $hash && valid_image($target)) {
+                        $stats['present']++;
+                        $result[$file] = true;
+                        $newManifest[$file] = $hash;
+                    } elseif ($dry) {
+                        $stats['converted']++; // у перевірці — скільки треба оновити
+                        $result[$file] = true;
+                    } elseif (convert_photo("$photoDir/$source", "$target.tmp", $gd) && @rename("$target.tmp", $target)) {
+                        $stats['converted']++;
+                        $result[$file] = true;
+                        $newManifest[$file] = $hash;
+                    } else {
+                        @unlink("$target.tmp");
+                        $stats['failed']++;
+                        $result[$file] = valid_image($target); // зіпсований оригінал — лишаємо попереднє
+                    }
+                }
+            }
+            if ($result[$file]) {
+                $kept[] = $img;
+            }
+        }
+        $p['images'] = $kept;
+    }
+    unset($p);
+
+    // Фото товарів, яких більше немає у вивантаженні (і недороблені залишки)
+    foreach (glob(IMAGES_DIR . '/*') ?: [] as $path) {
+        if (is_file($path) && !isset($result[basename($path)])) {
+            $stats['deleted']++;
+            if (!$dry) {
+                @unlink($path);
+            }
+        }
+    }
+    if (!$dry) {
+        write_atomic(PHOTO_MANIFEST, json_out($newManifest));
+    }
+    return $stats;
+}
+
+// Оригінал у photo/: назва з вивантаження (00-…-1.jpg / .png / .jpeg), інакше та сама основа з іншим розширенням
+function source_photo(array $index, string $file): ?string
+{
+    $candidates = [];
+    $original = original_image($file);
+    if ($original !== null) {
+        $candidates[] = $original;
+    }
+    $base = preg_replace('/\.[A-Za-z]+$/D', '', $file);
+    foreach (['jpg', 'jpeg', 'png', 'webp'] as $ext) {
+        $candidates[] = "$base.$ext";
+    }
+    foreach ($candidates as $name) {
+        if (preg_match('/^[A-Za-z0-9][A-Za-z0-9._-]*$/D', $name) && isset($index[strtolower($name)])) {
+            return $index[strtolower($name)];
+        }
+    }
+    return null;
+}
+
+// Як create-backup.php lvivimport.com (білий фон замість прозорого, JPEG), але зі зменшенням
+// до PHOTO_MAX_SIDE і нормальною якістю. Без GD — копія оригіналу як є.
+function convert_photo(string $source, string $target, bool $gd): bool
+{
+    if (filesize($source) > MAX_IMAGE_BYTES * 3) {
+        return false;
+    }
+    if (!$gd) {
+        return @copy($source, $target) && valid_image($target);
+    }
+    $image = @imagecreatefromstring((string) file_get_contents($source));
+    if ($image === false) {
+        return false;
+    }
+    $w = imagesx($image);
+    $h = imagesy($image);
+    $scale = min(1, PHOTO_MAX_SIDE / max($w, $h));
+    $nw = max(1, (int) round($w * $scale));
+    $nh = max(1, (int) round($h * $scale));
+    $out = imagecreatetruecolor($nw, $nh);
+    imagefill($out, 0, 0, imagecolorallocate($out, 255, 255, 255));
+    imagealphablending($out, true);
+    imagecopyresampled($out, $image, 0, 0, 0, 0, $nw, $nh, $w, $h);
+    imagedestroy($image);
+    imageinterlace($out, true);
+    $ok = @imagejpeg($out, $target, PHOTO_QUALITY);
+    imagedestroy($out);
+    return $ok && valid_image($target);
 }
 
 // [успіх, помилка, чи варто повторити]: повтор лише при збої з'єднання, не при HTTP 4xx/5xx
@@ -900,7 +1128,7 @@ function iso(DateTimeImmutable $t): string
 }
 
 // Лист про збій — на ту саму адресу, що й заявки з форм (FORM_TO_EMAIL)
-function notify(array $config, string $message): void
+function notify(array $config, string $message, ?string $warning = null): void
 {
     $to = (string) ($config['to'] ?? '');
     if ($to === '' || !function_exists('mail')) {
@@ -919,8 +1147,10 @@ function notify(array $config, string $message): void
         'Content-Type: text/plain; charset=UTF-8',
         'Content-Transfer-Encoding: base64',
     ]);
-    $text = "Щоденне оновлення каталогу demo.lvivimport.com не вдалося.\n\n$message\n\nНа сайті лишився попередній каталог. Журнал: public_html/api/data/catalog-update.log\n";
-    $subject = $enc('Каталог демосайту не оновлено');
+    $text = $warning !== null
+        ? "Щоденне оновлення каталогу demo.lvivimport.com.\n\n$message\n\nЖурнал: public_html/api/data/catalog-update.log\n"
+        : "Щоденне оновлення каталогу demo.lvivimport.com не вдалося.\n\n$message\n\nНа сайті лишився попередній каталог. Журнал: public_html/api/data/catalog-update.log\n";
+    $subject = $enc($warning ?? 'Каталог демосайту не оновлено');
     $body = chunk_split(base64_encode($text));
     @mail($to, $subject, $body, $headers, "-f$from") || @mail($to, $subject, $body, $headers);
 }

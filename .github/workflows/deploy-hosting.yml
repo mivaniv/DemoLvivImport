@@ -130,8 +130,9 @@ jobs:
           path: site
 
       # Адреса для листів з форм — GitHub Variable FORM_TO_EMAIL (у репозиторій і артефакт збірки не потрапляє).
-      # Можна кілька через кому. Посилання на вивантаження 1С для щоденного крона (api/update-catalog.php) —
-      # секрет IMPORT_SOURCE_URL; у config.php воно закрите від відвідувачів (api/.htaccess).
+      # Можна кілька через кому. Щоденний крон (api/update-catalog.php) бере файли 1С прямо з диска
+      # (--source у команді крона); секрет IMPORT_SOURCE_URL потрібен лише для старого режиму через HTTP.
+      # У config.php усе закрите від відвідувачів (api/.htaccess).
       - name: Add form settings
         if: steps.cfg.outputs.ready == 'true'
         env:
@@ -149,9 +150,7 @@ jobs:
           if ! printf '%s' "$TO" | grep -qxE "$EMAIL(,$EMAIL)*" || ! printf '%s' "$FROM" | grep -qxE "$EMAIL"; then
             echo "::error::FORM_TO_EMAIL або FORM_FROM_EMAIL — некоректна адреса"; exit 1
           fi
-          if [ -z "$FEED" ]; then
-            echo "::warning::Не задано секрет IMPORT_SOURCE_URL — щоденне оновлення каталогу на хостингу не працюватиме. Див. docs/hosting.md"
-          elif ! printf '%s' "$FEED" | grep -qE '^https?://'; then
+          if [ -n "$FEED" ] && ! printf '%s' "$FEED" | grep -qE '^https?://'; then
             echo "::error::IMPORT_SOURCE_URL має починатись з https:// або http://"; exit 1
           fi
           # Посилання — у base64: будь-які лапки й скісні в ньому не зламають PHP-файл
