@@ -908,7 +908,7 @@ function convert_photo(string $source, string $target, bool $gd): bool
     imagealphablending($out, true);
     imagecopyresampled($out, $image, 0, 0, 0, 0, $nw, $nh, $w, $h);
     imagedestroy($image);
-    imageinterlace($out, true);
+    imageinterlace($out, 1); // у PHP 7.4 параметр — int (strict_types не пропустить true)
     $ok = @imagejpeg($out, $target, PHOTO_QUALITY);
     imagedestroy($out);
     return $ok && valid_image($target);
