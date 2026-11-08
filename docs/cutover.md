@@ -39,13 +39,15 @@ domains/lvivimport.com/
 
 ## Підготовка (сайт lvivimport.com працює як зараз)
 
-1. **FTP-акаунт для заливки** (DirectAdmin → домен `lvivimport.com` → FTP Management → Створити):
-   - логін, наприклад, `site` (вийде `site@lvivimport.com`), надійний пароль;
-   - коренева тека **«Домен»** — це тека `domains/lvivimport.com/` (WordPress у ній, у `public_html`, але workflow туди не заливає: див. крок 4).
-2. **Тека для нового сайту:** у файловому менеджері — `domains/lvivimport.com/public_html_new/` і в ній порожній файл `lvivimport-site.txt`.
+1. **FTP-акаунт для заливки** — `supclaude@lvivimport.com`, коренева тека `/home/zvszaqqj/domains/`.
+   - WordPress теж у цій теці (`lvivimport.com/public_html`), але workflow туди не заливає: див. крок 4.
+2. **Тека для нового сайту:** `domains/lvivimport.com/public_html_new/` і в ній порожній файл `lvivimport-site.txt` (створено 08.11.2026).
 3. **GitHub → Settings → Environments → New environment `production`:**
    - Required reviewers — ви; Deployment branches — `main`;
-   - секрети `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD` (акаунт з кроку 1) і `FTP_DIR` = `/public_html_new/`;
+   - секрети:
+     - `FTP_SERVER` = `rocket-da8.hostsila.org` (як у середовищі `hosting`);
+     - `FTP_USERNAME` = `supclaude@lvivimport.com`, `FTP_PASSWORD` — його пароль;
+     - `FTP_DIR` = `/lvivimport.com/public_html_new/` (шлях від кореневої теки акаунта);
    - змінна `FORM_TO_EMAIL` (куди йдуть заявки, напр. `info@lvivimport.com`).
 4. **Заливка:** Actions → **Deploy to hosting** → **Run workflow** → `target: production` → Approve.
    - Workflow заливає лише в теку з `lvivimport-site.txt` і без WordPress, тож у живий сайт він не потрапить.
@@ -73,7 +75,7 @@ domains/lvivimport.com/
      0 8 * * * php -q /home/zvszaqqj/domains/lvivimport.com/public_html/api/update-catalog.php --source=/home/zvszaqqj/public_html/assets/uploads/wpallimport/files
      ```
    - крон demo.lvivimport.com лишається.
-4. **GitHub:** Environment `production` → секрет `FTP_DIR` = `/public_html/`.
+4. **GitHub:** Environment `production` → секрет `FTP_DIR` = `/lvivimport.com/public_html/`.
 5. **Перевірка:**
    - головна, каталог, сторінка товару з фото;
    - заявка з кошика доходить на `FORM_TO_EMAIL`;
@@ -88,7 +90,7 @@ domains/lvivimport.com/
 
 1. `bash ~/wp-backup/cutover.sh rollback`.
 2. Повернути 5 кронів WordPress, видалити крон нового сайту.
-3. Секрет `FTP_DIR` — знову `/public_html_new/`.
+3. Секрет `FTP_DIR` — знову `/lvivimport.com/public_html_new/`.
 
 ## Потім
 
