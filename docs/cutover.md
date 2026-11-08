@@ -51,9 +51,9 @@ domains/lvivimport.com/
    - розділ **Environment variables** → `FORM_TO_EMAIL` (куди йдуть заявки, напр. `info@lvivimport.com`; внесена як секрет — теж спрацює).
 4. **Заливка:** Actions → **Deploy to hosting** → **Run workflow** → `target: production` → Approve.
    - Workflow заливає лише в теку з `lvivimport-site.txt` і без WordPress, тож у живий сайт він не потрапить.
-5. **Каталог і фото в новій теці** (Термінал DirectAdmin, ~5 хвилин):
+5. **Каталог і фото в новій теці** (Термінал DirectAdmin). Зроблено 08.11.2026: фото й `api/data/photos.json` скопійовано з демосайту (ті самі оригінали 1С), потім:
    ```
-   php -q ~/domains/lvivimport.com/public_html_new/api/update-catalog.php --source=/home/zvszaqqj/public_html/assets/uploads/wpallimport/files
+   /usr/local/php74/bin/php -q ~/domains/lvivimport.com/public_html_new/api/update-catalog.php --source=/home/zvszaqqj/public_html/assets/uploads/wpallimport/files
    ```
 6. **Скрипт перемикання — на сервер:** [deploy/cutover/cutover.sh](../deploy/cutover/cutover.sh) у `~/wp-backup/`.
 7. **Пробна перевірка:** `bash ~/wp-backup/cutover.sh check` — усі пункти мають бути з ✓.
@@ -63,28 +63,30 @@ domains/lvivimport.com/
 Не з 05:00 до 06:00: тоді 1С заливає файли.
 
 1. **Свіжа копія WordPress:** `bash ~/wp-backup/make-backup.sh` (~2 хв).
-2. **Перемикання:** `bash ~/wp-backup/cutover.sh switch`.
+2. **Свіжий каталог у новій теці** — та сама команда, що в кроці 5 підготовки (~1 хв: перероблюються лише нові й змінені фото).
+3. **Перемикання:** `bash ~/wp-backup/cutover.sh switch`.
    - Скрипт ще раз усе перевіряє й відмовляється, якщо щось не так.
 
 ### Після перемикання
 
-3. **Крони** (DirectAdmin → Cron Jobs):
+4. **Крони** (DirectAdmin → Cron Jobs):
    - видалити 5 кронів WordPress: `create-backup.php` і чотири `wp-load.php?import_key=…`. Запишіть їх перед видаленням — вони знадобляться для повернення;
    - додати крон нового сайту:
      ```
      0 8 * * * php -q /home/zvszaqqj/domains/lvivimport.com/public_html/api/update-catalog.php --source=/home/zvszaqqj/public_html/assets/uploads/wpallimport/files
      ```
    - крон demo.lvivimport.com лишається.
-4. **GitHub:** Environment `production` → секрет `FTP_DIR` = `/lvivimport.com/public_html/`.
-5. **Перевірка:**
+5. **GitHub:** Environment `production` → секрет `FTP_DIR` = `/lvivimport.com/public_html/`, потім **Run workflow** → `production`.
+   - Перевіряє, що заливка йде в нове місце, і доливає зміни, зроблені після підготовки.
+6. **Перевірка:**
    - головна, каталог, сторінка товару з фото;
    - заявка з кошика доходить на `FORM_TO_EMAIL`;
    - стара адреса товару з іншим slug веде на товар;
    - `/en/contacts/` → `/contacts/`;
    - `https://lvivimport.com/assets/uploads/wpallimport/files/products_full.XML` → 403;
    - `robots.txt` і `sitemap.xml` — з адресами lvivimport.com.
-6. **Google Search Console:** надіслати `https://lvivimport.com/sitemap.xml`.
-7. **Наступного ранку:** `https://lvivimport.com/data/catalog-status.json` — `"ok": true`, дата файлу 1С свіжа.
+7. **Google Search Console:** надіслати `https://lvivimport.com/sitemap.xml`.
+8. **Наступного ранку:** `https://lvivimport.com/data/catalog-status.json` — `"ok": true`, дата файлу 1С свіжа.
 
 ### Якщо щось не так — повернення
 
@@ -96,4 +98,4 @@ domains/lvivimport.com/
 
 - **Через 2–4 тижні**, якщо все добре: видалити `public_html_wordpress` (~10 ГБ) і базу WordPress.
   - Перед цим — остання копія бази на ПК.
-- **Тестова копія WordPress** (`public_html/staging`) переїжджає разом з WordPress. Окремий піддомен на неї, якщо є, після перемикання не працюватиме.
+- **Тестова копія WordPress** (`public_html/staging`) переїжджає разом з WordPress. Піддомен `staging.lvivimport.com` (є в DirectAdmin) після перемикання не працюватиме.

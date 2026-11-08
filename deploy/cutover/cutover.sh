@@ -30,7 +30,13 @@ check() {
     [ -f "$NEW/lvivimport-site.txt" ] && ok "новий сайт у public_html_new (позначка є)" || bad "у public_html_new немає lvivimport-site.txt"
     [ -f "$NEW/index.html" ] && [ -f "$NEW/product/index.html" ] && ok "сторінки нового сайту на місці" || bad "у public_html_new немає index.html / product/index.html — заливка не завершена"
     if [ -f "$NEW/data/catalog-status.json" ] && grep -q '"ok":true' "$NEW/data/catalog-status.json"; then
-        ok "каталог зібрано кроном: $(grep -o '"products":[0-9]*' "$NEW/data/catalog-status.json")"
+        # До ранкового крону новий сайт показуватиме саме цей каталог — він має бути свіжим
+        AGE=$(( ($(date +%s) - $(stat -c %Y "$NEW/data/catalog-status.json")) / 3600 ))
+        if [ "$AGE" -lt 36 ]; then
+            ok "каталог зібрано $AGE год тому: $(grep -o '"products":[0-9]*' "$NEW/data/catalog-status.json")"
+        else
+            bad "каталог у public_html_new зібрано $AGE год тому — оновіть його (docs/cutover.md, «День переходу»)"
+        fi
     else
         bad "каталог у public_html_new ще не зібрано (запустіть update-catalog.php, див. docs/cutover.md)"
     fi
