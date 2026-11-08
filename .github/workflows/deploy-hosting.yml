@@ -183,7 +183,8 @@ jobs:
           FEED=$(printf '%s' "$IMPORT_SOURCE_URL" | tr -d '[:space:]')
           EMAIL='[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
           if [ -z "$TO" ]; then
-            echo "::error::Не задано адресу для листів з форм: Settings → Secrets and variables → Actions → Variables → FORM_TO_EMAIL. Див. docs/hosting.md"; exit 1
+            ENV_NAME=$([ "$TARGET" = production ] && echo production || echo hosting)
+            echo "::error::Не задано адресу для листів з форм: Settings → Environments → $ENV_NAME → Environment variables → FORM_TO_EMAIL. Див. docs/hosting.md"; exit 1
           fi
           if ! printf '%s' "$TO" | grep -qxE "$EMAIL(,$EMAIL)*" || ! printf '%s' "$FROM" | grep -qxE "$EMAIL"; then
             echo "::error::FORM_TO_EMAIL або FORM_FROM_EMAIL — некоректна адреса"; exit 1
