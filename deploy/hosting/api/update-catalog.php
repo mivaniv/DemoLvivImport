@@ -173,7 +173,8 @@ function main(array $args): int
             log_line("OK: $summary" . ($report['warnings'] ? '; попереджень: ' . count($report['warnings']) : '') . ($stale !== null ? "; УВАГА: $stale" : ''));
             echo "Каталог оновлено: $summary\n";
             if ($stale !== null) {
-                notify($config, $stale, 'Файл 1С для демосайту не оновлюється');
+                $host = (string) (parse_url((string) ($config['site'] ?? ''), PHP_URL_HOST) ?: 'demo.lvivimport.com');
+                notify($config, $stale, strpos($host, 'demo.') === 0 ? 'Файл 1С для демосайту не оновлюється' : "Файл 1С для $host не оновлюється");
             }
         }
         foreach (array_slice($report['warnings'], 0, 20) as $w) {
