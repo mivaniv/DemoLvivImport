@@ -48,7 +48,7 @@ domains/lvivimport.com/
      - `FTP_SERVER` = `rocket-da8.hostsila.org` (як у середовищі `hosting`);
      - `FTP_USERNAME` = `supclaude@lvivimport.com`, `FTP_PASSWORD` — його пароль;
      - `FTP_DIR` = `/lvivimport.com/public_html_new/` (шлях від кореневої теки акаунта);
-   - змінна `FORM_TO_EMAIL` (куди йдуть заявки, напр. `info@lvivimport.com`).
+   - розділ **Environment variables** → `FORM_TO_EMAIL` (куди йдуть заявки, напр. `info@lvivimport.com`; внесена як секрет — теж спрацює).
 4. **Заливка:** Actions → **Deploy to hosting** → **Run workflow** → `target: production` → Approve.
    - Workflow заливає лише в теку з `lvivimport-site.txt` і без WordPress, тож у живий сайт він не потрапить.
 5. **Каталог і фото в новій теці** (Термінал DirectAdmin, ~5 хвилин):

@@ -174,7 +174,10 @@ jobs:
       - name: Add form settings
         if: steps.cfg.outputs.ready == 'true'
         env:
-          FORM_TO_EMAIL: ${{ vars.FORM_TO_EMAIL }}
+          # Змінна (Variables); якщо адресу внесли як секрет з тією ж назвою — береться секрет
+          FORM_TO_EMAIL: ${{ vars.FORM_TO_EMAIL || secrets.FORM_TO_EMAIL }}
+          # Лише для підказки в помилці: назви змінних, які бачить заливка (без значень)
+          VARS_JSON: ${{ toJSON(vars) }}
           FORM_FROM_EMAIL: ${{ vars.FORM_FROM_EMAIL || (inputs.target == 'production' && 'noreply@lvivimport.com' || 'noreply@demo.lvivimport.com') }}
           IMPORT_SOURCE_URL: ${{ secrets.IMPORT_SOURCE_URL }}
         run: |
@@ -184,7 +187,8 @@ jobs:
           EMAIL='[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
           if [ -z "$TO" ]; then
             ENV_NAME=$([ "$TARGET" = production ] && echo production || echo hosting)
-            echo "::error::Не задано адресу для листів з форм: Settings → Environments → $ENV_NAME → Environment variables → FORM_TO_EMAIL. Див. docs/hosting.md"; exit 1
+            SEEN_VARS=$(printf '%s' "$VARS_JSON" | jq -r 'keys | join(", ")' 2>/dev/null || true)
+            echo "::error::Не задано адресу для листів з форм: Settings → Environments → $ENV_NAME → Environment variables → FORM_TO_EMAIL. Змінні, які бачить заливка: ${SEEN_VARS:-(жодної)}. Див. docs/hosting.md"; exit 1
           fi
           if ! printf '%s' "$TO" | grep -qxE "$EMAIL(,$EMAIL)*" || ! printf '%s' "$FROM" | grep -qxE "$EMAIL"; then
             echo "::error::FORM_TO_EMAIL або FORM_FROM_EMAIL — некоректна адреса"; exit 1
