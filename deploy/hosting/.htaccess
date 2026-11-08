@@ -1,9 +1,16 @@
-# demo.lvivimport.com — статична версія каталогу (без цін і входу).
-# Файл викладається разом із сайтом workflow-ом .github/workflows/deploy-hosting.yml.
+# Статична версія каталогу (без цін і входу): demo.lvivimport.com, після переходу — lvivimport.com.
+# Файл викладається разом із сайтом workflow-ом .github/workflows/deploy-hosting.yml;
+# для lvivimport.com блок між «BEGIN demo-only» і «END demo-only» вирізається.
 
 Options -Indexes
 DirectoryIndex index.html
 ErrorDocument 404 /404.html
+
+# Кеш сторінок LiteSpeed не потрібен (сайт статичний). Явне «off», щоб після переходу lvivimport.com
+# не показувались збережені в кеші сторінки WordPress.
+<IfModule LiteSpeed>
+  CacheLookup off
+</IfModule>
 
 # Службові файли заливки (список файлів сайту з контрольними сумами)
 <FilesMatch "^(deploy-manifest\.txt|\.ftp-deploy-sync-state\.json)$">
@@ -16,13 +23,36 @@ ErrorDocument 404 /404.html
   </IfModule>
 </FilesMatch>
 
+# BEGIN demo-only
 # Демоверсія не повинна потрапляти в пошук і конкурувати з lvivimport.com
 <IfModule mod_headers.c>
   Header set X-Robots-Tag "noindex, nofollow"
 </IfModule>
+# END demo-only
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+
+  # Тека, куди 1С заливає вивантаження й фото по FTP (після переходу лежить усередині сайту):
+  # у файлі є всі оптові ціни, тож ззовні вона закрита. Крон читає її з диска.
+  RewriteRule ^assets/uploads/wpallimport/ - [F,L]
+
+  # Адреси старого сайту (WordPress), яких немає на новому → api/legacy.php, переадресація 301.
+  # Пошук WordPress /?s=…
+  RewriteCond %{QUERY_STRING} (^|&)s=
+  RewriteRule ^$ /api/legacy.php [L]
+  # Мовні версії WPML: /en/…, /de/…, /pt-pt/… (нова версія поки лише українською)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(en|de|pl|cs|fr|it|es|pt-pt|ru|uk)(/.*)?$ /api/legacy.php [L]
+  # Категорії WooCommerce і сторінки, що на новому сайті мають іншу адресу
+  RewriteRule ^product-category(/.*)?$ /api/legacy.php [L]
+  RewriteRule ^(home|team|shop|checkout|my-account|catalog/cart|catalog/checkout|catalog/exchange-and-return|catalog/cart/payment-and-delivery)/?$ /api/legacy.php [L]
+  # Товари, чия адреса на новому сайті інша: позначки api/legacy/product/<стара-адреса> створює заливка
+  # з api/legacy-urls.json. Товари з тією ж адресою йдуть одразу в шаблон нижче.
+  RewriteCond %{DOCUMENT_ROOT}/api/legacy/product/$1 -f
+  RewriteRule ^product/([a-z0-9-]+)/?$ /api/legacy.php [L]
+
   # Сторінки лежать у теках з index.html: /catalog → /catalog/
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteCond %{REQUEST_URI} !/$

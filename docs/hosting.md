@@ -1,5 +1,7 @@
 # Розміщення на хостингу HostPro (demo.lvivimport.com)
 
+> Перехід lvivimport.com з WordPress на цей сайт (заливка з ціллю `production`, переадресації старих адрес, перемикання й повернення) — у [cutover.md](cutover.md).
+
 Схема роботи:
 
 1. Зміни комітяться й пушаться в GitHub (гілка `main`).

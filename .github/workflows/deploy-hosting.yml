@@ -1,26 +1,43 @@
-# Розгортання на хостинг HostPro (demo.lvivimport.com) — ЛИШЕ після підтвердження.
+# Розгортання на хостинг HostPro — ЛИШЕ після підтвердження.
 #
-# 1. Після push у main сайт збирається (статична версія: каталог без цін, база не потрібна).
-# 2. Крок «deploy» прив'язаний до GitHub Environment «hosting» з обов'язковим рецензентом:
+# Дві цілі:
+#   demo       — demo.lvivimport.com: після кожного push у main (і вручну). Environment «hosting»,
+#                файл-позначка lvivimport-demo.txt, заборона індексації (noindex).
+#   production — lvivimport.com: ЛИШЕ вручну (Actions → Deploy to hosting → Run workflow → target: production).
+#                Environment «production», файл-позначка lvivimport-site.txt. Див. docs/cutover.md.
+#
+# 1. Сайт збирається (статична версія: каталог без цін, база не потрібна).
+# 2. Крок «deploy» прив'язаний до GitHub Environment з обов'язковим рецензентом:
 #    GitHub чекає, доки власник натисне «Review deployments → Approve and deploy».
-# 3. Перед заливкою перевіряється цільова тека на сервері: у ній має лежати файл-позначка
-#    lvivimport-demo.txt і не повинно бути WordPress/PHP (wp-config.php, index.php, wp-admin...).
-# 4. Лише тоді змінені файли заливаються по FTP (curl, кілька з'єднань паралельно) у теку демосайту.
+# 3. Перед заливкою перевіряється цільова тека на сервері: у ній має лежати файл-позначка цілі
+#    і не повинно бути WordPress/PHP (wp-config.php, index.php, wp-admin...).
+# 4. Лише тоді змінені файли заливаються по FTP (curl, кілька з'єднань паралельно).
 #
 # Налаштування (один раз): див. docs/hosting.md — Environment «hosting», секрети FTP_*, позначка.
-name: Deploy to hosting (demo.lvivimport.com)
+name: Deploy to hosting
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      target:
+        description: "Куди заливати: demo (demo.lvivimport.com) або production (lvivimport.com)"
+        type: choice
+        options: [demo, production]
+        default: demo
 
 permissions:
   contents: read
 
 concurrency:
-  group: hosting
+  group: hosting-${{ inputs.target || 'demo' }}
   cancel-in-progress: false
+
+env:
+  TARGET: ${{ inputs.target || 'demo' }}
+  SITE: ${{ inputs.target == 'production' && 'https://lvivimport.com' || 'https://demo.lvivimport.com' }}
+  MARKER: ${{ inputs.target == 'production' && 'lvivimport-site.txt' || 'lvivimport-demo.txt' }}
 
 jobs:
   build:
@@ -43,15 +60,30 @@ jobs:
         run: npx next build
         env:
           NEXT_PUBLIC_STATIC_EXPORT: "1"
-          SITE_URL: https://demo.lvivimport.com
+          SITE_URL: ${{ env.SITE }}
           DATABASE_URL: postgresql://build:build@localhost:5432/build
           # Форми й кошик-заявка надсилаються на PHP-обробник хостингу (deploy/hosting/api/form.php)
           NEXT_PUBLIC_FORM_ENDPOINT: /api/form.php
 
       - name: Add hosting config and form handler
         run: |
-          cp deploy/hosting/.htaccess out/.htaccess
           cp -r deploy/hosting/api out/api
+          if [ "$TARGET" = production ]; then
+            # lvivimport.com індексується пошуковиками: без заборони noindex демоверсії
+            sed '/# BEGIN demo-only/,/# END demo-only/d' deploy/hosting/.htaccess > out/.htaccess
+          else
+            cp deploy/hosting/.htaccess out/.htaccess
+          fi
+          echo "Ціль: $TARGET ($SITE); рядків noindex у .htaccess: $(grep -c 'X-Robots-Tag' out/.htaccess || true)"
+          # Позначки старих адрес товарів для переадресацій 301 (.htaccess → api/legacy.php)
+          node -e '
+            const fs = require("fs");
+            const { products } = JSON.parse(fs.readFileSync("out/api/legacy-urls.json", "utf8"));
+            fs.mkdirSync("out/api/legacy/product", { recursive: true });
+            const slugs = Object.keys(products).filter((s) => /^[a-z0-9-]+$/.test(s));
+            for (const s of slugs) fs.writeFileSync("out/api/legacy/product/" + s, "");
+            console.log("Старих адрес товарів з переадресацією:", slugs.length);
+          '
 
       - uses: actions/upload-artifact@v4
         with:
@@ -65,8 +97,9 @@ jobs:
     runs-on: ubuntu-latest
     # Тут GitHub зупиняється й чекає підтвердження власника (правило Environment «hosting»)
     environment:
-      name: hosting
-      url: https://demo.lvivimport.com
+      # (контекст env тут недоступний — лише inputs)
+      name: ${{ inputs.target == 'production' && 'production' || 'hosting' }}
+      url: ${{ inputs.target == 'production' && 'https://lvivimport.com' || 'https://demo.lvivimport.com' }}
     steps:
       - name: Check FTP settings and target folder
         id: cfg
@@ -95,8 +128,8 @@ jobs:
             *) echo "::error::FTP_DIR має починатись і закінчуватись на «/», напр. /public_html/"; exit 1 ;;
           esac
 
-          # Захист від заливки не туди (26.10 сайт потрапив у теку lvivimport.com):
-          # заливаємо лише в теку з файлом-позначкою lvivimport-demo.txt і без WordPress/PHP.
+          # Захист від заливки не туди (26.10 демо потрапило в теку WordPress lvivimport.com):
+          # заливаємо лише в теку з файлом-позначкою цілі ($MARKER) і без WordPress/PHP.
           case "$FTP_PROTOCOL" in
             ftp) BASE="ftp://$FTP_SERVER"; TLS="" ;;
             ftps-legacy) BASE="ftps://$FTP_SERVER"; TLS="" ;;
@@ -118,8 +151,8 @@ jobs:
             echo "::error::У цільовій теці є WordPress/PHP-сайт — заливку скасовано. Перевірте FTP_DIR і корінь FTP-акаунта. Вміст теки: $SEEN"; exit 1
           fi
           # Файли з крапкою на початку FTP-сервер може не показувати, тому позначка — без крапки
-          if ! printf '%s\n' "$LIST" | grep -qxF 'lvivimport-demo.txt'; then
-            echo "::error::У цільовій теці немає файла-позначки lvivimport-demo.txt — заливку скасовано. Вміст теки: ${SEEN:-(порожньо)}"; exit 1
+          if ! printf '%s\n' "$LIST" | grep -qxF "$MARKER"; then
+            echo "::error::У цільовій теці немає файла-позначки $MARKER (ціль $TARGET) — заливку скасовано. Вміст теки: ${SEEN:-(порожньо)}"; exit 1
           fi
           echo "ready=true" >> "$GITHUB_OUTPUT"
 
@@ -137,7 +170,7 @@ jobs:
         if: steps.cfg.outputs.ready == 'true'
         env:
           FORM_TO_EMAIL: ${{ vars.FORM_TO_EMAIL }}
-          FORM_FROM_EMAIL: ${{ vars.FORM_FROM_EMAIL || 'noreply@demo.lvivimport.com' }}
+          FORM_FROM_EMAIL: ${{ vars.FORM_FROM_EMAIL || (inputs.target == 'production' && 'noreply@lvivimport.com' || 'noreply@demo.lvivimport.com') }}
           IMPORT_SOURCE_URL: ${{ secrets.IMPORT_SOURCE_URL }}
         run: |
           TO=$(printf '%s' "$FORM_TO_EMAIL" | tr -d '[:space:]')
@@ -154,12 +187,12 @@ jobs:
             echo "::error::IMPORT_SOURCE_URL має починатись з https:// або http://"; exit 1
           fi
           # Посилання — у base64: будь-які лапки й скісні в ньому не зламають PHP-файл
-          printf "<?php\nreturn ['to' => '%s', 'from' => '%s', 'feed' => base64_decode('%s'), 'site' => 'https://demo.lvivimport.com'];\n" \
-            "$TO" "$FROM" "$(printf '%s' "$FEED" | base64 -w0)" > site/api/config.php
+          printf "<?php\nreturn ['to' => '%s', 'from' => '%s', 'feed' => base64_decode('%s'), 'site' => '%s'];\n" \
+            "$TO" "$FROM" "$(printf '%s' "$FEED" | base64 -w0)" "$SITE" > site/api/config.php
 
       # Заливаються лише змінені файли, пачками по 50 у FTP_PARALLEL з'єднань (curl).
       # Що змінилось, визначає deploy-manifest.txt на сервері: контрольні суми SHA-256 уже залитих файлів;
-      # без нього заливається все. Чужі файли в теці (зокрема lvivimport-demo.txt) не видаляються.
+      # без нього заливається все. Чужі файли в теці (зокрема файл-позначка) не видаляються.
       - name: Upload changed files
         if: steps.cfg.outputs.ready == 'true'
         env:

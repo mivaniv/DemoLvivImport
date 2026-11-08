@@ -33,7 +33,7 @@ const KEEP_FEEDS = 14;
 const MAX_FEED_BYTES = 200 * 1024 * 1024;
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 const IMAGE_PAUSE_US = 1000000; // пауза між запитами фото, щоб не спрацював фаєрвол
-const USER_AGENT = 'demo.lvivimport.com catalog update';
+const USER_AGENT = 'lvivimport.com catalog update';
 const PHOTO_MANIFEST = DATA_DIR . '/photos.json'; // фото → контрольна сума оригіналу, з якого воно зроблене
 const PHOTO_MAX_SIDE = 1500;
 const PHOTO_QUALITY = 82;
@@ -1134,23 +1134,25 @@ function notify(array $config, string $message, ?string $warning = null): void
     if ($to === '' || !function_exists('mail')) {
         return;
     }
+    $host = (string) (parse_url((string) ($config['site'] ?? ''), PHP_URL_HOST) ?: 'demo.lvivimport.com');
+    $demo = strpos($host, 'demo.') === 0;
     $from = (string) ($config['from'] ?? '');
     if (!filter_var($from, FILTER_VALIDATE_EMAIL)) {
-        $from = 'noreply@demo.lvivimport.com';
+        $from = "noreply@$host";
     }
     $enc = function (string $s): string {
         return '=?UTF-8?B?' . base64_encode($s) . '?=';
     };
     $headers = implode("\r\n", [
-        'From: ' . $enc('Lviv Import — демосайт') . " <$from>",
+        'From: ' . $enc($demo ? 'Lviv Import — демосайт' : 'Lviv Import — сайт') . " <$from>",
         'MIME-Version: 1.0',
         'Content-Type: text/plain; charset=UTF-8',
         'Content-Transfer-Encoding: base64',
     ]);
     $text = $warning !== null
-        ? "Щоденне оновлення каталогу demo.lvivimport.com.\n\n$message\n\nЖурнал: public_html/api/data/catalog-update.log\n"
-        : "Щоденне оновлення каталогу demo.lvivimport.com не вдалося.\n\n$message\n\nНа сайті лишився попередній каталог. Журнал: public_html/api/data/catalog-update.log\n";
-    $subject = $enc($warning ?? 'Каталог демосайту не оновлено');
+        ? "Щоденне оновлення каталогу $host.\n\n$message\n\nЖурнал: public_html/api/data/catalog-update.log\n"
+        : "Щоденне оновлення каталогу $host не вдалося.\n\n$message\n\nНа сайті лишився попередній каталог. Журнал: public_html/api/data/catalog-update.log\n";
+    $subject = $enc($warning ?? ($demo ? 'Каталог демосайту не оновлено' : "Каталог $host не оновлено"));
     $body = chunk_split(base64_encode($text));
     @mail($to, $subject, $body, $headers, "-f$from") || @mail($to, $subject, $body, $headers);
 }

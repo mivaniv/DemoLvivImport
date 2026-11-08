@@ -1,15 +1,16 @@
-# Ззовні доступний лише обробник форм. config.php (адреса для листів, посилання на вивантаження),
-# update-catalog.php (запускає лише крон) і тека data/ (журнали, копії вивантаження) закриті.
+# Ззовні доступні лише обробник форм і переадресації старих адрес (legacy.php, сюди веде .htaccess сайту).
+# config.php (адреса для листів), update-catalog.php (запускає лише крон), legacy-urls.json, позначки legacy/
+# і тека data/ (журнали, копії вивантаження) закриті.
 <IfModule mod_authz_core.c>
   Require all denied
-  <Files "form.php">
+  <FilesMatch "^(form|legacy)\.php$">
     Require all granted
-  </Files>
+  </FilesMatch>
 </IfModule>
 <IfModule !mod_authz_core.c>
   Order deny,allow
   Deny from all
-  <Files "form.php">
+  <FilesMatch "^(form|legacy)\.php$">
     Allow from all
-  </Files>
+  </FilesMatch>
 </IfModule>
