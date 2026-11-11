@@ -80,7 +80,7 @@ domains/lvivimport.com/
      ```
      0 8 * * * php -q /home/zvszaqqj/domains/lvivimport.com/public_html/api/update-catalog.php --source=/home/zvszaqqj/public_html/assets/uploads/wpallimport/files
      ```
-   - крон demo.lvivimport.com лишається.
+   - крон demo.lvivimport.com лишається (прибрано 11.11.2026 разом із демосайтом, див. hosting.md).
 5. **GitHub:** Environment `production` → секрет `FTP_DIR` = `/lvivimport.com/public_html/`, потім **Run workflow** → `production`.
    - Перевіряє, що заливка йде в нове місце, і доливає зміни, зроблені після підготовки.
 6. **Перевірка:**

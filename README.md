@@ -73,17 +73,15 @@ npm run dev                 # http://localhost:3000
 
 Тести: `npm test` (адаптери, паролі, повний цикл імпорту на окремій базі `lvivimport_test`). Приклади файлів — у [data/1c-sample/](data/1c-sample/).
 
-## Хостинг HostPro (demo.lvivimport.com)
+## Хостинг HostPro (lvivimport.com)
 
-Після кожного push у `main` GitHub збирає сайт і **чекає підтвердження власника**, а тоді заливає його по FTP на demo.lvivimport.com. Налаштування й порядок підтвердження: [docs/hosting.md](docs/hosting.md). Поки на хостинг іде статична версія (каталог без цін), база не потрібна.
+Сайт заливається на lvivimport.com **лише вручну**: Actions → **Deploy to hosting** → **Run workflow**, далі GitHub чекає підтвердження власника й заливає змінені файли по FTP. Push у `main` нічого не викладає. Налаштування й порядок підтвердження: [docs/hosting.md](docs/hosting.md). На хостинг іде статична версія (каталог без цін), база не потрібна.
 
-## Статична демоверсія (GitHub Pages)
+Демосайт demo.lvivimport.com і копію на GitHub Pages прибрано 11.11.2026: demo.lvivimport.com лише переадресовує на ті самі сторінки lvivimport.com.
 
-Адреса: https://mivaniv.github.io/DemoLvivImport/
+## Статична версія
 
-Workflow [.github/workflows/pages.yml](.github/workflows/pages.yml) збирає сайт після кожного push у `main`. База для цього не потрібна: дані беруться зі знімка [src/data/catalog-snapshot.json](src/data/catalog-snapshot.json).
-
-На demo.lvivimport.com каталог щодня оновлює крон самого хостингу — див. [docs/hosting.md](docs/hosting.md#щоденне-оновлення-каталогу). Знімок у репозиторії потрібен для збірки й GitHub Pages. Оновити його:
+На lvivimport.com каталог щодня оновлює крон самого хостингу — див. [docs/hosting.md](docs/hosting.md#щоденне-оновлення-каталогу). Знімок [src/data/catalog-snapshot.json](src/data/catalog-snapshot.json) у репозиторії потрібен лише для збірки. Оновити його:
 
 ```powershell
 npm run catalog:from-feed -- шлях/до/products_full.XML   # прямо з вивантаження 1С, без бази

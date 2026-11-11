@@ -1,6 +1,5 @@
-# Статична версія каталогу (без цін і входу): demo.lvivimport.com, після переходу — lvivimport.com.
-# Файл викладається разом із сайтом workflow-ом .github/workflows/deploy-hosting.yml;
-# для lvivimport.com блок між «BEGIN demo-only» і «END demo-only» вирізається.
+# lvivimport.com — статична версія каталогу (без цін і входу).
+# Файл викладається разом із сайтом workflow-ом .github/workflows/deploy-hosting.yml.
 
 Options -Indexes
 DirectoryIndex index.html
@@ -22,13 +21,6 @@ ErrorDocument 404 /404.html
     Deny from all
   </IfModule>
 </FilesMatch>
-
-# BEGIN demo-only
-# Демоверсія не повинна потрапляти в пошук і конкурувати з lvivimport.com
-<IfModule mod_headers.c>
-  Header set X-Robots-Tag "noindex, nofollow"
-</IfModule>
-# END demo-only
 
 <IfModule mod_rewrite.c>
   RewriteEngine On

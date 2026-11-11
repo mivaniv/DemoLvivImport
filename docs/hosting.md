@@ -1,65 +1,63 @@
-# Розміщення на хостингу HostPro (demo.lvivimport.com)
+# Розміщення на хостингу HostPro (lvivimport.com)
 
-> Перехід lvivimport.com з WordPress на цей сайт (заливка з ціллю `production`, переадресації старих адрес, перемикання й повернення) — у [cutover.md](cutover.md).
+> Як lvivimport.com перейшов з WordPress на цей сайт 08.11.2026 (переадресації старих адрес, перемикання й повернення) — у [cutover.md](cutover.md).
 
 Схема роботи:
 
-1. Зміни комітяться й пушаться в GitHub (гілка `main`).
-2. GitHub Actions збирає сайт (workflow [deploy-hosting.yml](../.github/workflows/deploy-hosting.yml)).
+1. Зміни комітяться й пушаться в GitHub (гілка `main`). Сам push на хостинг нічого не викладає.
+2. Ви запускаєте заливку вручну: **Actions → Deploy to hosting → Run workflow**. GitHub Actions збирає сайт (workflow [deploy-hosting.yml](../.github/workflows/deploy-hosting.yml)).
 3. **GitHub чекає вашого підтвердження.** Без нього на хостинг нічого не потрапляє.
-4. Після підтвердження змінені файли заливаються по FTP у теку demo.lvivimport.com.
+4. Після підтвердження змінені файли заливаються по FTP у теку lvivimport.com.
 
-Зараз на хостинг іде **статична версія**: каталог без цін і входу, дані зі знімка `src/data/catalog-snapshot.json`. База даних і Node.js для неї не потрібні. Повну версію (база, кабінет, імпорт з 1С) підключимо окремим етапом.
+На хостинг іде **статична версія**: каталог без цін і входу. Каталог щодня оновлює крон хостингу (нижче). База даних і Node.js не потрібні. Повну версію (база, кабінет менеджера, ціни) підключимо окремим етапом.
 
 ## Налаштування — один раз
 
-### 1. DirectAdmin HostPro: окремий FTP-акаунт для демосайту
+### 1. DirectAdmin HostPro: FTP-акаунт для заливки
 
-> **Увага.** FTP-акаунт належить домену, у якому його створено. Акаунт `…@lvivimport.com` з коренем «Домен» відкривається в теці **lvivimport.com** (WordPress), а не демо. 26.10.2026 через це сайт залився в lvivimport.com.
+> **Увага.** FTP-акаунт належить домену, у якому його створено, і бачить лише свою кореневу теку. Перевіряйте корінь акаунта: 26.10.2026 через невідповідний корінь сайт залився не туди.
 
-1. У DirectAdmin угорі **оберіть домен `demo.lvivimport.com`**, потім **FTP Management → Створити FTP-акаунт**: логін, наприклад `deploy` (вийде `deploy@demo.lvivimport.com`), надійний пароль, коренева директорія **«Домен»**. Акаунт бачитиме лише `domains/demo.lvivimport.com`.
-2. У файловому менеджері відкрийте `domains/demo.lvivimport.com/public_html/` і створіть **порожній файл `lvivimport-demo.txt`**. Це позначка: workflow заливає лише в теку, де вона є, і відмовляється, якщо в теці є WordPress/PHP (`wp-config.php`, `index.php`, `wp-admin`…).
-3. Запишіть **FTP-сервер** (зазвичай `ftp.lvivimport.com` або ім'я сервера HostPro).
-4. Переконайтесь, що для `demo.lvivimport.com` є SSL-сертифікат (Let's Encrypt у панелі).
+1. FTP-акаунт з коренем `/home/<користувач>/domains/` (зараз так і налаштовано).
+2. У теці сайту `domains/lvivimport.com/public_html/` лежить **порожній файл `lvivimport-site.txt`**. Це позначка: workflow заливає лише в теку, де вона є, і відмовляється, якщо в теці є WordPress/PHP (`wp-config.php`, `index.php`, `wp-admin`…).
+3. FTP-сервер — ім'я сервера HostPro з сертифіката FTPS (`rocket-da8.hostsila.org`).
 
 ### 2. GitHub: підтвердження перед заливкою
 
-Репозиторій → **Settings → Environments → New environment** → назва `hosting`:
+Репозиторій → **Settings → Environments** → `production`:
 
-- **Required reviewers** — додайте себе (`mivaniv`) → *Save protection rules*;
-- **Deployment branches and tags** → *Selected branches* → `main`.
+- **Required reviewers** — ви (`mivaniv`); галочку *Prevent self-review* зніміть, інакше самі не зможете підтвердити → *Save protection rules*.
 
 ### 3. GitHub: доступ до FTP
 
-У тому ж Environment `hosting` → **Environment secrets → Add secret**:
+У тому ж Environment `production` → **Environment secrets**:
 
 | Секрет | Значення |
 | --- | --- |
 | `FTP_SERVER` | FTP-сервер з кроку 1.3 |
-| `FTP_USERNAME` | логін FTP-акаунта повністю, напр. `deploy@demo.lvivimport.com` |
+| `FTP_USERNAME` | логін FTP-акаунта повністю |
 | `FTP_PASSWORD` | пароль FTP-акаунта |
-| `FTP_DIR` | `/public_html/` (для акаунта з коренем «Домен» з кроку 1.1; починається й закінчується на `/`) |
+| `FTP_DIR` | `/lvivimport.com/public_html/` (для акаунта з коренем `domains/`; починається й закінчується на `/`) |
 
 Змінна `FTP_PROTOCOL` (Environment variables) — не задавайте (типово `ftps`); якщо FTPS не працює — `ftp`.
 
-Перед заливкою workflow показує в журналі вміст цільової теки й зупиняється, якщо там немає `lvivimport-demo.txt` або є файли WordPress.
+Перед заливкою workflow показує в журналі вміст цільової теки й зупиняється, якщо там немає `lvivimport-site.txt` або є файли WordPress.
 
 Паролі зберігаються лише в GitHub Secrets. У репозиторій і в чат вони не потрапляють.
 
 ### 4. GitHub: куди надходять заявки й форми
 
-У тому ж Environment `hosting` (або Settings → Secrets and variables → Actions → **Variables**) → **Add variable**:
+У тому ж Environment `production` → **Environment variables**:
 
 | Змінна | Значення |
 | --- | --- |
-| `FORM_TO_EMAIL` | адреса, на яку приходять заявки з кошика, «Замовити дзвінок», форма контактів і відгуки. Кілька адрес — через кому без пробілів |
-| `FORM_FROM_EMAIL` | (необов'язково) адреса відправника, типово `noreply@demo.lvivimport.com` |
+| `FORM_TO_EMAIL` | адреси, на які приходять заявки з кошика, «Замовити дзвінок», форма контактів і відгуки. Кілька адрес — **через кому**, напр. `info@lvivimport.com,vita.nahanda@lvivimport.com` |
+| `FORM_FROM_EMAIL` | (необов'язково) адреса відправника, типово `noreply@lvivimport.com` |
 
-Без `FORM_TO_EMAIL` заливка зупиняється з поясненням. Адреса записується у `api/config.php` лише під час заливки: у репозиторій і в артефакт збірки вона не потрапляє.
+Без `FORM_TO_EMAIL` або з неправильною адресою заливка зупиняється з поясненням. Адреса записується у `api/config.php` лише під час заливки, тож **після зміни адреси запустіть заливку** (Run workflow). У репозиторій і в артефакт збірки адреса не потрапляє.
 
 ### 5. GitHub: посилання на вивантаження каталогу (необов’язково)
 
-У тому ж Environment `hosting` → **Environment secrets → Add secret**:
+У тому ж Environment `production` → **Environment secrets → Add secret**:
 
 | Секрет | Значення |
 | --- | --- |
@@ -69,11 +67,11 @@
 
 ## Як підтвердити заливку
 
-1. Після кожного push у `main` у вкладці **Actions** з'являється запуск **«Deploy to hosting (demo.lvivimport.com)»**, і ви отримуєте лист від GitHub.
-2. Відкрийте запуск → **Review deployments** → позначте `hosting` → **Approve and deploy**.
+1. **Actions → Deploy to hosting → Run workflow** → зелена кнопка **Run workflow** у списку, що відкрився.
+2. Відкрийте новий запуск → **Review deployments** → позначте `production` → **Approve and deploy**.
 3. Заливаються лише змінені файли. Правка на одній сторінці — хвилина-дві, правка шапки чи футера (~200 файлів) — до ~15 хвилин. Деталі — у розділі «Як заливаються файли».
 
-Не хочете викладати? Натисніть **Reject**: сайт на хостингу лишиться попередній. Повторно викласти будь-яку версію можна через **Re-run jobs** у потрібному запуску.
+Передумали? Натисніть **Reject**: сайт на хостингу лишиться попередній.
 
 ## Що потрапляє на хостинг
 
@@ -82,7 +80,7 @@
   - Окремої сторінки на кожен товар немає: `.htaccess` віддає шаблон на будь-яку адресу `/product/<slug>/`, і він показує товар з файлу даних.
   - Адреси товарів ті самі, що й раніше.
   - Каталог, «Акції», «Новинки», «Популярне», головна й «Бренди» теж беруть товари з цього файлу, тож бачать свіжі дані без нової заливки.
-- [deploy/hosting/.htaccess](../deploy/hosting/.htaccess): шаблон товарів, сторінка 404, адреси без скісної риски на кінці, заборона індексації демосайту пошуковиками (`X-Robots-Tag: noindex`);
+- [deploy/hosting/.htaccess](../deploy/hosting/.htaccess): шаблон товарів, сторінка 404, адреси без скісної риски на кінці, переадресації старих адрес WordPress;
 - [deploy/hosting/api/form.php](../deploy/hosting/api/form.php): обробник форм на PHP (Node.js на хостингу поки немає).
   - Перевіряє поля, приймає запити лише зі сторінок самого сайту, має приманку для ботів і обмеження частоти.
   - Надсилає лист функцією `mail()` хостингу.
@@ -129,17 +127,17 @@
 
 ### Як налаштувати крон (один раз)
 
-1. DirectAdmin → **Додатково → Cron Jobs (Завдання Cron)** → створити або змінити завдання демосайту:
+1. DirectAdmin → **Додатково → Cron Jobs (Завдання Cron)** → створити або змінити завдання сайту:
    - хвилина `0`, година `8`, день `*`, місяць `*`, день тижня `*`;
    - команда (одним рядком):
      ```
-     php -q /home/<користувач DirectAdmin>/domains/demo.lvivimport.com/public_html/api/update-catalog.php --source=<тека, куди 1С заливає файли>
+     php -q /home/<користувач DirectAdmin>/domains/lvivimport.com/public_html/api/update-catalog.php --source=<тека, куди 1С заливає файли>
      ```
    - Тека 1С — коренева тека FTP-акаунта, яким користується 1С (DirectAdmin → FTP Management).
    - Час крона — час сервера (зараз київський).
 2. Спершу перевірка без змін: тимчасове завдання на найближчу хвилину з тією ж командою плюс `--dry-run`. Результат з'явиться в журналі рядком `ПЕРЕВІРКА: …`. Після перевірки тимчасове завдання видаліть.
 3. Перший справжній запуск переробляє всі фото (~1 270), це кілька хвилин. Далі щодня — лише нові та змінені.
-4. Перевірте `https://demo.lvivimport.com/data/catalog-status.json`: `"ok": true`, `"source": "1c-folder"`, кількість товарів і фото.
+4. Перевірте `https://lvivimport.com/data/catalog-status.json`: `"ok": true`, `"source": "1c-folder"`, кількість товарів і фото.
 
 ### Якщо щось не так
 
@@ -158,7 +156,7 @@
 
 Якщо листи не приходять:
 1. Перевірте «Спам».
-2. Відкрийте `api/data/submissions.log` у файловому менеджері DirectAdmin. `"mailed":false` означає, що хостинг не відправив лист. Тоді в DirectAdmin → E-mail Accounts створіть скриньку `noreply@demo.lvivimport.com` або вкажіть у `FORM_FROM_EMAIL` наявну скриньку домену.
+2. Відкрийте `api/data/submissions.log` у файловому менеджері DirectAdmin. `"mailed":false` означає, що хостинг не відправив лист. Тоді в DirectAdmin → E-mail Accounts створіть скриньку `noreply@lvivimport.com` або вкажіть у `FORM_FROM_EMAIL` наявну скриньку домену.
 
 У повній версії (Node.js + база) ті самі форми працюють через серверні дії: заявки видно в `/admin/inquiries`.
 
@@ -175,3 +173,18 @@
 - Сталий ідентифікатор збірки (`generateBuildId` у [next.config.ts](../next.config.ts)) гарантує, що незмінені сторінки лишаються байт-у-байт такими самими і повторно не заливаються.
 - Інших файлів у теці (наприклад, залишених хостингом) workflow не видаляє.
 - До 01.11.2026 кожен товар мав окрему теку `public_html/product/<slug>/` (~7 тис. файлів, ~350 МБ). Сайт їх більше не використовує: правило в `.htaccess` перекриває їх шаблоном. Перший запуск щоденного крона їх видаляє.
+
+## demo.lvivimport.com (прибрано 11.11.2026)
+
+Після переходу lvivimport.com на цей сайт демосайт більше не потрібен. Посилання на demo.lvivimport.com лишились у старих листах-заявках, тому піддомен не видаляється: у його теці лежить лише `.htaccess`, який переадресовує (301) кожну адресу на ту саму сторінку lvivimport.com:
+
+```
+RewriteEngine On
+RewriteRule ^ https://lvivimport.com%{REQUEST_URI} [R=301,L]
+```
+
+Що прибрано разом із ним:
+- крон демосайту о 08:00 (крон lvivimport.com лишився);
+- файли демо в `domains/demo.lvivimport.com/public_html/`; журнал заявок демо збережено в `~/wp-backup/demo-submissions.log`;
+- заливка на демо в [deploy-hosting.yml](../.github/workflows/deploy-hosting.yml) і копія на GitHub Pages (`pages.yml`);
+- GitHub Environment `hosting` і FTP-акаунт демо.

@@ -1,10 +1,6 @@
-# Розгортання на хостинг HostPro — ЛИШЕ після підтвердження.
-#
-# Дві цілі:
-#   demo       — demo.lvivimport.com: після кожного push у main (і вручну). Environment «hosting»,
-#                файл-позначка lvivimport-demo.txt, заборона індексації (noindex).
-#   production — lvivimport.com: ЛИШЕ вручну (Actions → Deploy to hosting → Run workflow → target: production).
-#                Environment «production», файл-позначка lvivimport-site.txt. Див. docs/cutover.md.
+# Розгортання lvivimport.com на хостинг HostPro — ЛИШЕ вручну й після підтвердження
+# (Actions → Deploy to hosting → Run workflow). Environment «production», файл-позначка lvivimport-site.txt.
+# Демосайт demo.lvivimport.com прибрано 11.11.2026: він лише переадресовує на lvivimport.com (docs/hosting.md).
 #
 # 1. Сайт збирається (статична версія: каталог без цін, база не потрібна).
 # 2. Крок «deploy» прив'язаний до GitHub Environment з обов'язковим рецензентом:
@@ -13,31 +9,23 @@
 #    і не повинно бути WordPress/PHP (wp-config.php, index.php, wp-admin...).
 # 4. Лише тоді змінені файли заливаються по FTP (curl, кілька з'єднань паралельно).
 #
-# Налаштування (один раз): див. docs/hosting.md — Environment «hosting», секрети FTP_*, позначка.
+# Налаштування: див. docs/hosting.md — Environment «production», секрети FTP_*, позначка.
 name: Deploy to hosting
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
-    inputs:
-      target:
-        description: "Куди заливати: demo (demo.lvivimport.com) або production (lvivimport.com)"
-        type: choice
-        options: [demo, production]
-        default: demo
 
 permissions:
   contents: read
 
 concurrency:
-  group: hosting-${{ inputs.target || 'demo' }}
+  group: hosting-production
   cancel-in-progress: false
 
 env:
-  TARGET: ${{ inputs.target || 'demo' }}
-  SITE: ${{ inputs.target == 'production' && 'https://lvivimport.com' || 'https://demo.lvivimport.com' }}
-  MARKER: ${{ inputs.target == 'production' && 'lvivimport-site.txt' || 'lvivimport-demo.txt' }}
+  TARGET: production
+  SITE: https://lvivimport.com
+  MARKER: lvivimport-site.txt
 
 jobs:
   build:
@@ -68,13 +56,7 @@ jobs:
       - name: Add hosting config and form handler
         run: |
           cp -r deploy/hosting/api out/api
-          if [ "$TARGET" = production ]; then
-            # lvivimport.com індексується пошуковиками: без заборони noindex демоверсії
-            sed '/# BEGIN demo-only/,/# END demo-only/d' deploy/hosting/.htaccess > out/.htaccess
-          else
-            cp deploy/hosting/.htaccess out/.htaccess
-          fi
-          echo "Ціль: $TARGET ($SITE); рядків noindex у .htaccess: $(grep -c 'X-Robots-Tag' out/.htaccess || true)"
+          cp deploy/hosting/.htaccess out/.htaccess
           # Позначки старих адрес товарів для переадресацій 301 (.htaccess → api/legacy.php)
           node -e '
             const fs = require("fs");
@@ -95,11 +77,10 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    # Тут GitHub зупиняється й чекає підтвердження власника (правило Environment «hosting»)
+    # Тут GitHub зупиняється й чекає підтвердження власника (правило Environment «production»)
     environment:
-      # (контекст env тут недоступний — лише inputs)
-      name: ${{ inputs.target == 'production' && 'production' || 'hosting' }}
-      url: ${{ inputs.target == 'production' && 'https://lvivimport.com' || 'https://demo.lvivimport.com' }}
+      name: production
+      url: https://lvivimport.com
     steps:
       - name: Check FTP settings and target folder
         id: cfg
@@ -113,12 +94,7 @@ jobs:
           if [ -z "$FTP_SERVER" ] || [ -z "$FTP_USERNAME" ] || [ -z "$FTP_PASSWORD" ] || [ -z "$FTP_DIR" ]; then
             MISSING=""
             for n in FTP_SERVER FTP_USERNAME FTP_PASSWORD FTP_DIR; do [ -z "${!n}" ] && MISSING="$MISSING $n"; done
-            if [ "$TARGET" = "production" ]; then
-              echo "::error::У середовищі production бракує секретів:$MISSING. Додайте їх у Settings → Environments → production → Environment secrets"; exit 1
-            fi
-            echo "::warning::FTP ще не налаштовано (секрети FTP_SERVER, FTP_USERNAME, FTP_PASSWORD, FTP_DIR) — заливку пропущено. Див. docs/hosting.md"
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-            exit 0
+            echo "::error::У середовищі production бракує секретів:$MISSING. Додайте їх у Settings → Environments → production → Environment secrets"; exit 1
           fi
           # Прибираємо випадкові пробіли/переноси й префікс ftp:// (часто потрапляють під час копіювання)
           FTP_SERVER=$(printf '%s' "$FTP_SERVER" | tr -d '[:space:]' | sed -E 's#^[A-Za-z]+://##; s#/.*$##')
@@ -178,7 +154,7 @@ jobs:
           FORM_TO_EMAIL: ${{ vars.FORM_TO_EMAIL || secrets.FORM_TO_EMAIL }}
           # Лише для підказки в помилці: назви змінних, які бачить заливка (без значень)
           VARS_JSON: ${{ toJSON(vars) }}
-          FORM_FROM_EMAIL: ${{ vars.FORM_FROM_EMAIL || (inputs.target == 'production' && 'noreply@lvivimport.com' || 'noreply@demo.lvivimport.com') }}
+          FORM_FROM_EMAIL: ${{ vars.FORM_FROM_EMAIL || 'noreply@lvivimport.com' }}
           IMPORT_SOURCE_URL: ${{ secrets.IMPORT_SOURCE_URL }}
         run: |
           TO=$(printf '%s' "$FORM_TO_EMAIL" | tr -d '[:space:]')
@@ -186,9 +162,8 @@ jobs:
           FEED=$(printf '%s' "$IMPORT_SOURCE_URL" | tr -d '[:space:]')
           EMAIL='[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
           if [ -z "$TO" ]; then
-            ENV_NAME=$([ "$TARGET" = production ] && echo production || echo hosting)
             SEEN_VARS=$(printf '%s' "$VARS_JSON" | jq -r 'keys | join(", ")' 2>/dev/null || true)
-            echo "::error::Не задано адресу для листів з форм: Settings → Environments → $ENV_NAME → Environment variables → FORM_TO_EMAIL. Змінні, які бачить заливка: ${SEEN_VARS:-(жодної)}. Див. docs/hosting.md"; exit 1
+            echo "::error::Не задано адресу для листів з форм: Settings → Environments → production → Environment variables → FORM_TO_EMAIL. Змінні, які бачить заливка: ${SEEN_VARS:-(жодної)}. Див. docs/hosting.md"; exit 1
           fi
           if ! printf '%s' "$TO" | grep -qxE "$EMAIL(,$EMAIL)*" || ! printf '%s' "$FROM" | grep -qxE "$EMAIL"; then
             echo "::error::FORM_TO_EMAIL або FORM_FROM_EMAIL — некоректна адреса"; exit 1
