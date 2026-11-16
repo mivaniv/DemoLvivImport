@@ -1145,7 +1145,7 @@ function notify(array $config, string $message, ?string $warning = null): void
         return '=?UTF-8?B?' . base64_encode($s) . '?=';
     };
     $headers = implode("\r\n", [
-        'From: ' . $enc($demo ? 'Lviv Import — демосайт' : 'Lviv Import — сайт') . " <$from>",
+        'From: ' . $enc($demo ? 'LvivImport — демосайт' : 'LvivImport — сайт') . " <$from>",
         'MIME-Version: 1.0',
         'Content-Type: text/plain; charset=UTF-8',
         'Content-Transfer-Encoding: base64',

@@ -16,7 +16,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const WIDTH = 1200;
 const HEIGHT = 630;
 const OUT = join(ROOT, "src/app/opengraph-image.jpg");
-const ALT = "Lviv Import — європейські продукти для бізнесу";
+const ALT = "LvivImport — європейські продукти для бізнесу";
 
 // Логотип — той самий SVG, що в шапці сайту (JSX → звичайна розмітка SVG)
 function logoSvg() {

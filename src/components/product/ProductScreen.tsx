@@ -12,7 +12,7 @@ import { findProduct, similarProducts } from "@/lib/catalog-data";
 // адресу /product/<slug>/ (.htaccess), а товар береться з /data/products.json (useCatalogData).
 // Так сайт — кілька десятків сторінок замість окремої на кожен товар, і правка футера заливається за хвилини.
 
-const TITLE = "%s — Lviv Import"; // як metadata.title.template в app/layout.tsx
+const TITLE = "%s — LvivImport"; // як metadata.title.template в app/layout.tsx
 
 export function ProductScreen() {
   const pathname = usePathname();

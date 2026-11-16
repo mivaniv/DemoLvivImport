@@ -3,10 +3,10 @@ import Link from "next/link";
 const NAVY = "#1E3B6B";
 const GOLD = "#FECD14";
 
-// Офіційний логотип Lviv Import (logo.svg від замовника); viewBox обрізано до вмісту без полів.
+// Офіційний логотип LvivImport (logo.svg від замовника); viewBox обрізано до вмісту без полів.
 export function Logo({ className = "" }: { className?: string }) {
   return (
-    <Link href="/" aria-label="Lviv Import — на головну" className={`inline-flex shrink-0 ${className}`}>
+    <Link href="/" aria-label="LvivImport — на головну" className={`inline-flex shrink-0 ${className}`}>
       <svg viewBox="12 6 136 52" className="h-full w-auto" role="img" aria-hidden="true" fill="none">
         {/* MPORT */}
         <path d="M35.785 56.1972V56.5439H37.8653V56.1972C37.3452 56.1972 36.9984 55.8504 36.9984 55.3303V46.142L41.7833 56.5439H42.3034L46.8975 45.2925V55.3303C46.8975 55.8503 46.5508 56.1971 46.0307 56.1971V56.5439H49.8447V56.1971C49.3246 56.1971 48.9779 55.8503 48.9779 55.3303V45.6219C48.9779 45.1019 49.3246 44.7551 49.8447 44.7551V44.4083H46.8975L42.9795 54.0127L38.4894 44.4083H35.7849V44.7551C36.305 44.7551 36.6517 45.1019 36.6517 45.6219V55.3303C36.6517 55.8503 36.305 56.1971 35.7849 56.1971L35.785 56.1972Z" fill={NAVY} />

@@ -242,7 +242,7 @@ function send_mail(array $config, string $subject, string $text, string $replyTo
         return '=?UTF-8?B?' . base64_encode($s) . '?=';
     };
     $headers = [
-        'From: ' . $enc('Lviv Import — демосайт') . " <$from>",
+        'From: ' . $enc('LvivImport — сайт') . " <$from>",
         'MIME-Version: 1.0',
         'Content-Type: text/plain; charset=UTF-8',
         'Content-Transfer-Encoding: base64',
